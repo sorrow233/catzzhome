@@ -34,10 +34,10 @@ export default class HeroSection {
             this.bookmarks = saved ? JSON.parse(saved) : defaultBookmarks;
 
             // Background
-            this.currentBg = localStorage.getItem('catzz_bg') || ""; // Default empty (gradient)
+            this.currentBg = localStorage.getItem('catzz_bg') || "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg";
         } catch (e) {
             this.bookmarks = defaultBookmarks;
-            this.currentBg = "";
+            this.currentBg = "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg";
         }
 
         this.simpleIconsMap = {
@@ -52,7 +52,8 @@ export default class HeroSection {
     render() {
         this.element = document.createElement('section');
         // Base classes
-        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-32 md:pt-48 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
+        // Base classes - Lifted up (pt-24 md:pt-36)
+        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-24 md:pt-36 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
 
         // Initial Background State
         if (this.currentBg) {
@@ -139,6 +140,14 @@ export default class HeroSection {
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <!-- CLICKABLE TITLE -->
                 <h1 id="hero-title" class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
+                
+                <!-- GUIDE TOOLTIP -->
+                <div id="theme-guide" class="hidden absolute top-14 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
+                    <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">
+                        Click 'Catzz' to switch theme
+                    </div>
+                </div>
+
                 <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-500 font-light tracking-[0.4em] hero-font-sc rounded-full">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
@@ -196,6 +205,21 @@ export default class HeroSection {
         this.renderGrid();
         this.initModal();
         this.initBgPicker();
+        this.initGuide();
+    }
+
+    initGuide() {
+        // Check if guide has been seen
+        if (!localStorage.getItem('catzz_guide_seen')) {
+            const guide = this.element.querySelector('#theme-guide');
+            if (guide) {
+                guide.classList.remove('hidden');
+                // Small delay for entrance
+                setTimeout(() => {
+                    guide.classList.remove('opacity-0');
+                }, 1000);
+            }
+        }
     }
 
     initBgPicker() {
@@ -235,7 +259,15 @@ export default class HeroSection {
             modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
         };
 
-        title.addEventListener('click', openModal);
+        title.addEventListener('click', () => {
+            // Dismiss Guide on First Click
+            if (!localStorage.getItem('catzz_guide_seen')) {
+                localStorage.setItem('catzz_guide_seen', 'true');
+                const guide = this.element.querySelector('#theme-guide');
+                if (guide) guide.classList.add('opacity-0');
+            }
+            openModal();
+        });
         closeBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
