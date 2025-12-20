@@ -17,11 +17,27 @@ export default class HeroSection {
             { name: "Claude", url: "https://claude.ai" }
         ];
 
+        this.bgImages = [
+            "https://blog.catzz.work/file/1766241276637_73205835_p0.jpg",
+            "https://blog.catzz.work/file/1766241281476_74451722_p0.jpg",
+            "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
+            "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
+            "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
+            "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
+            "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
+            "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg"
+        ];
+
+        // Load Saved Data
         try {
             const saved = localStorage.getItem('catzz_bookmarks');
             this.bookmarks = saved ? JSON.parse(saved) : defaultBookmarks;
+
+            // Background
+            this.currentBg = localStorage.getItem('catzz_bg') || ""; // Default empty (gradient)
         } catch (e) {
             this.bookmarks = defaultBookmarks;
+            this.currentBg = "";
         }
 
         this.simpleIconsMap = {
@@ -35,8 +51,16 @@ export default class HeroSection {
 
     render() {
         this.element = document.createElement('section');
-        // J-FRESH THEME: Soft, airy, dawning light.
-        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-32 md:pt-48 bg-gradient-to-b from-[#fdfbf7] via-[#f4f7fb] to-[#eef2f6] relative overflow-hidden font-serif';
+        // Base classes
+        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-32 md:pt-48 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
+
+        // Initial Background State
+        if (this.currentBg) {
+            this.element.style.backgroundImage = `url('${this.currentBg}')`;
+        } else {
+            // Fallback gradient if no image selected
+            this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
+        }
 
         const style = document.createElement('style');
         style.textContent = `
@@ -76,13 +100,6 @@ export default class HeroSection {
             .icon-bitmap { 
                 width: 36px; height: 36px;
                 object-fit: contain; 
-                /* 
-                   Light Mode Logic: 
-                   1. Grayscale: Silver/Grey look.
-                   2. Multiply Blend: The Secret Weapon. It makes white pixels transparent 
-                      and dark pixels darker. Perfect for merging white-bg icons onto a light page.
-                   3. Contrast: Pop the logo a bit.
-                */
                 filter: grayscale(100%) contrast(1.1) opacity(0.85);
                 mix-blend-mode: multiply; 
                 transition: all 0.3s ease;
@@ -104,8 +121,11 @@ export default class HeroSection {
             .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
             
             /* Modal Light Theme */
-            .glass-modal { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 25px 50px -12px rgba(100, 116, 139, 0.25); }
+            .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -15px rgba(100, 116, 139, 0.25); }
             
+            .bg-thumb { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: 2px solid transparent; }
+            .bg-thumb:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+            .bg-thumb.active { border-color: #64748b; transform: scale(0.95); }
 
             .preview-container .glass-box { width: 80px; height: 80px; }
             .preview-container .icon-bitmap { width: 48px; height: 48px; }
@@ -116,8 +136,9 @@ export default class HeroSection {
         this.element.innerHTML += `
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
-                <h1 class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90">Catzz</h1>
-                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-400 font-light tracking-[0.4em] hero-font-sc">
+                <!-- CLICKABLE TITLE -->
+                <h1 id="hero-title" class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
+                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-500 font-light tracking-[0.4em] hero-font-sc backdrop-blur-sm bg-white/30 px-6 py-1 rounded-full">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
@@ -126,7 +147,8 @@ export default class HeroSection {
                 </div>
             </div>
             
-            <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 opacity-0 pointer-events-none transition-opacity duration-300">
+            <!-- ADD BOOKMARK MODAL -->
+            <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/10 opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="glass-modal w-full max-w-md p-10 rounded-[2rem] transform scale-95 transition-transform duration-300">
                     <h3 class="text-2xl text-slate-700 font-light mb-8 hero-font-sc tracking-wider text-center">New Shortcut</h3>
                     <div class="flex flex-col items-center justify-center mb-8 h-24">
@@ -152,6 +174,17 @@ export default class HeroSection {
                     </div>
                 </div>
             </div>
+
+            <!-- BACKGROUND PICKER MODAL -->
+            <div id="bg-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 opacity-0 pointer-events-none transition-opacity duration-300">
+                <div class="glass-modal w-full max-w-4xl p-8 rounded-[2rem] transform scale-95 transition-transform duration-300 relative">
+                     <button id="close-bg-modal" class="absolute top-6 right-8 text-slate-400 hover:text-slate-700 text-2xl transition-colors">&times;</button>
+                     <h3 class="text-2xl text-slate-700 font-light mb-8 hero-font-sc tracking-wider text-center">Select Theme</h3>
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto px-2 pb-4 scrollbar-hide">
+                        <!-- BG Images Injected Here -->
+                     </div>
+                </div>
+            </div>
         `;
         return this.element;
     }
@@ -161,6 +194,48 @@ export default class HeroSection {
         this.initTypewriter();
         this.renderGrid();
         this.initModal();
+        this.initBgPicker();
+    }
+
+    initBgPicker() {
+        const title = this.element.querySelector('#hero-title');
+        const modal = this.element.querySelector('#bg-modal');
+        const modalContent = modal.querySelector('.glass-modal');
+        const closeBtn = this.element.querySelector('#close-bg-modal');
+        const grid = modal.querySelector('.grid');
+
+        // Populate Grid
+        this.bgImages.forEach(src => {
+            const thumb = document.createElement('div');
+            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === src ? 'active' : ''}`;
+            thumb.style.backgroundImage = `url('${src}')`;
+            thumb.addEventListener('click', () => {
+                this.currentBg = src;
+                this.element.style.backgroundImage = `url('${src}')`;
+                this.element.classList.remove('bg-gradient-to-b'); // Remove gradient if persistent
+                localStorage.setItem('catzz_bg', src);
+                closeModal();
+
+                // Update Active State
+                modal.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+            });
+            grid.appendChild(thumb);
+        });
+
+        const openModal = () => {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
+        };
+
+        const closeModal = () => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
+        };
+
+        title.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
 
     getSimpleIconSlug(name, url) {
