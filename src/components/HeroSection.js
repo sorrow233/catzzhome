@@ -431,10 +431,29 @@ export default class HeroSection {
         try {
             const hostname = new URL(url).hostname;
             const parts = hostname.split('.');
-            const ignored = ['www', 'chat', 'app', 'web', 'login', 'docs'];
-            const usefulParts = parts.filter(p => !ignored.includes(p));
-            if (usefulParts.length === 0) return 'Site';
-            let name = usefulParts[0];
+
+            // Heuristic for TLD (Top Level Domain)
+            // Handle common double-extensions like .co.uk, .com.cn
+            const doubleTlds = ['co', 'com', 'org', 'net', 'edu', 'gov', 'mil', 'ac'];
+            let tldParts = 1;
+
+            if (parts.length > 2) {
+                const last = parts[parts.length - 1];
+                const secondLast = parts[parts.length - 2];
+                // If last is 2 chars (e.g. uk, cn) and second last is generic (e.g. co), treat as 2-part TLD
+                if (last.length === 2 && doubleTlds.includes(secondLast)) {
+                    tldParts = 2;
+                }
+            }
+
+            // The 'Brand' is usually the part immediately before the TLD
+            // e.g. [console, gmicloud, ai] (1 part TLD) -> index 1 (gmicloud)
+            // e.g. [www, google, co, jp] (2 part TLD) -> index 1 (google)
+            if (parts.length <= tldParts) return 'Site'; // Fallback for 'localhost' or 'ai'
+
+            const brandIndex = parts.length - tldParts - 1;
+            let name = parts[brandIndex];
+
             return name.charAt(0).toUpperCase() + name.slice(1);
         } catch (e) { return ''; }
     }
