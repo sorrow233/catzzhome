@@ -135,6 +135,9 @@ export default class HeroSection {
             .preview-container .icon-bitmap { width: 48px; height: 48px; }
             .preview-container .icon-mask { width: 48px; height: 48px; background-color: #475569; }
 
+            /* Delayed Delete Button */
+            .delayed-delete-btn { opacity: 0; transition: opacity 0.3s ease 0s; pointer-events: none; }
+            .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 3s; pointer-events: auto; }
         `;
         this.element.appendChild(style);
 
@@ -409,7 +412,7 @@ export default class HeroSection {
             item.appendChild(link);
 
             const deleteBtn = document.createElement('button');
-            deleteBtn.className = "absolute -top-1 -right-1 bg-white/10 hover:bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-all backdrop-blur-md";
+            deleteBtn.className = "absolute -top-1 -right-1 bg-white/10 hover:bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] backdrop-blur-md delayed-delete-btn";
             deleteBtn.innerHTML = "&times;";
             deleteBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.deleteBookmark(index); });
             item.appendChild(deleteBtn);
