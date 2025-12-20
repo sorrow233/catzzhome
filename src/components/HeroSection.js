@@ -1,3 +1,5 @@
+import { login, logout, saveSettings, listenSettings, auth } from '../lib/firebase.js';
+
 export default class HeroSection {
     constructor() {
         this.prefixes = ["清凉雨夜", "脆弱雨伞", "街边电话", "路旁雨滩"];
@@ -141,6 +143,12 @@ export default class HeroSection {
                 <!-- CLICKABLE TITLE -->
                 <h1 id="hero-title" class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
                 
+                <!-- CLOUD BUTTON -->
+                <div id="cloud-btn" class="absolute top-6 right-6 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                </div>
+
+                
                 <!-- GUIDE TOOLTIP -->
                 <div id="theme-guide" class="hidden absolute top-14 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
                     <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">
@@ -206,6 +214,54 @@ export default class HeroSection {
         this.initModal();
         this.initBgPicker();
         this.initGuide();
+        this.initAuth();
+    }
+
+    initAuth() {
+        const btn = this.element.querySelector('#cloud-btn');
+        let currentUser = null;
+
+        // Listen for Auth Changes
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            if (user) {
+                btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full opacity-80" alt="User">`;
+                btn.title = `Logged in as ${user.displayName}`;
+
+                // Start Listening to Settings
+                listenSettings(user.uid, (data) => {
+                    if (data) {
+                        let changed = false;
+                        if (data.bg && data.bg !== this.currentBg) {
+                            this.currentBg = data.bg;
+                            this.element.style.backgroundImage = `url('${data.bg}')`;
+                            this.element.classList.remove('bg-gradient-to-b');
+                            localStorage.setItem('catzz_bg', data.bg);
+                            changed = true;
+                        }
+                        if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
+                            this.bookmarks = data.bookmarks;
+                            localStorage.setItem('catzz_bookmarks', JSON.stringify(data.bookmarks));
+                            this.renderGrid();
+                            changed = true;
+                        }
+                    }
+                });
+            } else {
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+                btn.title = "Sync Settings";
+            }
+        });
+
+        btn.addEventListener('click', async () => {
+            if (currentUser) {
+                if (confirm('Logout?')) logout();
+            } else {
+                try {
+                    await login();
+                } catch (e) { alert('Login failed'); }
+            }
+        });
     }
 
     initGuide() {
@@ -240,6 +296,7 @@ export default class HeroSection {
                 this.element.classList.remove('bg-gradient-to-b');
 
                 localStorage.setItem('catzz_bg', src);
+                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: src });
                 closeModal();
 
                 // Update Active State
@@ -433,7 +490,10 @@ export default class HeroSection {
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
 
-    saveBookmarks() { localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks)); }
+    saveBookmarks() {
+        localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
+        if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
+    }
     deleteBookmark(index) { if (confirm('Remove shortcut?')) { this.bookmarks.splice(index, 1); this.saveBookmarks(); this.renderGrid(); } }
 
     initTypewriter() {
