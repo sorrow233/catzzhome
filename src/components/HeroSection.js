@@ -137,7 +137,7 @@ export default class HeroSection {
 
             /* Delayed Delete Button */
             .delayed-delete-btn { opacity: 0; transition: opacity 0.3s ease 0s; pointer-events: none; }
-            .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 3s; pointer-events: auto; }
+            .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 2s; pointer-events: auto; }
         `;
         this.element.appendChild(style);
 
@@ -165,7 +165,7 @@ export default class HeroSection {
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
                 <div class="mt-12 md:mt-20 w-full max-w-3xl">
-                     <div id="bookmark-grid" class="flex flex-wrap justify-center gap-y-8 gap-x-4 md:gap-y-12 md:gap-x-12 px-4 opacity-0 animate-[softFadeIn_1s_ease-out_0.8s_forwards]"></div>
+                     <div id="bookmark-grid" class="flex flex-wrap justify-center gap-y-8 gap-x-4 md:gap-y-12 md:gap-x-12 px-4"></div>
                 </div>
             </div>
             
@@ -412,7 +412,7 @@ export default class HeroSection {
             item.appendChild(link);
 
             const deleteBtn = document.createElement('button');
-            deleteBtn.className = "absolute -top-1 -right-1 bg-white/10 hover:bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] backdrop-blur-md delayed-delete-btn";
+            deleteBtn.className = "absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] backdrop-blur-md delayed-delete-btn shadow-sm";
             deleteBtn.innerHTML = "&times;";
             deleteBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.deleteBookmark(index); });
             item.appendChild(deleteBtn);
