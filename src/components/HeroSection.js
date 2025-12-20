@@ -18,8 +18,8 @@ export default class HeroSection {
         ];
 
         this.bgImages = [
-            "https://blog.catzz.work/file/1766241276637_73205835_p0.jpg",
-            "https://blog.catzz.work/file/1766241281476_74451722_p0.jpg",
+            "https://blog.catzz.work/file/1766242722856_image.png",
+            "https://blog.catzz.work/file/1766242726260_image.png",
             "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
             "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
             "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
@@ -130,6 +130,7 @@ export default class HeroSection {
             .preview-container .glass-box { width: 80px; height: 80px; }
             .preview-container .icon-bitmap { width: 48px; height: 48px; }
             .preview-container .icon-mask { width: 48px; height: 48px; background-color: #475569; }
+
         `;
         this.element.appendChild(style);
 
@@ -138,7 +139,7 @@ export default class HeroSection {
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <!-- CLICKABLE TITLE -->
                 <h1 id="hero-title" class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
-                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-500 font-light tracking-[0.4em] hero-font-sc backdrop-blur-sm bg-white/30 px-6 py-1 rounded-full">
+                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-500 font-light tracking-[0.4em] hero-font-sc rounded-full">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
@@ -212,7 +213,8 @@ export default class HeroSection {
             thumb.addEventListener('click', () => {
                 this.currentBg = src;
                 this.element.style.backgroundImage = `url('${src}')`;
-                this.element.classList.remove('bg-gradient-to-b'); // Remove gradient if persistent
+                this.element.classList.remove('bg-gradient-to-b');
+
                 localStorage.setItem('catzz_bg', src);
                 closeModal();
 
