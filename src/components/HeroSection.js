@@ -35,7 +35,8 @@ export default class HeroSection {
 
     render() {
         this.element = document.createElement('section');
-        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-32 md:pt-48 bg-slate-900 relative overflow-hidden font-serif';
+        // J-FRESH THEME: Soft, airy, dawning light.
+        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-32 md:pt-48 bg-gradient-to-b from-[#fdfbf7] via-[#f4f7fb] to-[#eef2f6] relative overflow-hidden font-serif';
 
         const style = document.createElement('style');
         style.textContent = `
@@ -44,70 +45,79 @@ export default class HeroSection {
             @keyframes softFadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-5px); blur(1px); } }
             .text-prefix-in { animation: softFadeIn 1.2s ease-out forwards; } .text-quotes-in { animation: softFadeIn 1.2s ease-out 0.3s forwards; } .text-out { animation: softFadeOut 1.2s ease-in forwards; }
             
-            /* Glass Container */
+            /* Glass Container - Cleaner Light Mode Version */
             .unified-icon-container .glass-box {
                 width: 48px; height: 48px;
                 border-radius: 12px;
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.05);
+                background: transparent;
                 display: flex; align-items: center; justify-content: center;
                 transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                overflow: hidden; /* Ensure filtered images don't leak corners */
             }
             
             .unified-icon-container:hover .glass-box {
-                background: rgba(255, 255, 255, 0.15);
+                background: rgba(255, 255, 255, 0.6); /* Milky white hover */
                 transform: translateY(-4px);
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-                border-color: rgba(255, 255, 255, 0.2);
+                box-shadow: 0 10px 20px -5px rgba(100, 116, 139, 0.15); /* Soft blue-grey shadow */
             }
 
-            /* THE FORCED DARK FILTER STRATEGY */
+            /* 1. SVG ICONS: Cool Slate Grey */
+            .icon-wrapper .icon-mask { 
+                width: 32px; height: 32px; 
+                background-color: #64748b; /* Slate-500: Perfect soft grey */
+                -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
+                mask-size: contain; mask-repeat: no-repeat; mask-position: center;
+                transition: all 0.3s ease;
+            }
+            .unified-icon-container:hover .icon-mask { 
+                background-color: #334155; /* Darker Slate on hover */
+            }
+
+            /* 2. BITMAP ICONS: The "Multiply" Magic */
             .icon-bitmap { 
-                width: 28px; height: 28px;
+                width: 36px; height: 36px;
                 object-fit: contain; 
                 /* 
-                   Mandated Logic: 
-                   1. Grayscale: Remove color
-                   2. Invert: White BG -> Black BG (Matches Theme better)
-                   3. Brightness: Dim the result to blend as a silhouette
+                   Light Mode Logic: 
+                   1. Grayscale: Silver/Grey look.
+                   2. Multiply Blend: The Secret Weapon. It makes white pixels transparent 
+                      and dark pixels darker. Perfect for merging white-bg icons onto a light page.
+                   3. Contrast: Pop the logo a bit.
                 */
-                filter: grayscale(100%) invert(1) brightness(0.7); 
-                opacity: 0.9;
+                filter: grayscale(100%) contrast(1.1) opacity(0.85);
+                mix-blend-mode: multiply; 
                 transition: all 0.3s ease;
-                /* Mix Blend Mode: 'multiply' cuts out white, 'screen' cuts out black.
-                   Since we inverted White->Black, 'screen' or 'lighten' would hide background?
-                   User asked for 'multiply', but with invert(1), multiply leads to black box.
-                   Let's stick to the powerful filters first. 
-                */
             }
             
             .unified-icon-container:hover .icon-bitmap { 
-                filter: grayscale(100%) invert(1) brightness(1); /* Brighten on hover */
-                opacity: 1;
+                filter: grayscale(100%) contrast(1.2) opacity(1);
+                transform: scale(1.05);
             }
 
             .text-icon {
                 font-family: 'Noto Serif SC', serif;
-                font-weight: 300; font-size: 20px; color: rgba(255, 255, 255, 0.8);
+                font-weight: 300; font-size: 20px; color: #475569; /* Slate-600 */
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
             }
 
-            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.4); transition: all 0.3s ease; cursor: pointer; }
-            .add-btn:hover { border-color: rgba(255, 255, 255, 0.6); color: rgba(255, 255, 255, 0.8); background: rgba(255, 255, 255, 0.1); }
-            .glass-modal { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8); }
+            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
+            .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
+            
+            /* Modal Light Theme */
+            .glass-modal { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 25px 50px -12px rgba(100, 116, 139, 0.25); }
+            
 
-            .preview-container .glass-box { width: 80px; height: 80px; border-radius: 20px; }
+            .preview-container .glass-box { width: 80px; height: 80px; }
             .preview-container .icon-bitmap { width: 48px; height: 48px; }
-            .preview-container .text-icon { font-size: 32px; }
+            .preview-container .icon-mask { width: 48px; height: 48px; background-color: #475569; }
         `;
         this.element.appendChild(style);
 
         this.element.innerHTML += `
-            <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-40"></canvas>
+            <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
-                <h1 class="text-5xl md:text-7xl font-extralight tracking-[0.2em] mb-8 text-white hero-font-sc opacity-90 drop-shadow-2xl">Catzz</h1>
-                <div class="h-8 flex items-center justify-center text-sm md:text-base text-gray-400 font-light tracking-[0.4em] hero-font-sc">
+                <h1 class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90">Catzz</h1>
+                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-400 font-light tracking-[0.4em] hero-font-sc">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
@@ -116,29 +126,29 @@ export default class HeroSection {
                 </div>
             </div>
             
-            <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 opacity-0 pointer-events-none transition-opacity duration-300">
+            <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="glass-modal w-full max-w-md p-10 rounded-[2rem] transform scale-95 transition-transform duration-300">
-                    <h3 class="text-2xl text-white font-light mb-8 hero-font-sc tracking-wider text-center">Add Shortcut</h3>
+                    <h3 class="text-2xl text-slate-700 font-light mb-8 hero-font-sc tracking-wider text-center">New Shortcut</h3>
                     <div class="flex flex-col items-center justify-center mb-8 h-24">
                         <div id="preview-icon-container" class="preview-container relative w-full flex items-center justify-center">
                             <div class="glass-box">
-                                <span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span>
+                                <span class="text-slate-400 text-[10px] uppercase tracking-widest">Preview</span>
                             </div>
                         </div>
                     </div>
                     <div class="space-y-6">
                          <div class="relative">
-                            <input type="url" id="bm-url" class="w-full bg-slate-800/80 border border-gray-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-blue-400 transition-all placeholder-gray-500 text-sm font-light" placeholder="https://chat.deepseek.com">
-                            <label class="absolute -top-2.5 left-3 bg-slate-900 px-2 text-[10px] text-gray-400 uppercase tracking-widest">Target URL</label>
+                            <input type="url" id="bm-url" class="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-4 text-slate-700 focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400 text-sm font-light" placeholder="https://site.com">
+                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">URL</label>
                         </div>
                         <div class="relative">
-                            <input type="text" id="bm-name" class="w-full bg-slate-800/80 border border-gray-600 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-blue-400 transition-all placeholder-gray-500 text-sm font-light" placeholder="Site Name">
-                            <label class="absolute -top-2.5 left-3 bg-slate-900 px-2 text-[10px] text-gray-400 uppercase tracking-widest">Name</label>
+                            <input type="text" id="bm-name" class="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-4 text-slate-700 focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400 text-sm font-light" placeholder="Name">
+                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">Name</label>
                         </div>
                     </div>
                     <div class="flex gap-4 mt-10">
-                        <button id="close-modal" class="flex-1 py-4 bg-transparent border border-gray-700 text-gray-400 rounded-xl hover:bg-gray-800 transition-colors font-light tracking-widest text-[10px] uppercase">Cancel</button>
-                        <button id="save-bookmark" class="flex-1 py-4 bg-blue-500 text-white rounded-xl transition-all hover:bg-blue-600 shadow-lg font-light tracking-widest text-[10px] uppercase">Keep Shortcut</button>
+                        <button id="close-modal" class="flex-1 py-4 bg-transparent border border-slate-300 text-slate-500 rounded-xl hover:bg-slate-50 transition-colors font-light tracking-widest text-[10px] uppercase">Cancel</button>
+                        <button id="save-bookmark" class="flex-1 py-4 bg-slate-700 text-white rounded-xl transition-all hover:bg-slate-800 shadow-lg font-light tracking-widest text-[10px] uppercase">Save</button>
                     </div>
                 </div>
             </div>
@@ -225,7 +235,8 @@ export default class HeroSection {
 
             link.appendChild(iconRoot);
             const label = document.createElement('span');
-            label.className = "text-[10px] tracking-widest text-gray-500 uppercase font-light group-hover:text-gray-300 transition-colors duration-300 text-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-full";
+            // Simplified label: Font Sans, Slate Color for Light Theme
+            label.className = "text-[10px] text-slate-400 font-sans tracking-wider mt-3 group-hover:text-slate-600 transition-colors duration-300 text-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-full";
             label.textContent = site.name;
             link.appendChild(label);
             item.appendChild(link);
@@ -339,7 +350,7 @@ export default class HeroSection {
         const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
         resize();
         const raindrops = []; const count = 80;
-        class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(168, 183, 204, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
+        class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
         for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
         const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
         animate(); window.addEventListener('resize', resize);
