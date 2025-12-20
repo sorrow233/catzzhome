@@ -24,7 +24,6 @@ export default class HeroSection {
             this.bookmarks = defaultBookmarks;
         }
 
-        // Mapping for Simple Icons
         this.simpleIconsMap = {
             'x.com': 'x', 'twitter.com': 'twitter',
             'mail.google.com': 'gmail', 'chatgpt.com': 'openai',
@@ -45,15 +44,16 @@ export default class HeroSection {
             @keyframes softFadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-5px); blur(1px); } }
             .text-prefix-in { animation: softFadeIn 1.2s ease-out forwards; } .text-quotes-in { animation: softFadeIn 1.2s ease-out 0.3s forwards; } .text-out { animation: softFadeOut 1.2s ease-in forwards; }
             
-            /* Glass Container for ALL Icons */
+            /* Glass Container */
             .unified-icon-container .glass-box {
                 width: 48px; height: 48px;
                 border-radius: 12px;
-                background: rgba(255, 255, 255, 0.05); /* Very subtle glass */
+                background: rgba(255, 255, 255, 0.05);
                 border: 1px solid rgba(255, 255, 255, 0.05);
                 display: flex; align-items: center; justify-content: center;
                 transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                overflow: hidden; /* Ensure filtered images don't leak corners */
             }
             
             .unified-icon-container:hover .glass-box {
@@ -63,24 +63,31 @@ export default class HeroSection {
                 border-color: rgba(255, 255, 255, 0.2);
             }
 
-            /* THE SILVER FILTER STRATEGY */
+            /* THE FORCED DARK FILTER STRATEGY */
             .icon-bitmap { 
-                width: 28px; height: 28px; /* Slightly smaller inside the glass box */
+                width: 28px; height: 28px;
                 object-fit: contain; 
-                /* TURN EVERYTHING TO SILVER */
-                filter: grayscale(100%) brightness(1.5) contrast(1.1);
-                opacity: 0.85;
+                /* 
+                   Mandated Logic: 
+                   1. Grayscale: Remove color
+                   2. Invert: White BG -> Black BG (Matches Theme better)
+                   3. Brightness: Dim the result to blend as a silhouette
+                */
+                filter: grayscale(100%) invert(1) brightness(0.7); 
+                opacity: 0.9;
                 transition: all 0.3s ease;
+                /* Mix Blend Mode: 'multiply' cuts out white, 'screen' cuts out black.
+                   Since we inverted White->Black, 'screen' or 'lighten' would hide background?
+                   User asked for 'multiply', but with invert(1), multiply leads to black box.
+                   Let's stick to the powerful filters first. 
+                */
             }
             
             .unified-icon-container:hover .icon-bitmap { 
-                /* Brighten on hover */
-                filter: grayscale(100%) brightness(2) contrast(1);
+                filter: grayscale(100%) invert(1) brightness(1); /* Brighten on hover */
                 opacity: 1;
-                drop-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
             }
 
-            /* Fallback Text */
             .text-icon {
                 font-family: 'Noto Serif SC', serif;
                 font-weight: 300; font-size: 20px; color: rgba(255, 255, 255, 0.8);
@@ -114,7 +121,6 @@ export default class HeroSection {
                     <h3 class="text-2xl text-white font-light mb-8 hero-font-sc tracking-wider text-center">Add Shortcut</h3>
                     <div class="flex flex-col items-center justify-center mb-8 h-24">
                         <div id="preview-icon-container" class="preview-container relative w-full flex items-center justify-center">
-                            <!-- Preview Injected Here -->
                             <div class="glass-box">
                                 <span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span>
                             </div>
@@ -145,14 +151,8 @@ export default class HeroSection {
         this.initTypewriter();
         this.renderGrid();
         this.initModal();
-        // Remove scroll listener as we are single page now
     }
 
-    // ==========================================
-    // SIMPLIFIED ICON FETCHING LOGIC 
-    // ==========================================
-
-    // Helper to get Simple Icons slug
     getSimpleIconSlug(name, url) {
         let domain = "";
         try { domain = new URL(url).hostname.replace('www.', ''); } catch (e) { }
@@ -162,29 +162,22 @@ export default class HeroSection {
         return slug;
     }
 
-    // Surgical Fetch: Simple Icons -> Google -> Text
     fetchIcon(name, url, container) {
         container.innerHTML = '';
-
-        // Create the Glass Box container
         const glassBox = document.createElement('div');
         glassBox.className = 'glass-box';
         container.appendChild(glassBox);
 
-        // Calculate Candidates
         const slug = this.getSimpleIconSlug(name, url);
         let domain = "";
         try { domain = new URL(url).hostname; } catch (e) { }
 
         const sources = [
-            // 1. Simple Icons (SVG)
             `https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/${slug}.svg`,
-            // 2. Google Favicon API (The "God" API)
             `https://www.google.com/s2/favicons?sz=128&domain=${domain}`
         ];
 
         let attempt = 0;
-
         const showText = () => {
             glassBox.innerHTML = '';
             const textEl = document.createElement('div');
@@ -194,31 +187,24 @@ export default class HeroSection {
         };
 
         const tryNext = () => {
-            if (attempt >= sources.length) {
-                showText();
-                return;
-            }
+            if (attempt >= sources.length) { showText(); return; }
             const src = sources[attempt];
             attempt++;
 
             const img = new Image();
             img.src = src;
             img.onload = () => {
-                // Ignore tiny pixels (Google sometimes returns 1x1 GIF for errors)
-                if (img.width < 5) {
-                    tryNext();
-                } else {
-                    // Success! Application of the Silver Filter happens via CSS class
+                if (img.width < 5) { tryNext(); }
+                else {
                     const realImg = document.createElement('img');
                     realImg.className = 'icon-bitmap';
                     realImg.src = src;
-                    glassBox.innerHTML = ''; // Clear loading/text
+                    glassBox.innerHTML = '';
                     glassBox.appendChild(realImg);
                 }
             };
             img.onerror = () => tryNext();
         };
-
         tryNext();
     }
 
@@ -229,7 +215,7 @@ export default class HeroSection {
             const item = document.createElement('div');
             item.className = 'unified-icon-container flex flex-col items-center gap-4 group w-24 cursor-pointer relative';
             const iconRoot = document.createElement('div');
-            iconRoot.className = 'relative w-[48px] h-[48px] flex items-center justify-center'; // Wrapper for sizing
+            iconRoot.className = 'relative w-[48px] h-[48px] flex items-center justify-center'; // Wrapper
 
             const link = document.createElement('a');
             link.href = site.url; link.target = "_blank"; link.rel = "noopener noreferrer";
@@ -244,7 +230,6 @@ export default class HeroSection {
             link.appendChild(label);
             item.appendChild(link);
 
-            // Delete Button
             const deleteBtn = document.createElement('button');
             deleteBtn.className = "absolute -top-1 -right-1 bg-white/10 hover:bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-all backdrop-blur-md";
             deleteBtn.innerHTML = "&times;";
@@ -292,7 +277,6 @@ export default class HeroSection {
             modal.classList.add('opacity-0', 'pointer-events-none');
             modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
             nameInput.value = ''; urlInput.value = '';
-            // Reset Preview
             previewContainer.innerHTML = '<div class="glass-box"><span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span></div>';
         };
 
