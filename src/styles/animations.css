@@ -1,0 +1,38 @@
+/* Base animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 
+   Note: Specific complex animations for Hero (melancholyFadeInPrefix, etc.) 
+   are currently injected directly by HeroSection.js to ensure self-contained portability 
+   and strict adherence to the legacy code provided by the user.
+   
+   Shared/Global utilities can go here.
+*/
+
+.animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease-out forwards;
+}
