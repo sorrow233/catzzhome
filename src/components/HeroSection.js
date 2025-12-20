@@ -55,7 +55,8 @@ export default class HeroSection {
         this.element = document.createElement('section');
         // Base classes
         // Base classes - Lifted up (pt-24 md:pt-36)
-        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-24 md:pt-36 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
+        // Base classes - Lifted up (pt-24 md:pt-36)
+        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
 
         // Initial Background State
         if (this.currentBg) {
@@ -141,16 +142,16 @@ export default class HeroSection {
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <!-- CLICKABLE TITLE -->
-                <h1 id="hero-title" class="text-5xl md:text-7xl font-light tracking-[0.2em] mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
+                <h1 id="hero-title" class="text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
                 
                 <!-- CLOUD BUTTON -->
-                <div id="cloud-btn" class="absolute top-6 right-6 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
+                <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
                 </div>
 
                 
                 <!-- GUIDE TOOLTIP -->
-                <div id="theme-guide" class="hidden absolute top-14 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
+                <div id="theme-guide" class="hidden absolute top-12 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
                     <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">
                         Click 'Catzz' to switch theme
                     </div>
@@ -160,8 +161,8 @@ export default class HeroSection {
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
-                <div class="mt-20 w-full max-w-3xl">
-                     <div id="bookmark-grid" class="flex flex-wrap justify-center gap-y-12 gap-x-8 md:gap-x-12 px-4 opacity-0 animate-[softFadeIn_1s_ease-out_0.8s_forwards]"></div>
+                <div class="mt-12 md:mt-20 w-full max-w-3xl">
+                     <div id="bookmark-grid" class="flex flex-wrap justify-center gap-y-8 gap-x-4 md:gap-y-12 md:gap-x-12 px-4 opacity-0 animate-[softFadeIn_1s_ease-out_0.8s_forwards]"></div>
                 </div>
             </div>
             
@@ -389,7 +390,7 @@ export default class HeroSection {
         grid.innerHTML = '';
         this.bookmarks.forEach((site, index) => {
             const item = document.createElement('div');
-            item.className = 'unified-icon-container flex flex-col items-center gap-4 group w-24 cursor-pointer relative';
+            item.className = 'unified-icon-container flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer relative';
             const iconRoot = document.createElement('div');
             iconRoot.className = 'relative w-[48px] h-[48px] flex items-center justify-center'; // Wrapper
 
@@ -417,7 +418,7 @@ export default class HeroSection {
         });
 
         const addBtn = document.createElement('div');
-        addBtn.className = 'flex flex-col items-center gap-4 group w-24 cursor-pointer';
+        addBtn.className = 'flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer';
         addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light group-hover:text-gray-400 transition-colors">Add</span>`;
         addBtn.addEventListener('click', () => this.openModal());
         grid.appendChild(addBtn);
