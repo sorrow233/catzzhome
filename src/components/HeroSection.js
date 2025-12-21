@@ -21,13 +21,14 @@ export default class HeroSection {
                 name: 'Rainy Window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
                 theme: {
-                    textColor: "text-white/90",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
-                    glassColor: "bg-slate-900/40",
-                    glassBorder: "border-white/10",
-                    iconColor: "#ffffff",
-                    iconHoverColor: "#e2e8f0",
-                    quoteColor: "text-slate-200/80"
+                    textColor: "text-cyan-50",
+                    textShadow: "drop-shadow-[0_2px_15px_rgba(34,211,238,0.3)]",
+                    glassColor: "bg-cyan-950/40",
+                    glassBorder: "border-cyan-200/20",
+                    iconColor: "#a5f3fc", // Cyan-200
+                    iconHoverColor: "#22d3ee", // Cyan-400 (Neon)
+                    glowColor: "rgba(34, 211, 238, 0.4)",
+                    quoteColor: "text-cyan-100/80"
                 }
             },
             {
@@ -35,13 +36,14 @@ export default class HeroSection {
                 name: 'Wet Street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
                 theme: {
-                    textColor: "text-white",
-                    textShadow: "drop-shadow-[0_3px_6px_rgba(0,0,0,0.95)]",
-                    glassColor: "bg-slate-900/60",
-                    glassBorder: "border-white/15",
-                    iconColor: "#ffffff",
-                    iconHoverColor: "#f1f5f9",
-                    quoteColor: "text-white/90"
+                    textColor: "text-indigo-50",
+                    textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
+                    glassColor: "bg-slate-900/70", // Deep dark for contrast
+                    glassBorder: "border-indigo-200/10",
+                    iconColor: "#e0e7ff", // Indigo-100
+                    iconHoverColor: "#818cf8", // Indigo-400
+                    glowColor: "rgba(129, 140, 248, 0.4)",
+                    quoteColor: "text-indigo-100/80"
                 }
             },
             {
@@ -50,11 +52,12 @@ export default class HeroSection {
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
                 theme: {
                     textColor: "text-amber-50",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]",
-                    glassColor: "bg-neutral-900/65",
+                    textShadow: "drop-shadow-[0_2px_15px_rgba(251,191,36,0.3)]",
+                    glassColor: "bg-neutral-900/60",
                     glassBorder: "border-amber-500/20",
-                    iconColor: "#fcd34d",
-                    iconHoverColor: "#fffbeb",
+                    iconColor: "#fcd34d", // Amber-300
+                    iconHoverColor: "#fbbf24", // Amber-400 (Lamp light)
+                    glowColor: "rgba(251, 191, 36, 0.4)",
                     quoteColor: "text-amber-100/90"
                 }
             },
@@ -63,13 +66,14 @@ export default class HeroSection {
                 name: 'Umbrella Street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 theme: {
-                    textColor: "text-white/90",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-slate-900/50",
-                    glassBorder: "border-white/15",
-                    iconColor: "#f8fafc",
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-100"
+                    textColor: "text-fuchsia-50",
+                    textShadow: "drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]",
+                    glassColor: "bg-gray-900/40",
+                    glassBorder: "border-fuchsia-200/10",
+                    iconColor: "#e879f9", // Fuchsia-400
+                    iconHoverColor: "#d946ef", // Fuchsia-500
+                    glowColor: "rgba(217, 70, 239, 0.4)",
+                    quoteColor: "text-fuchsia-100/90"
                 }
             },
             {
@@ -77,13 +81,14 @@ export default class HeroSection {
                 name: 'Flower Window',
                 url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
                 theme: {
-                    textColor: "text-white/90",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-black/55",
-                    glassBorder: "border-white/10",
-                    iconColor: "#f8fafc",
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-200/90"
+                    textColor: "text-emerald-50",
+                    textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
+                    glassColor: "bg-emerald-950/40",
+                    glassBorder: "border-emerald-200/15",
+                    iconColor: "#6ee7b7", // Emerald-300
+                    iconHoverColor: "#34d399", // Emerald-400
+                    glowColor: "rgba(52, 211, 153, 0.4)",
+                    quoteColor: "text-emerald-100/90"
                 }
             },
             {
@@ -92,11 +97,12 @@ export default class HeroSection {
                 url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
                 theme: {
                     textColor: "text-slate-50",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
-                    glassColor: "bg-slate-900/40",
-                    glassBorder: "border-white/20",
-                    iconColor: "#e2e8f0",
+                    textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.6)]",
+                    glassColor: "bg-slate-800/30",
+                    glassBorder: "border-slate-200/20",
+                    iconColor: "#cbd5e1", // Slate-300
                     iconHoverColor: "#ffffff",
+                    glowColor: "rgba(255, 255, 255, 0.4)",
                     quoteColor: "text-slate-200/80"
                 }
             },
@@ -106,11 +112,12 @@ export default class HeroSection {
                 url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
                 theme: {
                     textColor: "text-orange-50",
-                    textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.85)]",
-                    glassColor: "bg-orange-950/50",
+                    textShadow: "drop-shadow-[0_2px_15px_rgba(251,146,60,0.4)]",
+                    glassColor: "bg-orange-950/40",
                     glassBorder: "border-orange-200/20",
-                    iconColor: "#fdba74",
-                    iconHoverColor: "#ffedd5",
+                    iconColor: "#fdba74", // Orange-300
+                    iconHoverColor: "#fb923c", // Orange-400
+                    glowColor: "rgba(251, 146, 60, 0.5)",
                     quoteColor: "text-orange-100"
                 }
             },
@@ -120,11 +127,12 @@ export default class HeroSection {
                 url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg",
                 theme: {
                     textColor: "text-blue-50",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-slate-950/45",
-                    glassBorder: "border-blue-200/10",
-                    iconColor: "#bfdbfe",
-                    iconHoverColor: "#dbeafe",
+                    textShadow: "drop-shadow-[0_2px_15px_rgba(96,165,250,0.5)]",
+                    glassColor: "bg-blue-950/50",
+                    glassBorder: "border-blue-400/20",
+                    iconColor: "#93c5fd", // Blue-300
+                    iconHoverColor: "#60a5fa", // Blue-400
+                    glowColor: "rgba(96, 165, 250, 0.6)", // Strong blue glow
                     quoteColor: "text-blue-100/90"
                 }
             }
@@ -162,6 +170,7 @@ export default class HeroSection {
             glassBorder: "border-white/40",
             iconColor: "#64748b",
             iconHoverColor: "#334155",
+            glowColor: "rgba(0, 0, 0, 0.1)",
             quoteColor: "text-slate-500"
         };
     }
@@ -289,7 +298,9 @@ export default class HeroSection {
             
             .unified-icon-container:hover .glass-box {
                 transform: translateY(-4px);
-                box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 10px 25px -5px \${theme.glowColor || 'rgba(0,0,0,0.15)'}, 
+                            0 0 15px -2px \${theme.glowColor || 'rgba(0,0,0,0.1)'} inset;
+                border-color: \${theme.iconHoverColor}40;
             }
 
             /* 1. SVG ICONS: Dynamic Color */
