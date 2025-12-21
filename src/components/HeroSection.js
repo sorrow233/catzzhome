@@ -357,8 +357,6 @@ export default class HeroSection {
                             this.toggleGradient(theme === 'dark' && this.cinematicMode);
 
                             changed = true;
-
-                            changed = true;
                         }
                         if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
                             this.bookmarks = data.bookmarks;
