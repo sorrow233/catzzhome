@@ -19,15 +19,63 @@ export default class HeroSection {
             { name: "Claude", url: "https://claude.ai" }
         ];
 
-        this.bgImages = [
-            "https://blog.catzz.work/file/1766242722856_image.png",
-            "https://blog.catzz.work/file/1766242726260_image.png",
-            "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
-            "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
-            "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
-            "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
-            "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
-            "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg"
+        this.wallpapers = [
+            {
+                id: 'rainy_window',
+                url: "https://blog.catzz.work/file/1766242722856_image.png",
+                theme: {
+                    textColor: "text-slate-100",
+                    textShadow: "drop-shadow-md",
+                    glassColor: "bg-black/30",
+                    glassBorder: "border-white/10",
+                    iconColor: "#cbd5e1", // Slate-300
+                    iconHoverColor: "#f1f5f9", // Slate-100
+                    quoteColor: "text-slate-300"
+                }
+            },
+            {
+                id: 'wet_street',
+                url: "https://blog.catzz.work/file/1766242726260_image.png",
+                theme: {
+                    textColor: "text-slate-800",
+                    textShadow: "",
+                    glassColor: "bg-white/40",
+                    glassBorder: "border-white/40",
+                    iconColor: "#475569", // Slate-600
+                    iconHoverColor: "#1e293b", // Slate-800
+                    quoteColor: "text-slate-600"
+                }
+            },
+            {
+                id: 'city_bed',
+                url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
+                theme: {
+                    textColor: "text-orange-50",
+                    textShadow: "drop-shadow-lg",
+                    glassColor: "bg-orange-950/30",
+                    glassBorder: "border-orange-200/20",
+                    iconColor: "#fdba74", // Orange-300
+                    iconHoverColor: "#ffedd5", // Orange-100
+                    quoteColor: "text-orange-200/80"
+                }
+            },
+            {
+                id: 'umbrella_street',
+                url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
+                theme: {
+                    textColor: "text-slate-900",
+                    textShadow: "shadow-none",
+                    glassColor: "bg-white/60",
+                    glassBorder: "border-slate-200/50",
+                    iconColor: "#334155", // Slate-700
+                    iconHoverColor: "#0f172a", // Slate-900
+                    quoteColor: "text-slate-600"
+                }
+            },
+            { id: 'wp5', url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } },
+            { id: 'wp6', url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } },
+            { id: 'wp7', url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } },
+            { id: 'wp8', url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } }
         ];
 
         // Load Saved Data
@@ -36,10 +84,10 @@ export default class HeroSection {
             this.bookmarks = saved ? JSON.parse(saved) : defaultBookmarks;
 
             // Background
-            this.currentBg = localStorage.getItem('catzz_bg') || "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg";
+            this.currentBg = localStorage.getItem('catzz_bg') || this.wallpapers[3].url;
         } catch (e) {
             this.bookmarks = defaultBookmarks;
-            this.currentBg = "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg";
+            this.currentBg = this.wallpapers[3].url;
         }
 
         this.simpleIconsMap = {
@@ -51,108 +99,48 @@ export default class HeroSection {
         };
     }
 
+    getCurrentTheme() {
+        const wp = this.wallpapers.find(w => w.url === this.currentBg);
+        return wp ? wp.theme : {
+            textColor: "text-slate-700",
+            textShadow: "",
+            glassColor: "bg-white/40",
+            glassBorder: "border-white/40",
+            iconColor: "#64748b",
+            iconHoverColor: "#334155",
+            quoteColor: "text-slate-500"
+        };
+    }
+
     render() {
+        const theme = this.getCurrentTheme();
+
         this.element = document.createElement('section');
-        // Base classes
-        // Base classes - Lifted up (pt-24 md:pt-36)
-        // Base classes - Lifted up (pt-24 md:pt-36)
         this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
 
         // Initial Background State
         if (this.currentBg) {
             this.element.style.backgroundImage = `url('${this.currentBg}')`;
         } else {
-            // Fallback gradient if no image selected
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
 
         const style = document.createElement('style');
-        style.textContent = `
-            .hero-font-sc { font-family: 'Noto Serif SC', serif; }
-            @keyframes softFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-            @keyframes softFadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-5px); blur(1px); } }
-            .text-prefix-in { animation: softFadeIn 1.2s ease-out forwards; } .text-quotes-in { animation: softFadeIn 1.2s ease-out 0.3s forwards; } .text-out { animation: softFadeOut 1.2s ease-in forwards; }
-            
-            /* Glass Container - Cleaner Light Mode Version */
-            .unified-icon-container .glass-box {
-                width: 48px; height: 48px;
-                border-radius: 12px;
-                background: transparent;
-                display: flex; align-items: center; justify-content: center;
-                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            }
-            
-            .unified-icon-container:hover .glass-box {
-                background: rgba(255, 255, 255, 0.6); /* Milky white hover */
-                transform: translateY(-4px);
-                box-shadow: 0 10px 20px -5px rgba(100, 116, 139, 0.15); /* Soft blue-grey shadow */
-            }
-
-            /* 1. SVG ICONS: Cool Slate Grey */
-            .icon-wrapper .icon-mask { 
-                width: 32px; height: 32px; 
-                background-color: #64748b; /* Slate-500: Perfect soft grey */
-                -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
-                mask-size: contain; mask-repeat: no-repeat; mask-position: center;
-                transition: all 0.3s ease;
-            }
-            .unified-icon-container:hover .icon-mask { 
-                background-color: #334155; /* Darker Slate on hover */
-            }
-
-            /* 2. BITMAP ICONS: The "Multiply" Magic */
-            .icon-bitmap { 
-                width: 36px; height: 36px;
-                object-fit: contain; 
-                filter: grayscale(100%) contrast(1.1) opacity(0.85);
-                mix-blend-mode: multiply; 
-                transition: all 0.3s ease;
-            }
-            
-            .unified-icon-container:hover .icon-bitmap { 
-                filter: grayscale(100%) contrast(1.2) opacity(1);
-                transform: scale(1.05);
-            }
-
-            .text-icon {
-                font-family: 'Noto Serif SC', serif;
-                font-weight: 300; font-size: 20px; color: #475569; /* Slate-600 */
-                border: 1px solid #cbd5e1;
-                border-radius: 8px;
-            }
-
-            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
-            .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
-            
-            /* Modal Light Theme */
-            .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -15px rgba(100, 116, 139, 0.25); }
-            
-            .bg-thumb { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: 2px solid transparent; }
-            .bg-thumb:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-            .bg-thumb.active { border-color: #64748b; transform: scale(0.95); }
-
-            .preview-container .glass-box { width: 80px; height: 80px; }
-            .preview-container .icon-bitmap { width: 48px; height: 48px; }
-            .preview-container .icon-mask { width: 48px; height: 48px; background-color: #475569; }
-
-            /* Delayed Delete Button */
-            .delayed-delete-btn { opacity: 0; transition: opacity 0.3s ease 0s; pointer-events: none; }
-            .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 2s; pointer-events: auto; }
-        `;
+        this.styleElement = style;
+        this.updateDynamicStyles(theme);
         this.element.appendChild(style);
 
         this.element.innerHTML += `
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <!-- CLICKABLE TITLE -->
-                <h1 id="hero-title" class="text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 text-slate-700 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-opacity" title="Change Theme">Catzz</h1>
+                <h1 id="hero-title" class="text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-all duration-500 ${theme.textColor} ${theme.textShadow}" title="Change Theme">Catzz</h1>
                 
                 <!-- CLOUD BUTTON -->
                 <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
                 </div>
 
-                
                 <!-- GUIDE TOOLTIP -->
                 <div id="theme-guide" class="hidden absolute top-12 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
                     <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">
@@ -160,7 +148,7 @@ export default class HeroSection {
                     </div>
                 </div>
 
-                <div class="h-8 flex items-center justify-center text-sm md:text-base text-slate-500 font-light tracking-[0.4em] hero-font-sc rounded-full">
+                <div class="h-8 flex items-center justify-center text-sm md:text-base font-light tracking-[0.4em] hero-font-sc rounded-full transition-colors duration-500 quote-container">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
@@ -208,7 +196,97 @@ export default class HeroSection {
                 </div>
             </div>
         `;
+
+        setTimeout(() => this.applyThemeToElements(theme), 0);
         return this.element;
+    }
+
+    updateDynamicStyles(theme) {
+        if (!this.styleElement) return;
+        this.styleElement.textContent = `
+            .hero-font-sc { font-family: 'Noto Serif SC', serif; }
+            @keyframes softFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+            @keyframes softFadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-5px); blur(1px); } }
+            .text-prefix-in { animation: softFadeIn 1.2s ease-out forwards; } .text-quotes-in { animation: softFadeIn 1.2s ease-out 0.3s forwards; } .text-out { animation: softFadeOut 1.2s ease-in forwards; }
+            
+            /* Glass Container - Dynamic */
+            .unified-icon-container .glass-box {
+                width: 48px; height: 48px;
+                border-radius: 12px;
+                display: flex; align-items: center; justify-content: center;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+            
+            .unified-icon-container:hover .glass-box {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.15);
+            }
+
+            /* 1. SVG ICONS: Dynamic Color */
+            .icon-wrapper .icon-mask { 
+                width: 32px; height: 32px; 
+                background-color: \${theme.iconColor || '#64748b'};
+                -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
+                mask-size: contain; mask-repeat: no-repeat; mask-position: center;
+                transition: all 0.3s ease;
+            }
+            .unified-icon-container:hover .icon-mask { 
+                background-color: \${theme.iconHoverColor || '#334155'};
+            }
+
+            /* 2. BITMAP ICONS */
+            .icon-bitmap { 
+                width: 36px; height: 36px;
+                object-fit: contain; 
+                filter: grayscale(100%) contrast(1.1) opacity(0.85);
+                mix-blend-mode: multiply; 
+                transition: all 0.3s ease;
+            }
+            
+            .unified-icon-container:hover .icon-bitmap { 
+                filter: grayscale(100%) contrast(1.2) opacity(1);
+                transform: scale(1.05);
+            }
+
+            .text-icon {
+                font-family: 'Noto Serif SC', serif;
+                font-weight: 300; font-size: 20px; 
+                color: \${theme.iconColor || '#64748b'};
+                border: 1px solid \${theme.iconColor ? theme.iconColor + '40' : '#cbd5e1'};
+                border-radius: 8px;
+            }
+
+            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
+            .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
+            
+            /* Modal Light Theme */
+            .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -15px rgba(100, 116, 139, 0.25); }
+            
+            .bg-thumb { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: 2px solid transparent; }
+            .bg-thumb:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+            .bg-thumb.active { border-color: #64748b; transform: scale(0.95); }
+
+            .preview-container .glass-box { width: 80px; height: 80px; }
+            .preview-container .icon-bitmap { width: 48px; height: 48px; }
+            .preview-container .icon-mask { width: 48px; height: 48px; background-color: #475569; }
+
+            /* Delayed Delete Button */
+            .delayed-delete-btn { opacity: 0; transition: opacity 0.3s ease 0s; pointer-events: none; }
+            .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 2s; pointer-events: auto; }
+        `;
+    }
+
+    applyThemeToElements(theme) {
+        const title = this.element.querySelector('#hero-title');
+        if (title) {
+            title.className = `text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-all duration-500 \${theme.textColor} \${theme.textShadow || ''}`;
+        }
+
+        const quoteContainer = this.element.querySelector('.quote-container');
+        if (quoteContainer) {
+            quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base font-light tracking-[0.4em] hero-font-sc rounded-full transition-colors duration-500 quote-container \${theme.quoteColor || 'text-slate-500'}`;
+        }
+        this.renderGrid();
     }
 
     mount() {
@@ -241,6 +319,11 @@ export default class HeroSection {
                             this.element.style.backgroundImage = `url('${data.bg}')`;
                             this.element.classList.remove('bg-gradient-to-b');
                             localStorage.setItem('catzz_bg', data.bg);
+
+                            const theme = this.getCurrentTheme();
+                            this.updateDynamicStyles(theme);
+                            this.applyThemeToElements(theme);
+
                             changed = true;
                         }
                         if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
@@ -290,17 +373,23 @@ export default class HeroSection {
         const grid = modal.querySelector('.grid');
 
         // Populate Grid
-        this.bgImages.forEach(src => {
+        this.wallpapers.forEach(wp => {
             const thumb = document.createElement('div');
-            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === src ? 'active' : ''}`;
-            thumb.style.backgroundImage = `url('${src}')`;
+            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === wp.url ? 'active' : ''}`;
+            thumb.style.backgroundImage = `url('${wp.url}')`;
+            thumb.title = wp.id;
             thumb.addEventListener('click', () => {
-                this.currentBg = src;
-                this.element.style.backgroundImage = `url('${src}')`;
+                this.currentBg = wp.url;
+                this.element.style.backgroundImage = `url('${wp.url}')`;
                 this.element.classList.remove('bg-gradient-to-b');
 
-                localStorage.setItem('catzz_bg', src);
-                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: src });
+                // Apply Theme
+                const theme = this.getCurrentTheme();
+                this.updateDynamicStyles(theme);
+                this.applyThemeToElements(theme);
+
+                localStorage.setItem('catzz_bg', wp.url);
+                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: wp.url });
                 closeModal();
 
                 // Update Active State
@@ -342,10 +431,14 @@ export default class HeroSection {
         return slug;
     }
 
-    fetchIcon(name, url, container) {
+    fetchIcon(name, url, container, theme) {
         container.innerHTML = '';
         const glassBox = document.createElement('div');
-        glassBox.className = 'glass-box';
+        // Apply Dynamic Theme Classes
+        const glassClass = theme && theme.glassColor ? theme.glassColor : 'bg-white/40';
+        const borderClass = theme && theme.glassBorder ? theme.glassBorder : '';
+
+        glassBox.className = `glass-box ${glassClass} ${borderClass} border`;
         container.appendChild(glassBox);
 
         const slug = this.getSimpleIconSlug(name, url);
@@ -390,6 +483,10 @@ export default class HeroSection {
 
     renderGrid() {
         const grid = this.element.querySelector('#bookmark-grid');
+        /* istanbul ignore next */
+        if (!grid) return;
+
+        const theme = this.getCurrentTheme();
         grid.innerHTML = '';
         this.bookmarks.forEach((site, index) => {
             const item = document.createElement('div');
@@ -401,12 +498,14 @@ export default class HeroSection {
             link.href = site.url; link.target = "_blank"; link.rel = "noopener noreferrer";
             link.className = "flex flex-col items-center gap-3 w-full";
 
-            this.fetchIcon(site.name, site.url, iconRoot);
+            this.fetchIcon(site.name, site.url, iconRoot, theme);
 
             link.appendChild(iconRoot);
             const label = document.createElement('span');
-            // Simplified label: Font Sans, Slate Color for Light Theme
-            label.className = "text-[10px] text-slate-400 font-sans tracking-wider mt-3 group-hover:text-slate-600 transition-colors duration-300 text-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-full";
+
+            const labelColor = theme && theme.quoteColor ? theme.quoteColor : "text-slate-400";
+
+            label.className = `text-[10px] font-sans tracking-wider mt-3 group-hover:text-opacity-100 text-opacity-80 transition-colors duration-300 text-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${labelColor}`;
             label.textContent = site.name;
             link.appendChild(label);
             item.appendChild(link);
