@@ -778,7 +778,11 @@ export default class HeroSection {
         localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
         if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
     }
-    deleteBookmark(index) { if (confirm('Remove shortcut?')) { this.bookmarks.splice(index, 1); this.saveBookmarks(); this.renderGrid(); } }
+    deleteBookmark(index) {
+        this.bookmarks.splice(index, 1);
+        this.saveBookmarks();
+        this.renderGrid();
+    }
 
     initTypewriter() {
         const prefix = this.element.querySelector('.prefix'); const typedQuotes = this.element.querySelector('.typed-quotes');
