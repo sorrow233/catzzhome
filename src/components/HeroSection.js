@@ -7,7 +7,6 @@ export default class HeroSection {
         this.currentIndex = 0;
 
         const defaultBookmarks = [
-            { name: "GitHub", url: "https://github.com" },
             { name: "Bilibili", url: "https://www.bilibili.com" },
             { name: "YouTube", url: "https://www.youtube.com" },
             { name: "Twitter", url: "https://x.com" },
@@ -144,7 +143,7 @@ export default class HeroSection {
             this.bookmarks = saved ? JSON.parse(saved) : defaultBookmarks;
 
             // Background
-            this.currentBg = localStorage.getItem('catzz_bg') || this.wallpapers[3].url;
+            this.currentBg = localStorage.getItem('catzz_bg') || this.wallpapers[4].url;
 
             // Current Cinematic Prefs (Map: URL -> Boolean)
             try {
