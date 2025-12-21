@@ -24,52 +24,52 @@ export default class HeroSection {
                 id: 'rainy_window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
                 theme: {
-                    textColor: "text-blue-50/90",
-                    textShadow: "drop-shadow-md",
-                    glassColor: "bg-slate-950/30",
-                    glassBorder: "border-slate-700/30",
-                    iconColor: "#cbd5e1", // Slate-300
-                    iconHoverColor: "#bfdbfe", // Blue-200
-                    quoteColor: "text-slate-300"
+                    textColor: "text-white",
+                    textShadow: "drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]", // Strong shadow for readability
+                    glassColor: "bg-slate-950/40", // Darker glass for contrast against bright rain streaks
+                    glassBorder: "border-white/10",
+                    iconColor: "#e2e8f0", // Slate-200 (Very Light Grey)
+                    iconHoverColor: "#ffffff", // White
+                    quoteColor: "text-slate-200"
                 }
             },
             {
                 id: 'wet_street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
                 theme: {
-                    textColor: "text-indigo-50/90",
+                    textColor: "text-indigo-950", // Dark text for light/reflective street
                     textShadow: "drop-shadow-sm",
-                    glassColor: "bg-slate-900/40",
-                    glassBorder: "border-indigo-200/10",
-                    iconColor: "#c7d2fe", // Indigo-200
-                    iconHoverColor: "#e0e7ff", // Indigo-100
-                    quoteColor: "text-indigo-200/80"
+                    glassColor: "bg-white/60", // Much milkier white glass
+                    glassBorder: "border-indigo-200/50",
+                    iconColor: "#312e81", // Indigo-900 (Dark)
+                    iconHoverColor: "#1e1b4b", // Indigo-950
+                    quoteColor: "text-indigo-900"
                 }
             },
             {
                 id: 'city_bed',
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
                 theme: {
-                    textColor: "text-amber-50/95",
-                    textShadow: "drop-shadow-lg",
-                    glassColor: "bg-orange-950/20",
+                    textColor: "text-orange-50",
+                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]",
+                    glassColor: "bg-black/40", // Dark glass to make orange icons pop
                     glassBorder: "border-orange-200/20",
-                    iconColor: "#fde68a", // Amber-200
-                    iconHoverColor: "#fef3c7", // Amber-100
-                    quoteColor: "text-amber-200/80"
+                    iconColor: "#fbbf24", // Amber-400 (Bright Gold)
+                    iconHoverColor: "#fcd34d", // Amber-300
+                    quoteColor: "text-orange-100/90"
                 }
             },
             {
                 id: 'umbrella_street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 theme: {
-                    textColor: "text-slate-100",
-                    textShadow: "shadow-none",
-                    glassColor: "bg-white/10",
+                    textColor: "text-white",
+                    textShadow: "drop-shadow-lg",
+                    glassColor: "bg-white/10", // Frosted look
                     glassBorder: "border-white/20",
-                    iconColor: "#e2e8f0", // Slate-200
-                    iconHoverColor: "#f8fafc", // Slate-50
-                    quoteColor: "text-slate-300"
+                    iconColor: "#f1f5f9", // Slate-100
+                    iconHoverColor: "#ffffff",
+                    quoteColor: "text-slate-200"
                 }
             },
             { id: 'wp5', url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } },
