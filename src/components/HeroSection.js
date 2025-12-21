@@ -21,20 +21,22 @@ export default class HeroSection {
 
         this.wallpapers = [
             {
-                id: 'rainy_window', // Wallpaper 1: Girl sitting on curb (User: "Fonts invisible" -> Fixed with High Contrast)
+                id: 'rainy_window',
+                name: 'Rainy Window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
                 theme: {
                     textColor: "text-white",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,1)]", // Strongest shadow
-                    glassColor: "bg-slate-900/50", // Darker backing to pop text
+                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,1)]",
+                    glassColor: "bg-slate-900/50",
                     glassBorder: "border-white/10",
                     iconColor: "#ffffff",
-                    iconHoverColor: "#bae6fd", // Light Blue hover
+                    iconHoverColor: "#bae6fd",
                     quoteColor: "text-slate-100"
                 }
             },
             {
                 id: 'wet_street',
+                name: 'Wet Street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
                 theme: {
                     textColor: "text-indigo-950",
@@ -47,12 +49,13 @@ export default class HeroSection {
                 }
             },
             {
-                id: 'city_bed', // Wallpaper 3: Girl on bed (User: "Messy, not modern" -> Fixed with Obsidian Look)
+                id: 'city_bed',
+                name: 'City Bed',
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
                 theme: {
                     textColor: "text-amber-50",
                     textShadow: "drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]",
-                    glassColor: "bg-neutral-900/70", // High opacity "Modern/Obsidian" look
+                    glassColor: "bg-neutral-900/70",
                     glassBorder: "border-amber-500/20",
                     iconColor: "#fcd34d",
                     iconHoverColor: "#fffbeb",
@@ -61,6 +64,7 @@ export default class HeroSection {
             },
             {
                 id: 'umbrella_street',
+                name: 'Umbrella Street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 theme: {
                     textColor: "text-white",
@@ -73,12 +77,13 @@ export default class HeroSection {
                 }
             },
             {
-                id: 'flower_window', // Moved to 5th position
+                id: 'flower_window',
+                name: 'Flower Window',
                 url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
                 theme: {
                     textColor: "text-white",
                     textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-black/60", // Heavy dark glass for visibility
+                    glassColor: "bg-black/60",
                     glassBorder: "border-white/10",
                     iconColor: "#f8fafc",
                     iconHoverColor: "#ffffff",
@@ -86,20 +91,8 @@ export default class HeroSection {
                 }
             },
             {
-                id: 'flower_window',
-                url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
-                theme: {
-                    textColor: "text-pink-50",
-                    textShadow: "drop-shadow-md",
-                    glassColor: "bg-red-950/30",
-                    glassBorder: "border-pink-200/10",
-                    iconColor: "#fbcfe8",
-                    iconHoverColor: "#fce7f3",
-                    quoteColor: "text-pink-100/90"
-                }
-            },
-            {
                 id: 'white_shirt_girl',
+                name: 'White Shirt Girl',
                 url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
                 theme: {
                     textColor: "text-slate-50",
@@ -113,6 +106,7 @@ export default class HeroSection {
             },
             {
                 id: 'sunset_balcony',
+                name: 'Sunset Balcony',
                 url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
                 theme: {
                     textColor: "text-orange-50",
@@ -126,6 +120,7 @@ export default class HeroSection {
             },
             {
                 id: 'night_view',
+                name: 'Night View',
                 url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg",
                 theme: {
                     textColor: "text-blue-50",
@@ -438,7 +433,7 @@ export default class HeroSection {
             const thumb = document.createElement('div');
             thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === wp.url ? 'active' : ''}`;
             thumb.style.backgroundImage = `url('${wp.url}')`;
-            thumb.title = wp.id;
+            thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
                 this.currentBg = wp.url;
                 this.element.style.backgroundImage = `url('${wp.url}')`;
