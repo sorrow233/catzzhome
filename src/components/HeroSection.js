@@ -362,6 +362,17 @@ export default class HeroSection {
                 mix-blend-mode: normal;
             }
 
+            .avatar-themed {
+                filter: grayscale(100%) brightness(1.1) opacity(0.8);
+                mix-blend-mode: luminosity;
+                transition: all 0.5s ease;
+            }
+            
+            #cloud-btn:hover .avatar-themed {
+                filter: grayscale(0%) brightness(1) opacity(1);
+                mix-blend-mode: normal;
+            }
+
             .text-icon {
                 font-family: 'Noto Serif SC', serif;
                 font-weight: 300; font-size: 20px; 
@@ -396,9 +407,20 @@ export default class HeroSection {
             title.className = `text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 \${theme.textColor} \${theme.textShadow || ''}`;
         }
 
-        const quoteContainer = this.element.querySelector('.quote-container');
         if (quoteContainer) {
-            quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container \${theme.quoteColor || 'text-slate-500'}`;
+            quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container ${theme.quoteColor || 'text-slate-500'}`;
+        }
+
+        const cloudBtn = this.element.querySelector('#cloud-btn');
+        if (cloudBtn) {
+            const glassClass = theme.glassColor || 'bg-white/40';
+            const borderClass = theme.glassBorder || 'border-white/20';
+            cloudBtn.className = `absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer transition-all ${glassClass} ${borderClass} border backdrop-blur-md`;
+
+            const svg = cloudBtn.querySelector('svg');
+            if (svg) {
+                svg.style.color = theme.iconColor || '#64748b';
+            }
         }
         this.renderGrid();
     }
