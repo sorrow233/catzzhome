@@ -734,117 +734,111 @@ export default class HeroSection {
         const urlInput = this.element.querySelector('#bm-url');
         const previewContainer = this.element.querySelector('#preview-icon-container');
 
-        modalContent.classList.add('scale-100');
-        urlInput.focus();
-    };
-
         this.openModal = (index = -1, bookmark = null) => {
-    this.editingIndex = index;
-    modal.classList.remove('opacity-0', 'pointer-events-none');
-    modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
+            this.editingIndex = index;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
 
-    if (index >= 0 && bookmark) {
-        nameInput.value = bookmark.name;
-        urlInput.value = bookmark.url;
-        updatePreview(); // Show preview for existing item
-        modal.querySelector('h3').textContent = "Edit Shortcut";
-    } else {
-        nameInput.value = ''; urlInput.value = '';
-        previewContainer.innerHTML = '<div class="glass-box"><span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span></div>';
-        modal.querySelector('h3').textContent = "Add Shortcut";
-    }
-    urlInput.focus();
-};
+            if (index >= 0 && bookmark) {
+                nameInput.value = bookmark.name;
+                urlInput.value = bookmark.url;
+                updatePreview(); // Show preview for existing item
+                modal.querySelector('h3').textContent = "Edit Shortcut";
+            } else {
+                nameInput.value = ''; urlInput.value = '';
+                previewContainer.innerHTML = '<div class="glass-box"><span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span></div>';
+                modal.querySelector('h3').textContent = "Add Shortcut";
+            }
+            urlInput.focus();
+        };
 
-const closeModal = () => {
-    this.editingIndex = -1;
-    modal.classList.add('opacity-0', 'pointer-events-none');
-    modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
-    // Delay clearing so transition doesn't look jarring
-    setTimeout(() => {
-        nameInput.value = ''; urlInput.value = '';
-    }, 300);
-};
+        const closeModal = () => {
+            this.editingIndex = -1;
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
+            // Delay clearing so transition doesn't look jarring
+            setTimeout(() => {
+                nameInput.value = ''; urlInput.value = '';
+            }, 300);
+        };
 
-let debounceTimer;
-const updatePreview = () => {
-    const val = urlInput.value.trim();
-    if (!val) return;
-    let url = val.startsWith('http') ? val : 'https://' + val;
+        let debounceTimer;
+        const updatePreview = () => {
+            const val = urlInput.value.trim();
+            if (!val) return;
+            let url = val.startsWith('http') ? val : 'https://' + val;
 
-    if (nameInput.value.trim() === '') {
-        const name = this.extractNameFromUrl(url);
-        if (name) nameInput.value = name;
-    }
-    const nameForIcon = nameInput.value.trim() || 'Site';
-    this.fetchIcon(nameForIcon, url, previewContainer);
-};
+            if (nameInput.value.trim() === '') {
+                const name = this.extractNameFromUrl(url);
+                if (name) nameInput.value = name;
+            }
+            const nameForIcon = nameInput.value.trim() || 'Site';
+            this.fetchIcon(nameForIcon, url, previewContainer);
+        };
 
-urlInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
-nameInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
+        urlInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
+        nameInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
 
-const saveBookmark = () => {
-    const name = nameInput.value.trim();
-    let url = urlInput.value.trim();
-    if (!name || !url) return;
-    if (!url.startsWith('http')) url = 'https://' + url;
-    if (!name || !url) return;
-    if (!url.startsWith('http')) url = 'https://' + url;
+        const saveBookmark = () => {
+            const name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+            if (!name || !url) return;
+            if (!url.startsWith('http')) url = 'https://' + url;
 
-    if (this.editingIndex >= 0) {
-        // Edit existing
-        this.bookmarks[this.editingIndex] = { name, url };
-    } else {
-        // Add new
-        this.bookmarks.push({ name, url });
-    }
+            if (this.editingIndex >= 0) {
+                // Edit existing
+                this.bookmarks[this.editingIndex] = { name, url };
+            } else {
+                // Add new
+                this.bookmarks.push({ name, url });
+            }
 
-    this.saveBookmarks();
-    this.renderGrid();
-    closeModal();
-};
+            this.saveBookmarks();
+            this.renderGrid();
+            closeModal();
+        };
 
-closeBtn.addEventListener('click', closeModal);
-saveBtn.addEventListener('click', saveBookmark);
-modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        saveBtn.addEventListener('click', saveBookmark);
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
     }
 
-saveBookmarks() {
-    localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
-    if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
-}
-deleteBookmark(index) {
-    this.bookmarks.splice(index, 1);
-    this.saveBookmarks();
-    this.renderGrid();
-}
+    saveBookmarks() {
+        localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
+        if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
+    }
+    deleteBookmark(index) {
+        this.bookmarks.splice(index, 1);
+        this.saveBookmarks();
+        this.renderGrid();
+    }
 
-initTypewriter() {
-    const prefix = this.element.querySelector('.prefix'); const typedQuotes = this.element.querySelector('.typed-quotes');
-    prefix.textContent = this.prefixes[0]; typedQuotes.textContent = this.suffixes[0];
-    prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
-    const updateQuote = () => {
-        prefix.classList.remove('text-prefix-in'); typedQuotes.classList.remove('text-quotes-in');
-        prefix.classList.add('text-out'); typedQuotes.classList.add('text-out');
-        setTimeout(() => {
-            this.currentIndex = (this.currentIndex + 1) % this.prefixes.length;
-            prefix.textContent = this.prefixes[this.currentIndex]; typedQuotes.textContent = this.suffixes[this.currentIndex];
-            prefix.classList.remove('text-out'); typedQuotes.classList.remove('text-out');
-            prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
-        }, 1200);
-    };
-    this.quoteInterval = setInterval(updateQuote, 5000);
-}
+    initTypewriter() {
+        const prefix = this.element.querySelector('.prefix'); const typedQuotes = this.element.querySelector('.typed-quotes');
+        prefix.textContent = this.prefixes[0]; typedQuotes.textContent = this.suffixes[0];
+        prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
+        const updateQuote = () => {
+            prefix.classList.remove('text-prefix-in'); typedQuotes.classList.remove('text-quotes-in');
+            prefix.classList.add('text-out'); typedQuotes.classList.add('text-out');
+            setTimeout(() => {
+                this.currentIndex = (this.currentIndex + 1) % this.prefixes.length;
+                prefix.textContent = this.prefixes[this.currentIndex]; typedQuotes.textContent = this.suffixes[this.currentIndex];
+                prefix.classList.remove('text-out'); typedQuotes.classList.remove('text-out');
+                prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
+            }, 1200);
+        };
+        this.quoteInterval = setInterval(updateQuote, 5000);
+    }
 
-initRain() {
-    const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1; let width = window.innerWidth; let height = window.innerHeight;
-    const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
-    resize();
-    const raindrops = []; const count = 80;
-    class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
-    for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
-    const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
-    animate(); window.addEventListener('resize', resize);
-}
+    initRain() {
+        const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1; let width = window.innerWidth; let height = window.innerHeight;
+        const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
+        resize();
+        const raindrops = []; const count = 80;
+        class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
+        for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
+        const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
+        animate(); window.addEventListener('resize', resize);
+    }
 }
