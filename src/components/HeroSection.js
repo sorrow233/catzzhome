@@ -486,7 +486,8 @@ export default class HeroSection {
         const toggleKnob = toggleBtn.querySelector('div');
 
         const updateToggleUI = () => {
-            if (this.cinematicMode) {
+            const isOn = this.getCinematicState();
+            if (isOn) {
                 toggleBtn.classList.remove('bg-slate-300'); toggleBtn.classList.add('bg-slate-700');
                 toggleKnob.classList.remove('left-1'); toggleKnob.classList.add('left-6');
             } else {
@@ -495,16 +496,19 @@ export default class HeroSection {
             }
         };
 
+        // Initialize UI State
+        updateToggleUI();
+
         toggleBtn.addEventListener('click', () => {
-            this.cinematicMode = !this.cinematicMode;
-            localStorage.setItem('catzz_cinematic', this.cinematicMode);
+            const newState = !this.getCinematicState();
+            this.cinematicPrefs[this.currentBg] = newState;
+            localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
             updateToggleUI();
 
             // Apply immediately
-            const theme = this.getCurrentTheme();
-            this.toggleGradient(this.cinematicMode);
+            this.toggleGradient(newState);
 
-            if (auth.currentUser) saveSettings(auth.currentUser.uid, { cinematicMode: this.cinematicMode });
+            if (auth.currentUser) saveSettings(auth.currentUser.uid, { cinematicPrefs: this.cinematicPrefs });
         });
 
         // Populate Grid
@@ -524,7 +528,12 @@ export default class HeroSection {
                 this.applyThemeToElements(theme);
 
                 localStorage.setItem('catzz_bg', wp.url);
-                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: wp.url, cinematicMode: this.cinematicMode });
+                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: wp.url, cinematicPrefs: this.cinematicPrefs });
+
+                // Update Toggle & Gradient for New Wallpaper
+                updateToggleUI();
+                this.toggleGradient(this.getCinematicState());
+
                 closeModal();
 
                 // Update Active State
