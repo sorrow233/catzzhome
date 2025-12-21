@@ -162,7 +162,14 @@ export default class HeroSection {
             'mail.google.com': 'gmail', 'chatgpt.com': 'openai',
             'claude.ai': 'anthropic', 'dribbble.com': 'dribbble',
             'figma.com': 'figma', 'notion.so': 'notion', 'vercel.com': 'vercel',
-            'bluesky.app': 'bluesky'
+            'bluesky.app': 'bluesky',
+            // Custom icon mappings
+            'github.com': 'github',
+            'pixiv.net': 'pixiv',
+            'gemini.google.com': 'googlegemini',
+            'yuanbao.tencent.com': 'tencentqq',
+            'maps.google.com': 'googlemaps',
+            'netflix.com': 'netflix'
         };
     }
 
