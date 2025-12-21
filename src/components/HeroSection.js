@@ -145,11 +145,17 @@ export default class HeroSection {
 
             // Background
             this.currentBg = localStorage.getItem('catzz_bg') || this.wallpapers[3].url;
-            this.cinematicMode = localStorage.getItem('catzz_cinematic') !== 'false'; // Default true
+
+            // Current Cinematic Prefs (Map: URL -> Boolean)
+            try {
+                this.cinematicPrefs = JSON.parse(localStorage.getItem('catzz_cinematic_prefs')) || {};
+            } catch {
+                this.cinematicPrefs = {};
+            }
         } catch (e) {
             this.bookmarks = defaultBookmarks;
             this.currentBg = this.wallpapers[3].url;
-            this.cinematicMode = true;
+            this.cinematicPrefs = {};
         }
 
         this.simpleIconsMap = {
@@ -173,6 +179,11 @@ export default class HeroSection {
             glowColor: "rgba(0, 0, 0, 0.1)",
             quoteColor: "text-slate-500"
         };
+    }
+
+    getCinematicState() {
+        // Default to true if not set
+        return this.cinematicPrefs[this.currentBg] !== false;
     }
 
     render() {
@@ -263,8 +274,8 @@ export default class HeroSection {
                      <!-- TOGGLE SWITCH -->
                      <div class="flex items-center justify-center gap-3 mb-8">
                         <span class="text-xs text-slate-500 font-light tracking-widest uppercase">Cinematic</span>
-                        <button id="cinematic-toggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 focus:outline-none ${this.cinematicMode ? 'bg-slate-700' : 'bg-slate-300'}">
-                            <div class="w-3 h-3 bg-white rounded-full absolute top-1 transition-all duration-300 ${this.cinematicMode ? 'left-6' : 'left-1'} shadow-sm"></div>
+                        <button id="cinematic-toggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 focus:outline-none bg-slate-700">
+                            <div class="w-3 h-3 bg-white rounded-full absolute top-1 transition-all duration-300 left-6 shadow-sm"></div>
                         </button>
                      </div>
 
