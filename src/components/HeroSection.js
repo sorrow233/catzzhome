@@ -407,6 +407,7 @@ export default class HeroSection {
             title.className = `text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 \${theme.textColor} \${theme.textShadow || ''}`;
         }
 
+        const quoteContainer = this.element.querySelector('.quote-container');
         if (quoteContainer) {
             quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container ${theme.quoteColor || 'text-slate-500'}`;
         }
@@ -443,7 +444,7 @@ export default class HeroSection {
         auth.onAuthStateChanged(user => {
             currentUser = user;
             if (user) {
-                btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full opacity-80" alt="User">`;
+                btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full avatar-themed" alt="User">`;
                 btn.title = `Logged in as ${user.displayName}`;
 
                 // Start Listening to Settings
