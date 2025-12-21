@@ -1,4 +1,4 @@
-const CACHE_NAME = 'catzzhome-v1';
+const CACHE_NAME = 'catzzhome-v2'; // Bump version to force update
 const urlsToCache = [
     '/',
     '/index.html',
@@ -32,38 +32,25 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch event - serve from cache first, then network
+// Fetch event - Stale-While-Revalidate strategy for "Instant Load + Auto Update"
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
+        caches.match(event.request).then((cachedResponse) => {
+            const fetchPromise = fetch(event.request).then((networkResponse) => {
+                // Check if valid response
+                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
+                return networkResponse;
+            }).catch(() => {
+                // Network failure, already handled by returning cachedResponse if it exists
+            });
 
-                // Clone the request
-                const fetchRequest = event.request.clone();
-
-                return fetch(fetchRequest).then((response) => {
-                    // Check if valid response
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
-                    }
-
-                    // Clone the response
-                    const responseToCache = response.clone();
-
-                    // Cache external images and static resources
-                    if (event.request.url.match(/\.(png|jpg|jpeg|svg|gif|webp|css|js)$/)) {
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-                    }
-
-                    return response;
-                });
-            })
+            // Return cached response immediately if available, otherwise wait for network
+            return cachedResponse || fetchPromise;
+        })
     );
 });
