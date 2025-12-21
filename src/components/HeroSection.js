@@ -186,6 +186,11 @@ export default class HeroSection {
         return this.cinematicPrefs[this.currentBg] !== false;
     }
 
+    getCinematicState() {
+        // Default to true if not set
+        return this.cinematicPrefs[this.currentBg] !== false;
+    }
+
     render() {
         const theme = this.getCurrentTheme();
         const isDark = theme === 'dark';
@@ -413,19 +418,21 @@ export default class HeroSection {
                             this.element.classList.remove('bg-gradient-to-b');
                             localStorage.setItem('catzz_bg', data.bg);
 
-                            if (data.cinematicMode !== undefined && data.cinematicMode !== this.cinematicMode) {
-                                this.cinematicMode = data.cinematicMode;
-                                localStorage.setItem('catzz_cinematic', data.cinematicMode);
+                            if (data.cinematicPrefs) {
+                                this.cinematicPrefs = data.cinematicPrefs;
+                                localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
+                            } else if (data.cinematicMode !== undefined) {
+                                // Backward compatibility migration
+                                this.cinematicPrefs[this.currentBg] = data.cinematicMode;
+                                localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
                             }
 
                             const theme = this.getCurrentTheme();
                             this.updateDynamicStyles(theme);
                             this.applyThemeToElements(theme);
 
-                            // Re-render gradient by re-mounting or simple DOM manipulation? 
-                            // Easier to reload page or just let re-render handle it if we were reacting.
-                            // Since we are not using React, let's just toggle the gradient element manually here if needed.
-                            this.toggleGradient(theme === 'dark' && this.cinematicMode);
+                            // Toggle gradient based on cinematicMode for CURRENT bg
+                            this.toggleGradient(this.getCinematicState());
 
                             changed = true;
                         }
