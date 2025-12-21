@@ -3,8 +3,6 @@
   Cache-Control: no-cache, no-store, must-revalidate
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
-/catzz-sw.js
-  Cache-Control: no-cache, no-store, must-revalidate
 
 # Common JS/CSS (Short TTL to allow updates while we develop)
 /*.js
