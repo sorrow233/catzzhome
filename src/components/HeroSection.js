@@ -205,9 +205,9 @@ export default class HeroSection {
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
 
-        // Cinematic Gradient Overlay for Dark Mode
-        if (isDark && this.cinematicMode) {
-            this.element.innerHTML += `<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none z-0"></div>`;
+        // Cinematic Gradient Overlay
+        if (this.getCinematicState()) {
+            this.element.innerHTML += `<div class="cinematic-gradient absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none z-0"></div>`;
         }
 
         const style = document.createElement('style');
