@@ -181,13 +181,17 @@ export default class HeroSection {
     }
 
     getCinematicState() {
-        // Default to true if not set
-        return this.cinematicPrefs[this.currentBg] !== false;
-    }
-
-    getCinematicState() {
-        // Default to true if not set
-        return this.cinematicPrefs[this.currentBg] !== false;
+        if (this.cinematicPrefs[this.currentBg] !== undefined) {
+            return this.cinematicPrefs[this.currentBg];
+        }
+        // Defaults: WP1 (Rainy Window), WP7 (Sunset), WP8 (Night) -> OFF
+        // Others -> ON
+        const defaultsOff = [
+            'https://blog.catzz.work/file/1766242722856_image.png', // WP1
+            'https://blog.catzz.work/file/1766241284787_72055179_p0.jpg', // WP7
+            'https://blog.catzz.work/file/1766241306259_68686407_p0.jpg'  // WP8
+        ];
+        return !defaultsOff.includes(this.currentBg);
     }
 
     render() {
