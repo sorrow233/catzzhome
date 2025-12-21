@@ -24,113 +24,49 @@ export default class HeroSection {
                 id: 'rainy_window',
                 name: 'Rainy Window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
-                theme: {
-                    textColor: "text-white",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,1)]",
-                    glassColor: "bg-slate-900/50",
-                    glassBorder: "border-white/10",
-                    iconColor: "#ffffff",
-                    iconHoverColor: "#bae6fd",
-                    quoteColor: "text-slate-100"
-                }
+                theme: 'dark'
             },
             {
                 id: 'wet_street',
                 name: 'Wet Street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
-                theme: {
-                    textColor: "text-indigo-950",
-                    textShadow: "drop-shadow-sm",
-                    glassColor: "bg-white/60",
-                    glassBorder: "border-indigo-200/50",
-                    iconColor: "#312e81",
-                    iconHoverColor: "#1e1b4b",
-                    quoteColor: "text-indigo-900"
-                }
+                theme: 'light'
             },
             {
                 id: 'city_bed',
                 name: 'City Bed',
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
-                theme: {
-                    textColor: "text-amber-50",
-                    textShadow: "drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]",
-                    glassColor: "bg-neutral-900/70",
-                    glassBorder: "border-amber-500/20",
-                    iconColor: "#fcd34d",
-                    iconHoverColor: "#fffbeb",
-                    quoteColor: "text-amber-100/90"
-                }
+                theme: 'dark'
             },
             {
                 id: 'umbrella_street',
                 name: 'Umbrella Street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
-                theme: {
-                    textColor: "text-white",
-                    textShadow: "drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-slate-900/60",
-                    glassBorder: "border-white/20",
-                    iconColor: "#f8fafc",
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-100"
-                }
+                theme: 'dark'
             },
             {
                 id: 'flower_window',
                 name: 'Flower Window',
                 url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
-                theme: {
-                    textColor: "text-white",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
-                    glassColor: "bg-black/60",
-                    glassBorder: "border-white/10",
-                    iconColor: "#f8fafc",
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-200"
-                }
+                theme: 'dark'
             },
             {
                 id: 'white_shirt_girl',
                 name: 'White Shirt Girl',
                 url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
-                theme: {
-                    textColor: "text-slate-50",
-                    textShadow: "drop-shadow-md",
-                    glassColor: "bg-slate-900/40",
-                    glassBorder: "border-white/20",
-                    iconColor: "#e2e8f0",
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-200"
-                }
+                theme: 'dark'
             },
             {
                 id: 'sunset_balcony',
                 name: 'Sunset Balcony',
                 url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
-                theme: {
-                    textColor: "text-orange-50",
-                    textShadow: "drop-shadow-md",
-                    glassColor: "bg-orange-950/40",
-                    glassBorder: "border-orange-200/20",
-                    iconColor: "#fdba74",
-                    iconHoverColor: "#ffedd5",
-                    quoteColor: "text-orange-100"
-                }
+                theme: 'dark'
             },
             {
                 id: 'night_view',
                 name: 'Night View',
                 url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg",
-                theme: {
-                    textColor: "text-blue-50",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,1)]",
-                    glassColor: "bg-slate-950/50",
-                    glassBorder: "border-blue-200/10",
-                    iconColor: "#bfdbfe",
-                    iconHoverColor: "#dbeafe",
-                    quoteColor: "text-blue-100"
-                }
+                theme: 'dark'
             }
         ];
 
@@ -157,22 +93,15 @@ export default class HeroSection {
 
     getCurrentTheme() {
         const wp = this.wallpapers.find(w => w.url === this.currentBg);
-        return wp ? wp.theme : {
-            textColor: "text-slate-700",
-            textShadow: "",
-            glassColor: "bg-white/40",
-            glassBorder: "border-white/40",
-            iconColor: "#64748b",
-            iconHoverColor: "#334155",
-            quoteColor: "text-slate-500"
-        };
+        return wp ? wp.theme : 'dark';
     }
 
     render() {
         const theme = this.getCurrentTheme();
+        const isDark = theme === 'dark';
 
         this.element = document.createElement('section');
-        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-all duration-700 ease-in-out bg-cover bg-center';
+        this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-opacity duration-700 ease-in-out bg-cover bg-center';
 
         // Initial Background State
         if (this.currentBg) {
@@ -181,16 +110,25 @@ export default class HeroSection {
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
 
+        // Cinematic Gradient Overlay for Dark Mode
+        if (isDark) {
+            this.element.innerHTML += `<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none z-0"></div>`;
+        }
+
         const style = document.createElement('style');
         this.styleElement = style;
         this.updateDynamicStyles(theme);
         this.element.appendChild(style);
 
+        const textColor = isDark ? "text-white/90 font-light tracking-widest" : "text-slate-700 tracking-wider";
+        const quoteColor = isDark ? "text-slate-200/80 font-light" : "text-slate-500";
+        const textShadow = isDark ? "" : ""; // Shadows handled cleanly or by global font style
+
         this.element.innerHTML += `
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <!-- CLICKABLE TITLE -->
-                <h1 id="hero-title" class="text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-all duration-500 ${theme.textColor} ${theme.textShadow}" title="Change Theme">Catzz</h1>
+                <h1 id="hero-title" class="text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ${textColor} ${textShadow}" title="Change Theme">Catzz</h1>
                 
                 <!-- CLOUD BUTTON -->
                 <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
@@ -204,7 +142,7 @@ export default class HeroSection {
                     </div>
                 </div>
 
-                <div class="h-8 flex items-center justify-center text-sm md:text-base font-light tracking-[0.4em] hero-font-sc rounded-full transition-colors duration-500 quote-container">
+                <div class="h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container ${quoteColor}">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
                     <span class="typed-quotes inline-block opacity-0"></span>
                 </div>
@@ -259,6 +197,12 @@ export default class HeroSection {
 
     updateDynamicStyles(theme) {
         if (!this.styleElement) return;
+        const isDark = theme === 'dark';
+
+        const iconColor = isDark ? '#ffffff' : '#475569'; // White vs Slate-600
+        const iconBg = isDark ? '#ffffff' : '#334155'; // Mask color
+        const iconHoverColor = isDark ? '#e2e8f0' : '#1e293b';
+
         this.styleElement.textContent = `
             .hero-font-sc { font-family: 'Noto Serif SC', serif; }
             @keyframes softFadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -281,13 +225,15 @@ export default class HeroSection {
             /* 1. SVG ICONS: Dynamic Color */
             .icon-wrapper .icon-mask { 
                 width: 32px; height: 32px; 
-                background-color: \${theme.iconColor || '#64748b'};
+                background-color: ${iconBg};
+                opacity: ${isDark ? '0.9' : '1'};
                 -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
                 mask-size: contain; mask-repeat: no-repeat; mask-position: center;
                 transition: all 0.3s ease;
             }
             .unified-icon-container:hover .icon-mask { 
-                background-color: \${theme.iconHoverColor || '#334155'};
+                background-color: ${iconColor};
+                opacity: 1;
             }
 
             /* 2. BITMAP ICONS */
@@ -295,25 +241,26 @@ export default class HeroSection {
                 width: 36px; height: 36px;
                 object-fit: contain; 
                 filter: grayscale(100%) contrast(1.1) opacity(0.85);
-                mix-blend-mode: multiply; 
+                mix-blend-mode: ${isDark ? 'screen' : 'multiply'}; 
                 transition: all 0.3s ease;
             }
             
             .unified-icon-container:hover .icon-bitmap { 
-                filter: grayscale(100%) contrast(1.2) opacity(1);
+                filter: grayscale(0%) contrast(1.1) opacity(1);
                 transform: scale(1.05);
+                mix-blend-mode: normal;
             }
 
             .text-icon {
                 font-family: 'Noto Serif SC', serif;
                 font-weight: 300; font-size: 20px; 
-                color: \${theme.iconColor || '#64748b'};
-                border: 1px solid \${theme.iconColor ? theme.iconColor + '40' : '#cbd5e1'};
+                color: ${iconBg};
+                border: 1px solid ${isDark ? 'rgba(255,255,255,0.3)' : '#cbd5e1'};
                 border-radius: 8px;
             }
 
-            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
-            .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
+            .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed ${isDark ? 'rgba(255,255,255,0.2)' : '#cbd5e1'}; display: flex; align-items: center; justify-content: center; color: ${isDark ? '#94a3b8' : '#94a3b8'}; transition: all 0.3s ease; cursor: pointer; }
+            .add-btn:hover { border-color: ${iconColor}; color: ${iconColor}; background: ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.5)'}; }
             
             /* Modal Light Theme */
             .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -15px rgba(100, 116, 139, 0.25); }
@@ -333,16 +280,24 @@ export default class HeroSection {
     }
 
     applyThemeToElements(theme) {
+        const isDark = theme === 'dark';
         const title = this.element.querySelector('#hero-title');
+
+        // Re-Apply logic using classes defined in render()
+        // Here we just trigger re-render of Grid since it uses the new theme string logic
+        this.renderGrid();
+
+        // Update title classes based on theme
         if (title) {
-            title.className = `text-4xl md:text-7xl font-light tracking-[0.2em] mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-all duration-500 \${theme.textColor} \${theme.textShadow || ''}`;
+            title.className = `text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ` +
+                (isDark ? "text-white/90 font-light tracking-widest" : "text-slate-700 tracking-wider");
         }
 
         const quoteContainer = this.element.querySelector('.quote-container');
         if (quoteContainer) {
-            quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base font-light tracking-[0.4em] hero-font-sc rounded-full transition-colors duration-500 quote-container \${theme.quoteColor || 'text-slate-500'}`;
+            quoteContainer.className = `h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container ` +
+                (isDark ? "text-slate-200/80 font-light" : "text-slate-500");
         }
-        this.renderGrid();
     }
 
     mount() {
@@ -490,11 +445,13 @@ export default class HeroSection {
     fetchIcon(name, url, container, theme) {
         container.innerHTML = '';
         const glassBox = document.createElement('div');
-        // Apply Dynamic Theme Classes
-        const glassClass = theme && theme.glassColor ? theme.glassColor : 'bg-white/40';
-        const borderClass = theme && theme.glassBorder ? theme.glassBorder : '';
+        const isDark = theme === 'dark';
 
-        glassBox.className = `glass-box ${glassClass} ${borderClass} border`;
+        // Adaptive Glassmorphism
+        const glassClass = isDark ? 'bg-slate-900/30' : 'bg-white/40';
+        const borderClass = isDark ? 'border-white/10' : 'border-white/40';
+
+        glassBox.className = `glass-box ${glassClass} ${borderClass} border backdrop-blur-md`;
         container.appendChild(glassBox);
 
         const slug = this.getSimpleIconSlug(name, url);
@@ -558,8 +515,9 @@ export default class HeroSection {
 
             link.appendChild(iconRoot);
             const label = document.createElement('span');
-
-            const labelColor = theme && theme.quoteColor ? theme.quoteColor : "text-slate-400";
+            // Label color based on theme
+            const isDark = theme === 'dark';
+            const labelColor = isDark ? "text-white/80" : "text-slate-500";
 
             label.className = `text-[10px] font-sans tracking-wider mt-3 group-hover:text-opacity-100 text-opacity-80 transition-colors duration-300 text-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${labelColor}`;
             label.textContent = site.name;
