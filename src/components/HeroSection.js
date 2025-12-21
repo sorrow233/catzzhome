@@ -586,145 +586,142 @@ export default class HeroSection {
         grid.appendChild(addBtn);
     }
 
-        grid.appendChild(addBtn);
-}
+    toggleGradient(show) {
+        // Remove existing
+        const existing = this.element.querySelector('.cinematic-gradient');
+        if (existing) existing.remove();
 
-toggleGradient(show) {
-    // Remove existing
-    const existing = this.element.querySelector('.cinematic-gradient');
-    if (existing) existing.remove();
-
-    if (show) {
-        const grad = document.createElement('div');
-        grad.className = 'cinematic-gradient absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none z-0';
-        // Insert after rain canvas
-        const rain = this.element.querySelector('#rain-canvas');
-        if (rain && rain.nextSibling) {
-            this.element.insertBefore(grad, rain.nextSibling);
-        } else {
-            this.element.appendChild(grad);
-        }
-    }
-}
-
-extractNameFromUrl(url) {
-    try {
-        const hostname = new URL(url).hostname;
-        const parts = hostname.split('.');
-
-        // Heuristic for TLD (Top Level Domain)
-        // Handle common double-extensions like .co.uk, .com.cn
-        const doubleTlds = ['co', 'com', 'org', 'net', 'edu', 'gov', 'mil', 'ac'];
-        let tldParts = 1;
-
-        if (parts.length > 2) {
-            const last = parts[parts.length - 1];
-            const secondLast = parts[parts.length - 2];
-            // If last is 2 chars (e.g. uk, cn) and second last is generic (e.g. co), treat as 2-part TLD
-            if (last.length === 2 && doubleTlds.includes(secondLast)) {
-                tldParts = 2;
+        if (show) {
+            const grad = document.createElement('div');
+            grad.className = 'cinematic-gradient absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none z-0';
+            // Insert after rain canvas
+            const rain = this.element.querySelector('#rain-canvas');
+            if (rain && rain.nextSibling) {
+                this.element.insertBefore(grad, rain.nextSibling);
+            } else {
+                this.element.appendChild(grad);
             }
         }
+    }
 
-        // The 'Brand' is usually the part immediately before the TLD
-        // e.g. [console, gmicloud, ai] (1 part TLD) -> index 1 (gmicloud)
-        // e.g. [www, google, co, jp] (2 part TLD) -> index 1 (google)
-        if (parts.length <= tldParts) return 'Site'; // Fallback for 'localhost' or 'ai'
+    extractNameFromUrl(url) {
+        try {
+            const hostname = new URL(url).hostname;
+            const parts = hostname.split('.');
 
-        const brandIndex = parts.length - tldParts - 1;
-        let name = parts[brandIndex];
+            // Heuristic for TLD (Top Level Domain)
+            // Handle common double-extensions like .co.uk, .com.cn
+            const doubleTlds = ['co', 'com', 'org', 'net', 'edu', 'gov', 'mil', 'ac'];
+            let tldParts = 1;
 
-        return name.charAt(0).toUpperCase() + name.slice(1);
-    } catch (e) { return ''; }
-}
+            if (parts.length > 2) {
+                const last = parts[parts.length - 1];
+                const secondLast = parts[parts.length - 2];
+                // If last is 2 chars (e.g. uk, cn) and second last is generic (e.g. co), treat as 2-part TLD
+                if (last.length === 2 && doubleTlds.includes(secondLast)) {
+                    tldParts = 2;
+                }
+            }
 
-initModal() {
-    const modal = this.element.querySelector('#add-modal');
-    const modalContent = modal.querySelector('.glass-modal');
-    const closeBtn = this.element.querySelector('#close-modal');
-    const saveBtn = this.element.querySelector('#save-bookmark');
-    const nameInput = this.element.querySelector('#bm-name');
-    const urlInput = this.element.querySelector('#bm-url');
-    const previewContainer = this.element.querySelector('#preview-icon-container');
+            // The 'Brand' is usually the part immediately before the TLD
+            // e.g. [console, gmicloud, ai] (1 part TLD) -> index 1 (gmicloud)
+            // e.g. [www, google, co, jp] (2 part TLD) -> index 1 (google)
+            if (parts.length <= tldParts) return 'Site'; // Fallback for 'localhost' or 'ai'
 
-    this.openModal = () => {
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
-        urlInput.focus();
-    };
+            const brandIndex = parts.length - tldParts - 1;
+            let name = parts[brandIndex];
 
-    const closeModal = () => {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
-        nameInput.value = ''; urlInput.value = '';
-        previewContainer.innerHTML = '<div class="glass-box"><span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span></div>';
-    };
+            return name.charAt(0).toUpperCase() + name.slice(1);
+        } catch (e) { return ''; }
+    }
 
-    let debounceTimer;
-    const updatePreview = () => {
-        const val = urlInput.value.trim();
-        if (!val) return;
-        let url = val.startsWith('http') ? val : 'https://' + val;
+    initModal() {
+        const modal = this.element.querySelector('#add-modal');
+        const modalContent = modal.querySelector('.glass-modal');
+        const closeBtn = this.element.querySelector('#close-modal');
+        const saveBtn = this.element.querySelector('#save-bookmark');
+        const nameInput = this.element.querySelector('#bm-name');
+        const urlInput = this.element.querySelector('#bm-url');
+        const previewContainer = this.element.querySelector('#preview-icon-container');
 
-        if (nameInput.value.trim() === '') {
-            const name = this.extractNameFromUrl(url);
-            if (name) nameInput.value = name;
-        }
-        const nameForIcon = nameInput.value.trim() || 'Site';
-        this.fetchIcon(nameForIcon, url, previewContainer);
-    };
+        this.openModal = () => {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
+            urlInput.focus();
+        };
 
-    urlInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
-    nameInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
+        const closeModal = () => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
+            nameInput.value = ''; urlInput.value = '';
+            previewContainer.innerHTML = '<div class="glass-box"><span class="text-gray-600 text-[10px] uppercase tracking-widest">Preview</span></div>';
+        };
 
-    const saveBookmark = () => {
-        const name = nameInput.value.trim();
-        let url = urlInput.value.trim();
-        if (!name || !url) return;
-        if (!url.startsWith('http')) url = 'https://' + url;
-        this.bookmarks.push({ name, url });
-        this.saveBookmarks();
-        this.renderGrid();
-        closeModal();
-    };
+        let debounceTimer;
+        const updatePreview = () => {
+            const val = urlInput.value.trim();
+            if (!val) return;
+            let url = val.startsWith('http') ? val : 'https://' + val;
 
-    closeBtn.addEventListener('click', closeModal);
-    saveBtn.addEventListener('click', saveBookmark);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-}
+            if (nameInput.value.trim() === '') {
+                const name = this.extractNameFromUrl(url);
+                if (name) nameInput.value = name;
+            }
+            const nameForIcon = nameInput.value.trim() || 'Site';
+            this.fetchIcon(nameForIcon, url, previewContainer);
+        };
 
-saveBookmarks() {
-    localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
-    if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
-}
-deleteBookmark(index) { if (confirm('Remove shortcut?')) { this.bookmarks.splice(index, 1); this.saveBookmarks(); this.renderGrid(); } }
+        urlInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
+        nameInput.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(updatePreview, 600); });
 
-initTypewriter() {
-    const prefix = this.element.querySelector('.prefix'); const typedQuotes = this.element.querySelector('.typed-quotes');
-    prefix.textContent = this.prefixes[0]; typedQuotes.textContent = this.suffixes[0];
-    prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
-    const updateQuote = () => {
-        prefix.classList.remove('text-prefix-in'); typedQuotes.classList.remove('text-quotes-in');
-        prefix.classList.add('text-out'); typedQuotes.classList.add('text-out');
-        setTimeout(() => {
-            this.currentIndex = (this.currentIndex + 1) % this.prefixes.length;
-            prefix.textContent = this.prefixes[this.currentIndex]; typedQuotes.textContent = this.suffixes[this.currentIndex];
-            prefix.classList.remove('text-out'); typedQuotes.classList.remove('text-out');
-            prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
-        }, 1200);
-    };
-    this.quoteInterval = setInterval(updateQuote, 5000);
-}
+        const saveBookmark = () => {
+            const name = nameInput.value.trim();
+            let url = urlInput.value.trim();
+            if (!name || !url) return;
+            if (!url.startsWith('http')) url = 'https://' + url;
+            this.bookmarks.push({ name, url });
+            this.saveBookmarks();
+            this.renderGrid();
+            closeModal();
+        };
 
-initRain() {
-    const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1; let width = window.innerWidth; let height = window.innerHeight;
-    const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
-    resize();
-    const raindrops = []; const count = 80;
-    class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
-    for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
-    const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
-    animate(); window.addEventListener('resize', resize);
-}
+        closeBtn.addEventListener('click', closeModal);
+        saveBtn.addEventListener('click', saveBookmark);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    }
+
+    saveBookmarks() {
+        localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
+        if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
+    }
+    deleteBookmark(index) { if (confirm('Remove shortcut?')) { this.bookmarks.splice(index, 1); this.saveBookmarks(); this.renderGrid(); } }
+
+    initTypewriter() {
+        const prefix = this.element.querySelector('.prefix'); const typedQuotes = this.element.querySelector('.typed-quotes');
+        prefix.textContent = this.prefixes[0]; typedQuotes.textContent = this.suffixes[0];
+        prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
+        const updateQuote = () => {
+            prefix.classList.remove('text-prefix-in'); typedQuotes.classList.remove('text-quotes-in');
+            prefix.classList.add('text-out'); typedQuotes.classList.add('text-out');
+            setTimeout(() => {
+                this.currentIndex = (this.currentIndex + 1) % this.prefixes.length;
+                prefix.textContent = this.prefixes[this.currentIndex]; typedQuotes.textContent = this.suffixes[this.currentIndex];
+                prefix.classList.remove('text-out'); typedQuotes.classList.remove('text-out');
+                prefix.classList.add('text-prefix-in'); typedQuotes.classList.add('text-quotes-in');
+            }, 1200);
+        };
+        this.quoteInterval = setInterval(updateQuote, 5000);
+    }
+
+    initRain() {
+        const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1; let width = window.innerWidth; let height = window.innerHeight;
+        const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
+        resize();
+        const raindrops = []; const count = 80;
+        class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
+        for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
+        const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
+        animate(); window.addEventListener('resize', resize);
+    }
 }
