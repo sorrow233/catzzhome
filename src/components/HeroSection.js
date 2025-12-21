@@ -30,7 +30,7 @@ export default class HeroSection {
                 id: 'wet_street',
                 name: 'Wet Street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
-                theme: 'light'
+                theme: 'dark'
             },
             {
                 id: 'city_bed',
@@ -112,7 +112,7 @@ export default class HeroSection {
 
         // Cinematic Gradient Overlay for Dark Mode
         if (isDark) {
-            this.element.innerHTML += `<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none z-0"></div>`;
+            this.element.innerHTML += `<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none z-0"></div>`;
         }
 
         const style = document.createElement('style');
@@ -122,7 +122,7 @@ export default class HeroSection {
 
         const textColor = isDark ? "text-white/90 font-light tracking-widest" : "text-slate-700 tracking-wider";
         const quoteColor = isDark ? "text-slate-200/80 font-light" : "text-slate-500";
-        const textShadow = isDark ? "" : ""; // Shadows handled cleanly or by global font style
+        const textShadow = isDark ? "drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : ""; // Add shadow back for extra legibility
 
         this.element.innerHTML += `
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
@@ -290,7 +290,7 @@ export default class HeroSection {
         // Update title classes based on theme
         if (title) {
             title.className = `text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ` +
-                (isDark ? "text-white/90 font-light tracking-widest" : "text-slate-700 tracking-wider");
+                (isDark ? "text-white/90 font-light tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : "text-slate-700 tracking-wider");
         }
 
         const quoteContainer = this.element.querySelector('.quote-container');
