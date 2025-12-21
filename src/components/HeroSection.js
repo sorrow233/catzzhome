@@ -21,20 +21,7 @@ export default class HeroSection {
 
         this.wallpapers = [
             {
-                id: 'flower_window', // Wallpaper 1: Girl with flowers (User: "Invisible icons/text")
-                url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
-                theme: {
-                    textColor: "text-white",
-                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]", // Maximum shadow
-                    glassColor: "bg-black/60", // Heavy dark glass for visibility
-                    glassBorder: "border-white/10",
-                    iconColor: "#f8fafc", // Slate-50
-                    iconHoverColor: "#ffffff",
-                    quoteColor: "text-slate-200"
-                }
-            },
-            {
-                id: 'rainy_window', // Wallpaper 2: Girl sitting on curb (User: "Fonts invisible")
+                id: 'rainy_window', // Wallpaper 1: Girl sitting on curb (User: "Fonts invisible" -> Fixed with High Contrast)
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
                 theme: {
                     textColor: "text-white",
@@ -44,19 +31,6 @@ export default class HeroSection {
                     iconColor: "#ffffff",
                     iconHoverColor: "#bae6fd", // Light Blue hover
                     quoteColor: "text-slate-100"
-                }
-            },
-            {
-                id: 'city_bed', // Wallpaper 3: Girl on bed (User: "Messy, not modern")
-                url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
-                theme: {
-                    textColor: "text-amber-50",
-                    textShadow: "drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]", // Soft but distinct shadow
-                    glassColor: "bg-neutral-900/70", // High opacity "Modern/Obsidian" look to clean up background noise
-                    glassBorder: "border-amber-500/20", // Subtle gold accent
-                    iconColor: "#fcd34d", // Amber-300
-                    iconHoverColor: "#fffbeb", // Amber-50
-                    quoteColor: "text-amber-100/90"
                 }
             },
             {
@@ -73,6 +47,19 @@ export default class HeroSection {
                 }
             },
             {
+                id: 'city_bed', // Wallpaper 3: Girl on bed (User: "Messy, not modern" -> Fixed with Obsidian Look)
+                url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
+                theme: {
+                    textColor: "text-amber-50",
+                    textShadow: "drop-shadow-[0_4px_6px_rgba(0,0,0,0.5)]",
+                    glassColor: "bg-neutral-900/70", // High opacity "Modern/Obsidian" look
+                    glassBorder: "border-amber-500/20",
+                    iconColor: "#fcd34d",
+                    iconHoverColor: "#fffbeb",
+                    quoteColor: "text-amber-100/90"
+                }
+            },
+            {
                 id: 'umbrella_street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 theme: {
@@ -83,6 +70,19 @@ export default class HeroSection {
                     iconColor: "#f8fafc",
                     iconHoverColor: "#ffffff",
                     quoteColor: "text-slate-100"
+                }
+            },
+            {
+                id: 'flower_window', // Moved to 5th position
+                url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
+                theme: {
+                    textColor: "text-white",
+                    textShadow: "drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
+                    glassColor: "bg-black/60", // Heavy dark glass for visibility
+                    glassBorder: "border-white/10",
+                    iconColor: "#f8fafc",
+                    iconHoverColor: "#ffffff",
+                    quoteColor: "text-slate-200"
                 }
             },
             {
