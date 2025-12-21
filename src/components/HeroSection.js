@@ -9,14 +9,10 @@ export default class HeroSection {
         const defaultBookmarks = [
             { name: "GitHub", url: "https://github.com" },
             { name: "Bilibili", url: "https://www.bilibili.com" },
-            { name: "DeepSeek", url: "https://chat.deepseek.com" },
             { name: "YouTube", url: "https://www.youtube.com" },
             { name: "Twitter", url: "https://x.com" },
             { name: "Gmail", url: "https://mail.google.com" },
-            { name: "Figma", url: "https://www.figma.com" },
-            { name: "Notion", url: "https://www.notion.so" },
-            { name: "Vercel", url: "https://vercel.com" },
-            { name: "Claude", url: "https://claude.ai" }
+            { name: "Notion", url: "https://www.notion.so" }
         ];
 
         this.wallpapers = [
