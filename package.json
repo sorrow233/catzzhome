@@ -1,0 +1,11 @@
+{
+    "name": "catzzhome",
+    "version": "1.0.0",
+    "description": "Catzz Homepage",
+    "scripts": {
+        "deploy": "npx wrangler pages deploy . --project-name catzzhome"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
