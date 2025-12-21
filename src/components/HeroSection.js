@@ -24,12 +24,12 @@ export default class HeroSection {
                 id: 'rainy_window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
                 theme: {
-                    textColor: "text-slate-100",
+                    textColor: "text-blue-50/90",
                     textShadow: "drop-shadow-md",
-                    glassColor: "bg-black/30",
-                    glassBorder: "border-white/10",
+                    glassColor: "bg-slate-950/30",
+                    glassBorder: "border-slate-700/30",
                     iconColor: "#cbd5e1", // Slate-300
-                    iconHoverColor: "#f1f5f9", // Slate-100
+                    iconHoverColor: "#bfdbfe", // Blue-200
                     quoteColor: "text-slate-300"
                 }
             },
@@ -37,39 +37,39 @@ export default class HeroSection {
                 id: 'wet_street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
                 theme: {
-                    textColor: "text-slate-800",
-                    textShadow: "",
-                    glassColor: "bg-white/40",
-                    glassBorder: "border-white/40",
-                    iconColor: "#475569", // Slate-600
-                    iconHoverColor: "#1e293b", // Slate-800
-                    quoteColor: "text-slate-600"
+                    textColor: "text-indigo-50/90",
+                    textShadow: "drop-shadow-sm",
+                    glassColor: "bg-slate-900/40",
+                    glassBorder: "border-indigo-200/10",
+                    iconColor: "#c7d2fe", // Indigo-200
+                    iconHoverColor: "#e0e7ff", // Indigo-100
+                    quoteColor: "text-indigo-200/80"
                 }
             },
             {
                 id: 'city_bed',
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
                 theme: {
-                    textColor: "text-orange-50",
+                    textColor: "text-amber-50/95",
                     textShadow: "drop-shadow-lg",
-                    glassColor: "bg-orange-950/30",
+                    glassColor: "bg-orange-950/20",
                     glassBorder: "border-orange-200/20",
-                    iconColor: "#fdba74", // Orange-300
-                    iconHoverColor: "#ffedd5", // Orange-100
-                    quoteColor: "text-orange-200/80"
+                    iconColor: "#fde68a", // Amber-200
+                    iconHoverColor: "#fef3c7", // Amber-100
+                    quoteColor: "text-amber-200/80"
                 }
             },
             {
                 id: 'umbrella_street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 theme: {
-                    textColor: "text-slate-900",
+                    textColor: "text-slate-100",
                     textShadow: "shadow-none",
-                    glassColor: "bg-white/60",
-                    glassBorder: "border-slate-200/50",
-                    iconColor: "#334155", // Slate-700
-                    iconHoverColor: "#0f172a", // Slate-900
-                    quoteColor: "text-slate-600"
+                    glassColor: "bg-white/10",
+                    glassBorder: "border-white/20",
+                    iconColor: "#e2e8f0", // Slate-200
+                    iconHoverColor: "#f8fafc", // Slate-50
+                    quoteColor: "text-slate-300"
                 }
             },
             { id: 'wp5', url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png", theme: { textColor: "text-slate-700", glassColor: "bg-white/40", iconColor: "#64748b" } },
