@@ -11,7 +11,13 @@ export default class HeroSection {
             { name: "YouTube", url: "https://www.youtube.com" },
             { name: "Twitter", url: "https://x.com" },
             { name: "Gmail", url: "https://mail.google.com" },
-            { name: "Notion", url: "https://www.notion.so" }
+            { name: "Notion", url: "https://www.notion.so" },
+            { name: "GitHub", url: "https://github.com" },
+            { name: "Pixiv", url: "https://www.pixiv.net" },
+            { name: "Gemini", url: "https://gemini.google.com" },
+            { name: "元宝", url: "https://yuanbao.tencent.com" },
+            { name: "Google Maps", url: "https://maps.google.com" },
+            { name: "Netflix", url: "https://www.netflix.com" }
         ];
 
         this.wallpapers = [
@@ -521,11 +527,12 @@ export default class HeroSection {
             if (auth.currentUser) saveSettings(auth.currentUser.uid, { cinematicPrefs: this.cinematicPrefs });
         });
 
-        // Populate Grid
+        // Populate Grid (but don't load images yet - lazy load on modal open)
         this.wallpapers.forEach(wp => {
             const thumb = document.createElement('div');
             thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === wp.url ? 'active' : ''}`;
-            thumb.style.backgroundImage = `url('${wp.url}')`;
+            // Store URL as data attribute instead of loading immediately
+            thumb.dataset.bgUrl = wp.url;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
                 this.currentBg = wp.url;
@@ -554,6 +561,16 @@ export default class HeroSection {
         });
 
         const openModal = () => {
+            // Lazy load thumbnails on first open
+            if (!this.thumbnailsLoaded) {
+                modal.querySelectorAll('.bg-thumb').forEach(thumb => {
+                    const bgUrl = thumb.dataset.bgUrl;
+                    if (bgUrl) {
+                        thumb.style.backgroundImage = `url('${bgUrl}')`;
+                    }
+                });
+                this.thumbnailsLoaded = true;
+            }
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
         };
