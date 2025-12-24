@@ -70,17 +70,24 @@ export default class HeroSection {
         if (id === this.currentBgId && this.element.style.backgroundImage !== 'none') return;
 
         const originalUrl = this.getWallpaperUrl(id);
+        const thumbUrl = this.getWallpaperThumbUrl(id);
         if (!originalUrl) return;
 
-        // 1. 淡出当前背景
-        this.element.style.opacity = '0';
+        // 1. 创建“知觉层” (模糊的缩略图占位)
+        const overlay = document.createElement('div');
+        overlay.className = 'bg-overlay bg-blur';
+        overlay.style.backgroundImage = `url('${thumbUrl}')`;
+        this.element.appendChild(overlay);
 
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // 强行刷新布局以触发 transition
+        overlay.offsetHeight;
+        overlay.style.opacity = '1';
 
-        // 2. 清除旧引用
-        this.clearPreviousWallpaper();
+        // 设定最小动画时间（为了优雅，不让过快）
+        const startTime = Date.now();
+        const minAnimTime = 800;
 
-        // 3. 预加载新图
+        // 2. 预加载新原图
         const img = new Image();
         img.src = originalUrl;
 
@@ -88,24 +95,28 @@ export default class HeroSection {
             await new Promise((resolve, reject) => {
                 img.onload = resolve;
                 img.onerror = reject;
-                // 防止加载时间过长，5秒超时
-                setTimeout(resolve, 5000);
+                setTimeout(resolve, 8000); // 宽松超时
             });
         } catch (e) {
-            console.warn("Wallpaper pre-load failed, switching anyway");
+            console.warn("Wallpaper original load failed");
         }
 
-        // 4. 应用新图并淡入
+        // 3. 计算剩余需要等待的时间
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minAnimTime - elapsedTime);
+        if (remainingTime > 0) await new Promise(r => setTimeout(r, remainingTime));
+
+        // 4. 正式替换主背景并淡入
         this.currentBgId = id;
+        const theme = this.getCurrentTheme();
         this.element.style.backgroundImage = `url('${originalUrl}')`;
         this.element.classList.remove('bg-gradient-to-b');
         this.currentLoadedBgId = id;
         localStorage.setItem('catzz_bg_id', id);
 
-        // 更新主题和样式
-        const theme = this.getCurrentTheme();
-        this.updateDynamicStyles(theme);
-        this.applyThemeToElements(theme);
+        // 同步 UI 状态
+        this.updateDynamicStyles(this.getCurrentTheme());
+        this.applyThemeToElements(this.getCurrentTheme());
         this.toggleGradient(this.getCinematicState());
 
         if (this.firebaseModule && this.firebaseModule.auth.currentUser) {
@@ -115,7 +126,9 @@ export default class HeroSection {
             });
         }
 
-        this.element.style.opacity = '1';
+        // 5. 移除“知觉层”：逐渐揭开清晰图
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 1000); // 等待淡出完成后移除
     }
 
     getCurrentTheme() {
@@ -245,6 +258,14 @@ export default class HeroSection {
             .preview-container .glass-box { width: 80px; height: 80px; }
             .delayed-delete-btn { opacity: 0; transition: opacity 0.3s ease 0s; pointer-events: none; }
             .unified-icon-container:hover .delayed-delete-btn { opacity: 1; transition-delay: 2s; pointer-events: auto; }
+            
+            /* 新增壁纸切换动效样式 */
+            .bg-overlay { 
+                position: absolute; inset: 0; z-index: -1; 
+                background-size: cover; background-position: center; 
+                opacity: 0; transition: opacity 0.8s ease-in-out;
+            }
+            .bg-blur { filter: blur(20px) scale(1.1); }
         `;
     }
 
