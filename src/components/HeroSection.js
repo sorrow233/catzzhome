@@ -25,6 +25,7 @@ export default class HeroSection {
                 id: 'rainy_window',
                 name: 'Rainy Window',
                 url: "https://blog.catzz.work/file/1766242722856_image.png",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-cyan-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(34,211,238,0.3)]",
@@ -40,6 +41,7 @@ export default class HeroSection {
                 id: 'wet_street',
                 name: 'Wet Street',
                 url: "https://blog.catzz.work/file/1766242726260_image.png",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-indigo-50",
                     textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
@@ -55,6 +57,7 @@ export default class HeroSection {
                 id: 'city_bed',
                 name: 'City Bed',
                 url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-amber-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(251,191,36,0.3)]",
@@ -70,6 +73,7 @@ export default class HeroSection {
                 id: 'umbrella_street',
                 name: 'Umbrella Street',
                 url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-fuchsia-50",
                     textShadow: "drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]",
@@ -85,6 +89,7 @@ export default class HeroSection {
                 id: 'flower_window',
                 name: 'Flower Window',
                 url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-emerald-50",
                     textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
@@ -100,6 +105,7 @@ export default class HeroSection {
                 id: 'white_shirt_girl',
                 name: 'White Shirt Girl',
                 url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-slate-50",
                     textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.6)]",
@@ -115,6 +121,7 @@ export default class HeroSection {
                 id: 'sunset_balcony',
                 name: 'Sunset Balcony',
                 url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-orange-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(251,146,60,0.4)]",
@@ -130,6 +137,7 @@ export default class HeroSection {
                 id: 'night_view',
                 name: 'Night View',
                 url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg",
+                thumbUrl: "", // Provide thumb link later
                 theme: {
                     textColor: "text-blue-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(96,165,250,0.5)]",
@@ -303,9 +311,9 @@ export default class HeroSection {
                         </button>
                      </div>
 
-                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto px-2 pb-4 scrollbar-hide">
+                      <div class="wallpaper-grid grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto px-2 pb-4 scrollbar-hide">
                         <!-- BG Images Injected Here -->
-                     </div>
+                      </div>
                 </div>
             </div>
         `;
@@ -522,7 +530,7 @@ export default class HeroSection {
         const modal = this.element.querySelector('#bg-modal');
         const modalContent = modal.querySelector('.glass-modal');
         const closeBtn = this.element.querySelector('#close-bg-modal');
-        const grid = modal.querySelector('.grid');
+        const grid = modal.querySelector('.wallpaper-grid');
 
         const toggleBtn = modal.querySelector('#cinematic-toggle');
         const toggleKnob = toggleBtn.querySelector('div');
@@ -556,10 +564,18 @@ export default class HeroSection {
         // Populate Grid (but don't load images yet - lazy load on modal open)
         this.wallpapers.forEach(wp => {
             const thumb = document.createElement('div');
-            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === wp.url ? 'active' : ''}`;
-            // Store URL as data attribute instead of loading immediately
+            thumb.className = `bg-thumb w-full h-32 rounded-xl overflow-hidden relative ${this.currentBg === wp.url ? 'active' : ''}`;
             thumb.dataset.bgUrl = wp.url;
+            thumb.dataset.thumbUrl = wp.thumbUrl || wp.url;
             thumb.title = wp.name || wp.id;
+
+            // Use an img tag for thumbnails to support loading="lazy" and better memory management
+            const img = document.createElement('img');
+            img.className = 'w-full h-full object-cover opacity-0 transition-opacity duration-300';
+            img.loading = 'lazy';
+            img.alt = wp.name;
+            thumb.appendChild(img);
+
             thumb.addEventListener('click', () => {
                 this.currentBg = wp.url;
                 this.element.style.backgroundImage = `url('${wp.url}')`;
@@ -590,11 +606,11 @@ export default class HeroSection {
             // Lazy load thumbnails on first open
             if (!this.thumbnailsLoaded) {
                 modal.querySelectorAll('.bg-thumb').forEach(thumb => {
-                    const bgUrl = thumb.dataset.bgUrl;
-                    if (bgUrl) {
-                        thumb.style.backgroundImage = `url('${bgUrl}')`;
-                        // Background images don't support loading="lazy", but we can add decoding hints if they WERE img tags.
-                        // Since they are div with bg-image, we rely on the lazy load logic already present in openModal.
+                    const img = thumb.querySelector('img');
+                    const thumbUrl = thumb.dataset.thumbUrl;
+                    if (img && thumbUrl) {
+                        img.src = thumbUrl;
+                        img.onload = () => img.classList.remove('opacity-0');
                     }
                 });
                 this.thumbnailsLoaded = true;
