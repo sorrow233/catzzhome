@@ -107,6 +107,7 @@ export default class HeroSection {
                 setTimeout(resolve, 8000); // 宽松超时
             });
         } catch (e) {
+            console.warn('Wallpaper load warning:', e);
         }
 
         // 显式释放 img 对象
