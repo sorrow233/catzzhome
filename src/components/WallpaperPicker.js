@@ -4,7 +4,7 @@ export class WallpaperPicker {
     constructor(parent) {
         this.parent = parent;
         this.wallpapers = HERO_CONFIG.wallpapers;
-        this.thumbnailsLoaded = false;
+        this.observer = null;
     }
 
     init() {
@@ -47,32 +47,10 @@ export class WallpaperPicker {
             thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.parent.currentBgId === wp.id ? 'active' : ''}`;
             thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
-            thumb.addEventListener('click', () => {
+            thumb.addEventListener('click', async () => {
                 this.parent.updateWallpaperChange();
-                if (this.parent.currentLoadedBgId && this.parent.currentLoadedBgId !== wp.id) {
-                    this.parent.clearPreviousWallpaper();
-                }
-
-                this.parent.currentBgId = wp.id;
-                const originalUrl = this.parent.getWallpaperUrl(wp.id);
-                this.parent.element.style.backgroundImage = `url('${originalUrl}')`;
-                this.parent.element.classList.remove('bg-gradient-to-b');
-                this.parent.currentLoadedBgId = wp.id;
-
-                const theme = this.parent.getCurrentTheme();
-                this.parent.updateDynamicStyles(theme);
-                this.parent.applyThemeToElements(theme);
-
-                localStorage.setItem('catzz_bg_id', wp.id);
-                if (this.parent.firebaseModule && this.parent.firebaseModule.auth.currentUser) {
-                    this.parent.firebaseModule.saveSettings(this.parent.firebaseModule.auth.currentUser.uid, {
-                        bgId: wp.id,
-                        cinematicPrefs: this.parent.cinematicPrefs
-                    });
-                }
-
+                await this.parent.switchBackground(wp.id);
                 updateToggleUI();
-                this.parent.toggleGradient(this.parent.getCinematicState());
                 closeModal();
 
                 modal.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active'));
@@ -82,15 +60,30 @@ export class WallpaperPicker {
         });
 
         const openModal = () => {
-            if (!this.thumbnailsLoaded) {
-                modal.querySelectorAll('.bg-thumb').forEach(thumb => {
-                    const bgUrl = thumb.dataset.bgUrl;
-                    if (bgUrl) thumb.style.backgroundImage = `url('${bgUrl}')`;
-                });
-                this.thumbnailsLoaded = true;
-            }
             modal.classList.remove('opacity-0', 'pointer-events-none');
-            modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100');
+            modalContent.classList.replace('scale-95', 'scale-100');
+
+            // 初始化 Intersection Observer 进行粒度化加载
+            if (!this.observer) {
+                this.observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const thumb = entry.target;
+                        const bgUrl = thumb.dataset.bgUrl;
+                        if (entry.isIntersecting) {
+                            // 进入视野：加载
+                            thumb.style.backgroundImage = `url('${bgUrl}')`;
+                        } else {
+                            // 移出视野：释放
+                            thumb.style.backgroundImage = 'none';
+                        }
+                    });
+                }, { root: grid, threshold: 0.1 });
+            }
+
+            // 观察所有缩略图
+            grid.querySelectorAll('.bg-thumb').forEach(thumb => {
+                this.observer.observe(thumb);
+            });
         };
 
         const closeModal = () => {
@@ -113,16 +106,15 @@ export class WallpaperPicker {
     }
 
     clearThumbnails() {
-        if (!this.thumbnailsLoaded) return;
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
+        }
         const modal = this.parent.element.querySelector('#bg-modal');
-        if (!modal) return;
-
-        // 如果选择器已关闭，强制清除所有预览图引用
-        if (modal.classList.contains('opacity-0')) {
+        if (modal) {
             modal.querySelectorAll('.bg-thumb').forEach(thumb => {
                 thumb.style.backgroundImage = 'none';
             });
-            this.thumbnailsLoaded = false;
         }
     }
 }

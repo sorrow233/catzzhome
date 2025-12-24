@@ -64,7 +64,58 @@ export default class HeroSection {
 
     clearPreviousWallpaper() {
         this.element.style.backgroundImage = 'none';
-        setTimeout(() => { }, 0);
+    }
+
+    async switchBackground(id) {
+        if (id === this.currentBgId && this.element.style.backgroundImage !== 'none') return;
+
+        const originalUrl = this.getWallpaperUrl(id);
+        if (!originalUrl) return;
+
+        // 1. 淡出当前背景
+        this.element.style.opacity = '0';
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // 2. 清除旧引用
+        this.clearPreviousWallpaper();
+
+        // 3. 预加载新图
+        const img = new Image();
+        img.src = originalUrl;
+
+        try {
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                // 防止加载时间过长，5秒超时
+                setTimeout(resolve, 5000);
+            });
+        } catch (e) {
+            console.warn("Wallpaper pre-load failed, switching anyway");
+        }
+
+        // 4. 应用新图并淡入
+        this.currentBgId = id;
+        this.element.style.backgroundImage = `url('${originalUrl}')`;
+        this.element.classList.remove('bg-gradient-to-b');
+        this.currentLoadedBgId = id;
+        localStorage.setItem('catzz_bg_id', id);
+
+        // 更新主题和样式
+        const theme = this.getCurrentTheme();
+        this.updateDynamicStyles(theme);
+        this.applyThemeToElements(theme);
+        this.toggleGradient(this.getCinematicState());
+
+        if (this.firebaseModule && this.firebaseModule.auth.currentUser) {
+            this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, {
+                bgId: id,
+                cinematicPrefs: this.cinematicPrefs
+            });
+        }
+
+        this.element.style.opacity = '1';
     }
 
     getCurrentTheme() {
