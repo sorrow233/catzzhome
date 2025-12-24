@@ -1,4 +1,7 @@
-const CACHE_NAME = 'catzzhome-v3-20241224'; // Date-based versioning for cache invalidation
+// Service Worker for Catzz Homepage - Optimized for Memory
+const CACHE_NAME = 'catzzhome-v4-minimal-20241224';
+
+// 只缓存关键资源（节省内存）
 const urlsToCache = [
     '/',
     '/index.html',
@@ -7,6 +10,7 @@ const urlsToCache = [
     '/src/components/HeroSection.js',
     '/src/lib/firebase.js',
     '/src/styles/animations.css'
+    // ❌ 移除图片、字体等大文件缓存
 ];
 
 // Install event - cache resources
@@ -33,8 +37,20 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch event - Stale-While-Revalidate strategy for "Instant Load + Auto Update"
+// Fetch event - Optimized strategy
 self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+
+    // 不缓存外部资源（Firebase, Google Fonts, 图片CDN等）
+    if (url.origin !== self.location.origin) {
+        return;
+    }
+
+    // 不缓存图片资源（节省内存）
+    if (url.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|woff|woff2|ttf)$/i)) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             const fetchPromise = fetch(event.request).then((networkResponse) => {

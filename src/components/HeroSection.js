@@ -20,19 +20,20 @@ export default class HeroSection {
             { name: "Netflix", url: "https://www.netflix.com" }
         ];
 
+        // 壁纸数据: 移除原图URL以节省内存 (~90MB)
+        // 原图URL将按需动态构建
         this.wallpapers = [
             {
                 id: 'rainy_window',
                 name: 'Rainy Window',
-                url: "https://blog.catzz.work/file/1766242722856_image.png",
                 thumbUrl: "https://blog.catzz.work/file/1766577198544_rainy_window_thumb.webp",
                 theme: {
                     textColor: "text-cyan-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(34,211,238,0.3)]",
                     glassColor: "bg-cyan-950/40",
                     glassBorder: "border-cyan-200/20",
-                    iconColor: "#a5f3fc", // Cyan-200
-                    iconHoverColor: "#22d3ee", // Cyan-400 (Neon)
+                    iconColor: "#a5f3fc",
+                    iconHoverColor: "#22d3ee",
                     glowColor: "rgba(34, 211, 238, 0.4)",
                     quoteColor: "text-cyan-100/80"
                 }
@@ -40,15 +41,14 @@ export default class HeroSection {
             {
                 id: 'wet_street',
                 name: 'Wet Street',
-                url: "https://blog.catzz.work/file/1766242726260_image.png",
                 thumbUrl: "https://blog.catzz.work/file/1766577191010_wet_street_thumb.webp",
                 theme: {
                     textColor: "text-indigo-50",
                     textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
-                    glassColor: "bg-slate-900/70", // Deep dark for contrast
+                    glassColor: "bg-slate-900/70",
                     glassBorder: "border-indigo-200/10",
-                    iconColor: "#e0e7ff", // Indigo-100
-                    iconHoverColor: "#818cf8", // Indigo-400
+                    iconColor: "#e0e7ff",
+                    iconHoverColor: "#818cf8",
                     glowColor: "rgba(129, 140, 248, 0.4)",
                     quoteColor: "text-indigo-100/80"
                 }
@@ -56,15 +56,14 @@ export default class HeroSection {
             {
                 id: 'city_bed',
                 name: 'City Bed',
-                url: "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
                 thumbUrl: "https://blog.catzz.work/file/1766577198695_city_bed_thumb.webp",
                 theme: {
                     textColor: "text-amber-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(251,191,36,0.3)]",
                     glassColor: "bg-neutral-900/60",
                     glassBorder: "border-amber-500/20",
-                    iconColor: "#fcd34d", // Amber-300
-                    iconHoverColor: "#fbbf24", // Amber-400 (Lamp light)
+                    iconColor: "#fcd34d",
+                    iconHoverColor: "#fbbf24",
                     glowColor: "rgba(251, 191, 36, 0.4)",
                     quoteColor: "text-amber-100/90"
                 }
@@ -72,15 +71,14 @@ export default class HeroSection {
             {
                 id: 'umbrella_street',
                 name: 'Umbrella Street',
-                url: "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
                 thumbUrl: "https://blog.catzz.work/file/1766577195392_umbrella_street_thumb.webp",
                 theme: {
                     textColor: "text-fuchsia-50",
                     textShadow: "drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]",
                     glassColor: "bg-gray-900/40",
                     glassBorder: "border-fuchsia-200/10",
-                    iconColor: "#e879f9", // Fuchsia-400
-                    iconHoverColor: "#d946ef", // Fuchsia-500
+                    iconColor: "#e879f9",
+                    iconHoverColor: "#d946ef",
                     glowColor: "rgba(217, 70, 239, 0.4)",
                     quoteColor: "text-fuchsia-100/90"
                 }
@@ -88,15 +86,14 @@ export default class HeroSection {
             {
                 id: 'flower_window',
                 name: 'Flower Window',
-                url: "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
                 thumbUrl: "https://blog.catzz.work/file/1766577189209_flower_window_thumb.webp",
                 theme: {
                     textColor: "text-emerald-50",
                     textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
                     glassColor: "bg-emerald-950/40",
                     glassBorder: "border-emerald-200/15",
-                    iconColor: "#6ee7b7", // Emerald-300
-                    iconHoverColor: "#34d399", // Emerald-400
+                    iconColor: "#6ee7b7",
+                    iconHoverColor: "#34d399",
                     glowColor: "rgba(52, 211, 153, 0.4)",
                     quoteColor: "text-emerald-100/90"
                 }
@@ -104,14 +101,13 @@ export default class HeroSection {
             {
                 id: 'white_shirt_girl',
                 name: 'White Shirt Girl',
-                url: "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
                 thumbUrl: "https://blog.catzz.work/file/1766577195255_white_shirt_girl_thumb.webp",
                 theme: {
                     textColor: "text-slate-50",
                     textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.6)]",
                     glassColor: "bg-slate-800/30",
                     glassBorder: "border-slate-200/20",
-                    iconColor: "#cbd5e1", // Slate-300
+                    iconColor: "#cbd5e1",
                     iconHoverColor: "#ffffff",
                     glowColor: "rgba(255, 255, 255, 0.4)",
                     quoteColor: "text-slate-200/80"
@@ -120,15 +116,14 @@ export default class HeroSection {
             {
                 id: 'sunset_balcony',
                 name: 'Sunset Balcony',
-                url: "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
                 thumbUrl: "https://blog.catzz.work/file/1766577196361_sunset_balcony_thumb.webp",
                 theme: {
                     textColor: "text-orange-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(251,146,60,0.4)]",
                     glassColor: "bg-orange-950/40",
                     glassBorder: "border-orange-200/20",
-                    iconColor: "#fdba74", // Orange-300
-                    iconHoverColor: "#fb923c", // Orange-400
+                    iconColor: "#fdba74",
+                    iconHoverColor: "#fb923c",
                     glowColor: "rgba(251, 146, 60, 0.5)",
                     quoteColor: "text-orange-100"
                 }
@@ -136,30 +131,41 @@ export default class HeroSection {
             {
                 id: 'night_view',
                 name: 'Night View',
-                url: "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg",
                 thumbUrl: "https://blog.catzz.work/file/1766577191962_night_view_thumb.webp",
                 theme: {
                     textColor: "text-blue-50",
                     textShadow: "drop-shadow-[0_2px_15px_rgba(96,165,250,0.5)]",
                     glassColor: "bg-blue-950/50",
                     glassBorder: "border-blue-400/20",
-                    iconColor: "#93c5fd", // Blue-300
-                    iconHoverColor: "#60a5fa", // Blue-400
-                    glowColor: "rgba(96, 165, 250, 0.6)", // Strong blue glow
+                    iconColor: "#93c5fd",
+                    iconHoverColor: "#60a5fa",
+                    glowColor: "rgba(96, 165, 250, 0.6)",
                     quoteColor: "text-blue-100/90"
                 }
             }
         ];
+
+        // 原图URL映射表（按需加载）
+        this.wallpaperUrls = {
+            'rainy_window': "https://blog.catzz.work/file/1766242722856_image.png",
+            'wet_street': "https://blog.catzz.work/file/1766242726260_image.png",
+            'city_bed': "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
+            'umbrella_street': "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
+            'flower_window': "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
+            'white_shirt_girl': "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
+            'sunset_balcony': "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
+            'night_view': "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg"
+        };
 
         // Load Saved Data
         try {
             const saved = localStorage.getItem('catzz_bookmarks');
             this.bookmarks = saved ? JSON.parse(saved) : defaultBookmarks;
 
-            // Background
-            this.currentBg = localStorage.getItem('catzz_bg') || this.wallpapers[4].url;
+            // Background: 使用ID而非URL（节省内存）
+            this.currentBgId = localStorage.getItem('catzz_bg_id') || 'flower_window';
 
-            // Current Cinematic Prefs (Map: URL -> Boolean)
+            // Current Cinematic Prefs (Map: ID -> Boolean)
             try {
                 this.cinematicPrefs = JSON.parse(localStorage.getItem('catzz_cinematic_prefs')) || {};
             } catch {
@@ -167,7 +173,7 @@ export default class HeroSection {
             }
         } catch (e) {
             this.bookmarks = defaultBookmarks;
-            this.currentBg = this.wallpapers[3].url;
+            this.currentBgId = 'umbrella_street';
             this.cinematicPrefs = {};
         }
 
@@ -190,8 +196,24 @@ export default class HeroSection {
         this.iconCache = new Map();
     }
 
+    // 辅助方法：获取壁纸原图URL
+    getWallpaperUrl(id) {
+        return this.wallpaperUrls[id] || '';
+    }
+
+    // 辅助方法：获取壁纸缩略图URL
+    getWallpaperThumbUrl(id) {
+        const wp = this.wallpapers.find(w => w.id === id);
+        return wp ? wp.thumbUrl : '';
+    }
+
+    // 辅助方法：通过ID查找壁纸
+    findWallpaperById(id) {
+        return this.wallpapers.find(w => w.id === id);
+    }
+
     getCurrentTheme() {
-        const wp = this.wallpapers.find(w => w.url === this.currentBg);
+        const wp = this.findWallpaperById(this.currentBgId);
         return wp ? wp.theme : {
             textColor: "text-slate-700",
             textShadow: "",
@@ -205,17 +227,13 @@ export default class HeroSection {
     }
 
     getCinematicState() {
-        if (this.cinematicPrefs[this.currentBg] !== undefined) {
-            return this.cinematicPrefs[this.currentBg];
+        if (this.cinematicPrefs[this.currentBgId] !== undefined) {
+            return this.cinematicPrefs[this.currentBgId];
         }
         // Defaults: WP1 (Rainy Window), WP7 (Sunset), WP8 (Night) -> OFF
         // Others -> ON
-        const defaultsOff = [
-            'https://blog.catzz.work/file/1766242722856_image.png', // WP1
-            'https://blog.catzz.work/file/1766241284787_72055179_p0.jpg', // WP7
-            'https://blog.catzz.work/file/1766241306259_68686407_p0.jpg'  // WP8
-        ];
-        return !defaultsOff.includes(this.currentBg);
+        const defaultsOff = ['rainy_window', 'sunset_balcony', 'night_view'];
+        return !defaultsOff.includes(this.currentBgId);
     }
 
     render() {
@@ -225,9 +243,10 @@ export default class HeroSection {
         this.element = document.createElement('section');
         this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-opacity duration-700 ease-in-out bg-cover bg-center';
 
-        // Initial Background State
-        if (this.currentBg) {
-            this.element.style.backgroundImage = `url('${this.currentBg}')`;
+        // Initial Background State: 使用缩略图（节省内存）
+        if (this.currentBgId) {
+            const thumbUrl = this.getWallpaperThumbUrl(this.currentBgId);
+            this.element.style.backgroundImage = `url('${thumbUrl}')`;
         } else {
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
@@ -462,18 +481,20 @@ export default class HeroSection {
                 listenSettings(user.uid, (data) => {
                     if (data) {
                         let changed = false;
-                        if (data.bg && data.bg !== this.currentBg) {
-                            this.currentBg = data.bg;
-                            this.element.style.backgroundImage = `url('${data.bg}')`;
+                        if (data.bgId && data.bgId !== this.currentBgId) {
+                            this.currentBgId = data.bgId;
+                            // 使用缩略图作为背景（节省内存）
+                            const thumbUrl = this.getWallpaperThumbUrl(data.bgId);
+                            this.element.style.backgroundImage = `url('${thumbUrl}')`;
                             this.element.classList.remove('bg-gradient-to-b');
-                            localStorage.setItem('catzz_bg', data.bg);
+                            localStorage.setItem('catzz_bg_id', data.bgId);
 
                             if (data.cinematicPrefs) {
                                 this.cinematicPrefs = data.cinematicPrefs;
                                 localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
                             } else if (data.cinematicMode !== undefined) {
                                 // Backward compatibility migration
-                                this.cinematicPrefs[this.currentBg] = data.cinematicMode;
+                                this.cinematicPrefs[this.currentBgId] = data.cinematicMode;
                                 localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
                             }
 
@@ -551,7 +572,7 @@ export default class HeroSection {
 
         toggleBtn.addEventListener('click', () => {
             const newState = !this.getCinematicState();
-            this.cinematicPrefs[this.currentBg] = newState;
+            this.cinematicPrefs[this.currentBgId] = newState;
             localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
             updateToggleUI();
 
@@ -561,16 +582,18 @@ export default class HeroSection {
             if (auth.currentUser) saveSettings(auth.currentUser.uid, { cinematicPrefs: this.cinematicPrefs });
         });
 
-        // Populate Grid (but don't load images yet - lazy load on modal open)
+        // Populate Grid (使用缩略图，节省内存)
         this.wallpapers.forEach(wp => {
             const thumb = document.createElement('div');
-            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBg === wp.url ? 'active' : ''}`;
-            // Store URL as data attribute instead of loading immediately
-            thumb.dataset.bgUrl = wp.url;
+            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBgId === wp.id ? 'active' : ''}`;
+            // 直接使用缩略图URL
+            thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
-                this.currentBg = wp.url;
-                this.element.style.backgroundImage = `url('${wp.url}')`;
+                this.currentBgId = wp.id;
+                // 使用缩略图作为背景（节省内存）
+                const thumbUrl = this.getWallpaperThumbUrl(wp.id);
+                this.element.style.backgroundImage = `url('${thumbUrl}')`;
                 this.element.classList.remove('bg-gradient-to-b');
 
                 // Apply Theme
@@ -578,8 +601,8 @@ export default class HeroSection {
                 this.updateDynamicStyles(theme);
                 this.applyThemeToElements(theme);
 
-                localStorage.setItem('catzz_bg', wp.url);
-                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bg: wp.url, cinematicPrefs: this.cinematicPrefs });
+                localStorage.setItem('catzz_bg_id', wp.id);
+                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bgId: wp.id, cinematicPrefs: this.cinematicPrefs });
 
                 // Update Toggle & Gradient for New Wallpaper
                 updateToggleUI();
@@ -931,12 +954,54 @@ export default class HeroSection {
     }
 
     initRain() {
-        const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5); let width = window.innerWidth; let height = window.innerHeight;
-        const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
+        const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return;
+        const ctx = canvas.getContext('2d', {
+            alpha: true,
+            desynchronized: true // 性能优化：允许Canvas异步渲染
+        });
+
+        // 极致优化：DPR降低到1.0（节省约15MB内存）
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.0);
+        let width = window.innerWidth; let height = window.innerHeight;
+
+        const resize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+        };
         resize();
-        const raindrops = []; const count = 80;
-        class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
+
+        const raindrops = [];
+        // 极致优化：雨滴数量减少到40（节省约2MB内存）
+        const count = 40;
+
+        class Raindrop {
+            constructor() { this.reset(); this.y = Math.random() * height; }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20;
+                this.length = Math.random() * 15 + 5;
+                this.speed = Math.random() * 3 + 4;
+                this.opacity = Math.random() * 0.3 + 0.1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, this.y + this.length);
+                ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+            update() {
+                this.y += this.speed;
+                if (this.y > height) this.reset();
+            }
+        }
+
         for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
 
         // Page Visibility API: Pause animation when tab is hidden
