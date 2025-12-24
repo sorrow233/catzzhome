@@ -195,6 +195,38 @@ export default class HeroSection {
 
         // Icon cache: Map<url, {iconSrc, iconType, textFallback}>
         this.iconCache = new Map();
+
+        // 不活动检测 (极致内存优化)
+        this.lastInteractionTime = Date.now();
+        this.startInactivityTimer();
+    }
+
+    // 更新最后交互时间
+    updateInteraction() {
+        this.lastInteractionTime = Date.now();
+    }
+
+    // 启动不活动检测定时器
+    startInactivityTimer() {
+        setInterval(() => {
+            const fiveMinutes = 5 * 60 * 1000;
+            if (Date.now() - this.lastInteractionTime > fiveMinutes) {
+                this.purgeMemory();
+            }
+        }, 60000); // 每分钟检查一次
+    }
+
+    // 极致内存优化：强制清理缓存
+    purgeMemory() {
+        if (this.iconCache.size === 0) return;
+
+        console.log('Aggressive Memory Purge: Cleaning up inactivity cache...');
+        this.iconCache.clear();
+
+        // 如果壁纸系统有冗余引用，这里也可以清除
+        // 实际上只需要 clearPreviousWallpaper 已经做了部分工作
+        // 重新渲染一次不带图标的 Grid（或带延迟加载的）
+        this.renderGrid();
     }
 
     // 辅助方法：获取壁纸原图URL
@@ -638,6 +670,7 @@ export default class HeroSection {
             thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
+                this.updateInteraction(); // 用户点击壁纸
                 // 极致优化：清除旧壁纸内存
                 if (this.currentLoadedBgId && this.currentLoadedBgId !== wp.id) {
                     this.clearPreviousWallpaper();
@@ -981,6 +1014,7 @@ export default class HeroSection {
     }
 
     saveBookmarks() {
+        this.updateInteraction(); // 保存书签
         localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
         if (this.firebaseModule) this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, { bookmarks: this.bookmarks });
     }
