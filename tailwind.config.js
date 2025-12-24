@@ -15,7 +15,6 @@ module.exports = {
             },
             fontFamily: {
                 serif: ['"Noto Serif SC"', 'serif'],
-                hand: ['"LXGWWenKai"', '"Noto Serif SC"', 'serif'],
                 mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
             }
         }

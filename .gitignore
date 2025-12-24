@@ -1,21 +1,44 @@
 # Dependencies
 node_modules/
-package-lock.json
+.pnp
+.pnp.js
 
-# Build outputs
-# Keep dist/output.css for deployment if needed, but usually built in CI
-# For now we keep it since we want to deploy it directly
+# Testing
+coverage/
 
-# Editor directories and files
+# Production
+dist/
+build/
+
+# Misc
+.DS_Store
+*.pem
 .vscode/
 .idea/
 *.sublime-workspace
 *.sublime-project
-.DS_Store
 
 # Logs
+logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Pixiv data
-pixiv_data/
+# Caches
+.eslintcache
+.stylelintcache
+.vite
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Project specific
+pixiv_data
+package-lock.json
+scripts/
