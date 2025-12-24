@@ -73,6 +73,13 @@ export default class HeroSection {
         const thumbUrl = this.getWallpaperThumbUrl(id);
         if (!originalUrl) return;
 
+        // 0. 强制清理：移除所有旧的 overlay，防止快速切换导致堆叠泄漏
+        const oldOverlays = this.element.querySelectorAll('.bg-overlay');
+        oldOverlays.forEach(el => {
+            el.style.backgroundImage = 'none'; // 强制释放纹理
+            el.remove();
+        });
+
         // 1. 创建“知觉层” (模糊的缩略图占位)
         const overlay = document.createElement('div');
         overlay.className = 'bg-overlay bg-blur';
@@ -100,8 +107,12 @@ export default class HeroSection {
                 setTimeout(resolve, 8000); // 宽松超时
             });
         } catch (e) {
-            console.warn("Wallpaper original load failed");
         }
+
+        // 显式释放 img 对象
+        img.onload = null;
+        img.onerror = null;
+        img.src = '';
 
         // 3. 计算剩余需要等待的时间
         const elapsedTime = Date.now() - startTime;
@@ -133,7 +144,10 @@ export default class HeroSection {
         overlay.classList.remove('active');
 
         // 等待淡出动画完成后移除元素
-        setTimeout(() => overlay.remove(), 1200);
+        setTimeout(() => {
+            overlay.style.backgroundImage = 'none'; // 移除前显式释放纹理
+            overlay.remove();
+        }, 1200);
     }
 
     getCurrentTheme() {
