@@ -888,7 +888,44 @@ export default class HeroSection {
         const raindrops = []; const count = 80;
         class Raindrop { constructor() { this.reset(); this.y = Math.random() * height; } reset() { this.x = Math.random() * width; this.y = -20; this.length = Math.random() * 15 + 5; this.speed = Math.random() * 3 + 4; this.opacity = Math.random() * 0.3 + 0.1; } draw() { ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x, this.y + this.length); ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`; ctx.lineWidth = 1.5; ctx.stroke(); } update() { this.y += this.speed; if (this.y > height) this.reset(); } }
         for (let i = 0; i < count; i++) raindrops.push(new Raindrop());
-        const animate = () => { ctx.clearRect(0, 0, width, height); raindrops.forEach(drop => { drop.update(); drop.draw(); }); this.rainAnimationId = requestAnimationFrame(animate); };
-        animate(); window.addEventListener('resize', resize);
+
+        // Page Visibility API: Pause animation when tab is hidden
+        let isAnimating = false;
+        const animate = () => {
+            if (!isAnimating) return; // Stop if paused
+            ctx.clearRect(0, 0, width, height);
+            raindrops.forEach(drop => { drop.update(); drop.draw(); });
+            this.rainAnimationId = requestAnimationFrame(animate);
+        };
+
+        const startAnimation = () => {
+            if (isAnimating) return;
+            isAnimating = true;
+            animate();
+        };
+
+        const stopAnimation = () => {
+            isAnimating = false;
+            if (this.rainAnimationId) {
+                cancelAnimationFrame(this.rainAnimationId);
+                this.rainAnimationId = null;
+            }
+        };
+
+        // Listen for visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAnimation();
+            } else {
+                startAnimation();
+            }
+        });
+
+        // Start animation if page is visible
+        if (!document.hidden) {
+            startAnimation();
+        }
+
+        window.addEventListener('resize', resize);
     }
 }
