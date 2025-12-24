@@ -243,10 +243,10 @@ export default class HeroSection {
         this.element = document.createElement('section');
         this.element.className = 'w-full h-screen flex flex-col items-center justify-start pt-16 md:pt-36 relative overflow-hidden font-serif transition-opacity duration-700 ease-in-out bg-cover bg-center';
 
-        // Initial Background State: 使用缩略图（节省内存）
+        // Initial Background State: 当前壁纸使用原图（清晰），只有1张~3MB
         if (this.currentBgId) {
-            const thumbUrl = this.getWallpaperThumbUrl(this.currentBgId);
-            this.element.style.backgroundImage = `url('${thumbUrl}')`;
+            const originalUrl = this.getWallpaperUrl(this.currentBgId);
+            this.element.style.backgroundImage = `url('${originalUrl}')`;
         } else {
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
@@ -483,9 +483,9 @@ export default class HeroSection {
                         let changed = false;
                         if (data.bgId && data.bgId !== this.currentBgId) {
                             this.currentBgId = data.bgId;
-                            // 使用缩略图作为背景（节省内存）
-                            const thumbUrl = this.getWallpaperThumbUrl(data.bgId);
-                            this.element.style.backgroundImage = `url('${thumbUrl}')`;
+                            // 当前壁纸使用原图（清晰）
+                            const originalUrl = this.getWallpaperUrl(data.bgId);
+                            this.element.style.backgroundImage = `url('${originalUrl}')`;
                             this.element.classList.remove('bg-gradient-to-b');
                             localStorage.setItem('catzz_bg_id', data.bgId);
 
@@ -582,18 +582,18 @@ export default class HeroSection {
             if (auth.currentUser) saveSettings(auth.currentUser.uid, { cinematicPrefs: this.cinematicPrefs });
         });
 
-        // Populate Grid (使用缩略图，节省内存)
+        // Populate Grid (选择器预览用缩略图，节省内存)
         this.wallpapers.forEach(wp => {
             const thumb = document.createElement('div');
             thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.currentBgId === wp.id ? 'active' : ''}`;
-            // 直接使用缩略图URL
+            // 选择器预览用缩略图
             thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
                 this.currentBgId = wp.id;
-                // 使用缩略图作为背景（节省内存）
-                const thumbUrl = this.getWallpaperThumbUrl(wp.id);
-                this.element.style.backgroundImage = `url('${thumbUrl}')`;
+                // 当前壁纸使用原图（清晰）
+                const originalUrl = this.getWallpaperUrl(wp.id);
+                this.element.style.backgroundImage = `url('${originalUrl}')`;
                 this.element.classList.remove('bg-gradient-to-b');
 
                 // Apply Theme
