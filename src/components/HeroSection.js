@@ -924,7 +924,7 @@ export default class HeroSection {
 
     initRain() {
         const canvas = this.element.querySelector('#rain-canvas'); if (!canvas) return; const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1; let width = window.innerWidth; let height = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5); let width = window.innerWidth; let height = window.innerHeight;
         const resize = () => { width = window.innerWidth; height = window.innerHeight; canvas.width = width * dpr; canvas.height = height * dpr; ctx.scale(dpr, dpr); canvas.style.width = width + 'px'; canvas.style.height = height + 'px'; };
         resize();
         const raindrops = []; const count = 80;
