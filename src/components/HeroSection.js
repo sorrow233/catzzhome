@@ -44,12 +44,15 @@ export default class HeroSection {
 
     async purgeMemory() {
         await this.iconCache.cleanup();
+
+        // 清理壁纸选择器中的未选中预览图
+        if (this.wallpaperPicker) this.wallpaperPicker.clearThumbnails();
+
         if (this.firebaseModule && this.firebaseActive) {
             await this.firebaseModule.terminateFirebase();
             this.firebaseActive = false;
             this.firebaseModule = null;
         }
-        this.renderGrid();
     }
 
     getWallpaperUrl(id) { return this.wallpaperUrls[id] || ''; }

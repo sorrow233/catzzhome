@@ -95,7 +95,9 @@ export class WallpaperPicker {
 
         const closeModal = () => {
             modal.classList.add('opacity-0', 'pointer-events-none');
-            modalContent.classList.add('scale-95'); modalContent.classList.remove('scale-100');
+            modalContent.classList.replace('scale-100', 'scale-95');
+            // 立即清理非选中壁纸的预览图引用，释放内存
+            this.clearThumbnails();
         };
 
         title.addEventListener('click', () => {
@@ -108,5 +110,19 @@ export class WallpaperPicker {
         });
         closeBtn.addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    }
+
+    clearThumbnails() {
+        if (!this.thumbnailsLoaded) return;
+        const modal = this.parent.element.querySelector('#bg-modal');
+        if (!modal) return;
+
+        // 如果选择器已关闭，强制清除所有预览图引用
+        if (modal.classList.contains('opacity-0')) {
+            modal.querySelectorAll('.bg-thumb').forEach(thumb => {
+                thumb.style.backgroundImage = 'none';
+            });
+            this.thumbnailsLoaded = false;
+        }
     }
 }
