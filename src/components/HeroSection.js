@@ -177,6 +177,9 @@ export default class HeroSection {
             'maps.google.com': 'googlemaps',
             'netflix.com': 'netflix'
         };
+
+        // Icon cache: Map<url, {iconSrc, iconType, textFallback}>
+        this.iconCache = new Map();
     }
 
     getCurrentTheme() {
@@ -635,6 +638,23 @@ export default class HeroSection {
         glassBox.className = `glass-box ${glassClass} ${borderClass} border backdrop-blur-md`;
         container.appendChild(glassBox);
 
+        // Check cache first
+        const cached = this.iconCache.get(url);
+        if (cached) {
+            if (cached.iconType === 'bitmap') {
+                const img = document.createElement('img');
+                img.className = 'icon-bitmap';
+                img.src = cached.iconSrc;
+                glassBox.appendChild(img);
+            } else if (cached.iconType === 'text') {
+                const textEl = document.createElement('div');
+                textEl.className = 'text-icon';
+                textEl.textContent = cached.textFallback;
+                glassBox.appendChild(textEl);
+            }
+            return;
+        }
+
         const slug = this.getSimpleIconSlug(name, url);
         let domain = "";
         try { domain = new URL(url).hostname; } catch (e) { }
@@ -649,8 +669,15 @@ export default class HeroSection {
             glassBox.innerHTML = '';
             const textEl = document.createElement('div');
             textEl.className = 'text-icon';
-            textEl.textContent = (name || 'S').charAt(0).toUpperCase();
+            const textFallback = (name || 'S').charAt(0).toUpperCase();
+            textEl.textContent = textFallback;
             glassBox.appendChild(textEl);
+
+            // Cache text fallback
+            this.iconCache.set(url, {
+                iconType: 'text',
+                textFallback: textFallback
+            });
         };
 
         const tryNext = () => {
@@ -668,6 +695,12 @@ export default class HeroSection {
                     realImg.src = src;
                     glassBox.innerHTML = '';
                     glassBox.appendChild(realImg);
+
+                    // Cache successful icon
+                    this.iconCache.set(url, {
+                        iconSrc: src,
+                        iconType: 'bitmap'
+                    });
                 }
             };
             img.onerror = () => tryNext();
@@ -682,6 +715,10 @@ export default class HeroSection {
 
         const theme = this.getCurrentTheme();
         grid.innerHTML = '';
+
+        // Use DocumentFragment to batch DOM operations and prevent layout thrashing
+        const fragment = document.createDocumentFragment();
+
         this.bookmarks.forEach((site, index) => {
             const item = document.createElement('div');
             item.className = 'unified-icon-container flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer relative';
@@ -716,14 +753,17 @@ export default class HeroSection {
                 this.openModal(index, site);
             });
 
-            grid.appendChild(item);
+            fragment.appendChild(item);
         });
 
         const addBtn = document.createElement('div');
         addBtn.className = 'flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer';
         addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light group-hover:text-gray-400 transition-colors">Add</span>`;
         addBtn.addEventListener('click', () => this.openModal());
-        grid.appendChild(addBtn);
+        fragment.appendChild(addBtn);
+
+        // Single DOM insertion instead of N+1 insertions
+        grid.appendChild(fragment);
     }
 
     toggleGradient(show) {
@@ -836,7 +876,9 @@ export default class HeroSection {
             if (!url.startsWith('http')) url = 'https://' + url;
 
             if (this.editingIndex >= 0) {
-                // Edit existing
+                // Edit existing - invalidate cache for the old URL
+                const oldUrl = this.bookmarks[this.editingIndex].url;
+                this.iconCache.delete(oldUrl);
                 this.bookmarks[this.editingIndex] = { name, url };
             } else {
                 // Add new
