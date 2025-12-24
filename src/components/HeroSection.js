@@ -79,13 +79,15 @@ export default class HeroSection {
         overlay.style.backgroundImage = `url('${thumbUrl}')`;
         this.element.appendChild(overlay);
 
-        // 强行刷新布局以触发 transition
+        // 强行刷新布局
         overlay.offsetHeight;
-        overlay.style.opacity = '1';
 
-        // 设定最小动画时间（为了优雅，不让过快）
+        // 触发进场动画 (Fade In + Zoom Out)
+        overlay.classList.add('active');
+
+        // 设定最小动画时间
         const startTime = Date.now();
-        const minAnimTime = 800;
+        const minAnimTime = 1200; // 延长到1.2秒，配合CSS
 
         // 2. 预加载新原图
         const img = new Image();
@@ -126,9 +128,12 @@ export default class HeroSection {
             });
         }
 
-        // 5. 移除“知觉层”：逐渐揭开清晰图
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.remove(), 1000); // 等待淡出完成后移除
+        // 5. 移除“知觉层”：逐渐揭开清晰图 (Fade Out)
+        // 此时主图已经是清晰的原图，我们只需要把覆盖在上面的模糊层淡出即可
+        overlay.classList.remove('active');
+
+        // 等待淡出动画完成后移除元素
+        setTimeout(() => overlay.remove(), 1200);
     }
 
     getCurrentTheme() {
@@ -261,11 +266,14 @@ export default class HeroSection {
             
             /* 新增壁纸切换动效样式 */
             .bg-overlay { 
-                position: absolute; inset: 0; z-index: -1; 
+                position: absolute; inset: 0; z-index: 5; /* 提升层级，确保在普通背景之上但在文字之下 */
                 background-size: cover; background-position: center; 
-                opacity: 0; transition: opacity 0.8s ease-in-out;
+                opacity: 0; transform: scale(1.1);
+                transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+                pointer-events: none;
             }
-            .bg-blur { filter: blur(20px) scale(1.1); }
+            .bg-overlay.active { opacity: 1; transform: scale(1.0); }
+            .bg-blur { filter: blur(20px); }
         `;
     }
 
