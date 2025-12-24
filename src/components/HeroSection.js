@@ -196,24 +196,24 @@ export default class HeroSection {
         // Icon cache: Map<url, {iconSrc, iconType, textFallback}>
         this.iconCache = new Map();
 
-        // 不活动检测 (极致内存优化)
-        this.lastInteractionTime = Date.now();
-        this.startInactivityTimer();
+        // 壁纸操作监测（1分钟不切换壁纸就清理缓存）
+        this.lastWallpaperChange = Date.now();
+        this.startWallpaperInactivityTimer();
     }
 
-    // 更新最后交互时间
-    updateInteraction() {
-        this.lastInteractionTime = Date.now();
+    // 更新最后壁纸切换时间
+    updateWallpaperChange() {
+        this.lastWallpaperChange = Date.now();
     }
 
-    // 启动不活动检测定时器
-    startInactivityTimer() {
+    // 启动壁纸不活动检测定时器（每30秒检查一次）
+    startWallpaperInactivityTimer() {
         setInterval(() => {
-            const fiveMinutes = 5 * 60 * 1000;
-            if (Date.now() - this.lastInteractionTime > fiveMinutes) {
+            const oneMinute = 60 * 1000;
+            if (Date.now() - this.lastWallpaperChange > oneMinute) {
                 this.purgeMemory();
             }
-        }, 60000); // 每分钟检查一次
+        }, 30000); // 每30秒检查一次
     }
 
     // 极致内存优化：强制清理缓存
@@ -679,7 +679,7 @@ export default class HeroSection {
             thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
-                this.updateInteraction(); // 用户点击壁纸
+                this.updateWallpaperChange(); // 用户切换壁纸
                 // 极致优化：清除旧壁纸内存
                 if (this.currentLoadedBgId && this.currentLoadedBgId !== wp.id) {
                     this.clearPreviousWallpaper();
@@ -1023,7 +1023,6 @@ export default class HeroSection {
     }
 
     saveBookmarks() {
-        this.updateInteraction(); // 保存书签
         localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
         if (this.firebaseModule) this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, { bookmarks: this.bookmarks });
     }
