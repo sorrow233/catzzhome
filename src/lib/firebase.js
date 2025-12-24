@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot, terminate } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -64,6 +64,20 @@ export const listenSettings = (uid, callback) => {
             callback(doc.data());
         }
     });
+};
+
+/**
+ * 极致优化：强行关闭连接并清理内存
+ */
+export const terminateFirebase = async () => {
+    try {
+        if (db) {
+            await terminate(db);
+            console.log("Firestore connection terminated for memory saving.");
+        }
+    } catch (e) {
+        console.error("Failed to terminate Firebase:", e);
+    }
 };
 
 export { auth, onAuthStateChanged };

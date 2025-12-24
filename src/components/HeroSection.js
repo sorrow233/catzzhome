@@ -217,15 +217,20 @@ export default class HeroSection {
     }
 
     // 极致内存优化：强制清理缓存
-    purgeMemory() {
-        if (this.iconCache.size === 0) return;
+    async purgeMemory() {
+        if (this.iconCache.size === 0 && !this.firebaseActive) return;
 
-        console.log('Aggressive Memory Purge: Cleaning up inactivity cache...');
+        console.log('Aggressive Memory Purge: Cleaning up inactivity cache and Firebase...');
         this.iconCache.clear();
 
-        // 如果壁纸系统有冗余引用，这里也可以清除
-        // 实际上只需要 clearPreviousWallpaper 已经做了部分工作
-        // 重新渲染一次不带图标的 Grid（或带延迟加载的）
+        // 强行杀掉 Firebase 运行内存
+        if (this.firebaseModule && this.firebaseActive) {
+            await this.firebaseModule.terminateFirebase();
+            this.firebaseActive = false; // 标记为非活跃
+            this.firebaseModule = null; // 释放引用，尽管内存不一定立即释放，但提示浏览器清理
+        }
+
+        // 重新渲染一次不带图标的 Grid（强制释放旧图片引用）
         this.renderGrid();
     }
 
@@ -517,6 +522,7 @@ export default class HeroSection {
         if (!this.firebaseModule) {
             try {
                 this.firebaseModule = await import('../lib/firebase.js');
+                this.firebaseActive = true;
             } catch (e) {
                 console.error("Failed to load Firebase:", e);
                 return null;
