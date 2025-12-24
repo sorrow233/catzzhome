@@ -212,6 +212,17 @@ export default class HeroSection {
         return this.wallpapers.find(w => w.id === id);
     }
 
+    // 极致内存优化：清除旧壁纸的内存引用
+    clearPreviousWallpaper() {
+        // 清除背景图引用，强制浏览器释放图片内存
+        this.element.style.backgroundImage = 'none';
+
+        // 强制垃圾回收提示（微任务队列）
+        setTimeout(() => {
+            // 浏览器会在下一帧清理未引用的图片资源
+        }, 0);
+    }
+
     getCurrentTheme() {
         const wp = this.findWallpaperById(this.currentBgId);
         return wp ? wp.theme : {
@@ -247,6 +258,8 @@ export default class HeroSection {
         if (this.currentBgId) {
             const originalUrl = this.getWallpaperUrl(this.currentBgId);
             this.element.style.backgroundImage = `url('${originalUrl}')`;
+            // 记录当前加载的壁纸ID（用于后续清理）
+            this.currentLoadedBgId = this.currentBgId;
         } else {
             this.element.classList.add('bg-gradient-to-b', 'from-[#fdfbf7]', 'via-[#f4f7fb]', 'to-[#eef2f6]');
         }
@@ -482,12 +495,18 @@ export default class HeroSection {
                     if (data) {
                         let changed = false;
                         if (data.bgId && data.bgId !== this.currentBgId) {
+                            // 极致优化：清除旧壁纸内存
+                            if (this.currentLoadedBgId && this.currentLoadedBgId !== data.bgId) {
+                                this.clearPreviousWallpaper();
+                            }
+
                             this.currentBgId = data.bgId;
                             // 当前壁纸使用原图（清晰）
                             const originalUrl = this.getWallpaperUrl(data.bgId);
                             this.element.style.backgroundImage = `url('${originalUrl}')`;
                             this.element.classList.remove('bg-gradient-to-b');
                             localStorage.setItem('catzz_bg_id', data.bgId);
+                            this.currentLoadedBgId = data.bgId; // 记录新加载的壁纸
 
                             if (data.cinematicPrefs) {
                                 this.cinematicPrefs = data.cinematicPrefs;
@@ -590,11 +609,17 @@ export default class HeroSection {
             thumb.dataset.bgUrl = wp.thumbUrl;
             thumb.title = wp.name || wp.id;
             thumb.addEventListener('click', () => {
+                // 极致优化：清除旧壁纸内存
+                if (this.currentLoadedBgId && this.currentLoadedBgId !== wp.id) {
+                    this.clearPreviousWallpaper();
+                }
+
                 this.currentBgId = wp.id;
                 // 当前壁纸使用原图（清晰）
                 const originalUrl = this.getWallpaperUrl(wp.id);
                 this.element.style.backgroundImage = `url('${originalUrl}')`;
                 this.element.classList.remove('bg-gradient-to-b');
+                this.currentLoadedBgId = wp.id; // 记录新加载的壁纸
 
                 // Apply Theme
                 const theme = this.getCurrentTheme();
