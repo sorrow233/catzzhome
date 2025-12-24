@@ -1,5 +1,6 @@
 // 移除顶层 Firebase 导入，改为动态按需加载 (~40MB 内存节省)
 // import { login, logout, saveSettings, listenSettings, auth } from '../lib/firebase.js';
+import { IconCache } from '../lib/IconCache.js';
 
 export default class HeroSection {
     constructor() {
@@ -193,8 +194,9 @@ export default class HeroSection {
             'netflix.com': 'netflix'
         };
 
-        // Icon cache: Map<url, {iconSrc, iconType, textFallback}>
-        this.iconCache = new Map();
+        // Icon cache: 双层缓存（内存 + IndexedDB持久化）
+        this.iconCache = new IconCache();
+        this.iconCache.init().catch(() => { }); // 初始化IndexedDB（失败则降级为仅内存缓存）
 
         // 壁纸操作监测（1分钟不切换壁纸就清理缓存）
         this.lastWallpaperChange = Date.now();
@@ -218,10 +220,10 @@ export default class HeroSection {
 
     // 极致内存优化：强制清理缓存
     async purgeMemory() {
-        if (this.iconCache.size === 0 && !this.firebaseActive) return;
+        // 清理过期缓存条目
+        await this.iconCache.cleanup();
 
-        console.log('Aggressive Memory Purge: Cleaning up inactivity cache and Firebase...');
-        this.iconCache.clear();
+        if (!this.firebaseActive) return;
 
         // 强行杀掉 Firebase 运行内存
         if (this.firebaseModule && this.firebaseActive) {
@@ -755,7 +757,7 @@ export default class HeroSection {
         return slug;
     }
 
-    fetchIcon(name, url, container, theme) {
+    async fetchIcon(name, url, container, theme) {
         container.innerHTML = '';
         const glassBox = document.createElement('div');
         // Apply Dynamic Theme Classes
@@ -765,8 +767,8 @@ export default class HeroSection {
         glassBox.className = `glass-box ${glassClass} ${borderClass} border backdrop-blur-md`;
         container.appendChild(glassBox);
 
-        // Check cache first
-        const cached = this.iconCache.get(url);
+        // Check cache first (async now with IndexedDB)
+        const cached = await this.iconCache.get(url);
         if (cached) {
             if (cached.iconType === 'bitmap') {
                 const img = document.createElement('img');
@@ -799,17 +801,14 @@ export default class HeroSection {
             const textFallback = (name || 'S').charAt(0).toUpperCase();
             textEl.textContent = textFallback;
             glassBox.appendChild(textEl);
-
-            // Cache text fallback
-            this.iconCache.set(url, {
-                iconType: 'text',
-                textFallback: textFallback
-            });
+            // Cache the text fallback (async)
+            this.iconCache.set(url, { iconType: 'text', textFallback }).catch(() => { });
         };
 
         const tryNext = () => {
             if (attempt >= sources.length) { showText(); return; }
             const src = sources[attempt];
+            const isSVG = attempt === 0; // First source is SVG from simple-icons
             attempt++;
 
             const img = new Image();
@@ -817,17 +816,28 @@ export default class HeroSection {
             img.onload = () => {
                 if (img.width < 5) { tryNext(); }
                 else {
-                    const realImg = document.createElement('img');
-                    realImg.className = 'icon-bitmap';
-                    realImg.src = src;
                     glassBox.innerHTML = '';
-                    glassBox.appendChild(realImg);
+                    if (isSVG) {
+                        // SVG: use mask for dynamic theming
+                        const iconWrapper = document.createElement('div');
+                        iconWrapper.className = 'icon-wrapper';
+                        const iconMask = document.createElement('div');
+                        iconMask.className = 'icon-mask';
+                        iconMask.style.webkitMaskImage = `url('${src}')`;
+                        iconMask.style.maskImage = `url('${src}')`;
+                        iconWrapper.appendChild(iconMask);
+                        glassBox.appendChild(iconWrapper);
+                    } else {
+                        // Bitmap (favicon): direct img tag
+                        const bitmapImg = document.createElement('img');
+                        bitmapImg.className = 'icon-bitmap';
+                        bitmapImg.src = src;
+                        glassBox.appendChild(bitmapImg);
+                    }
+                    container.dataset.iconLoaded = 'true';
 
-                    // Cache successful icon
-                    this.iconCache.set(url, {
-                        iconSrc: src,
-                        iconType: 'bitmap'
-                    });
+                    // Cache - async
+                    this.iconCache.set(url, { iconSrc: src, iconType: 'bitmap' }).catch(() => { });
                 }
             };
             img.onerror = () => tryNext();
