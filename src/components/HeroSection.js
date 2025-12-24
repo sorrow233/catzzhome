@@ -570,13 +570,16 @@ export default class HeroSection {
         };
 
         const setupAuthListener = (fb) => {
-            fb.auth.onAuthStateChanged(user => {
+            fb.auth.onAuthStateChanged(async user => {
                 currentUser = user;
                 if (user) {
                     localStorage.setItem('catzz_is_logged_in', 'true');
                     btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full avatar-themed" alt="User">`;
                     btn.title = `Logged in as ${user.displayName}`;
-                    fb.listenSettings(user.uid, handleUserData);
+
+                    // 按需同步：登录时拉取一次数据
+                    const data = await fb.fetchSettings(user.uid);
+                    if (data) handleUserData(data);
                 } else {
                     localStorage.removeItem('catzz_is_logged_in');
                     btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;

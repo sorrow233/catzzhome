@@ -53,6 +53,26 @@ export const saveSettings = async (uid, data) => {
 };
 
 /**
+ * 按需同步：单次获取用户设置（不保持实时监听）
+ * @param {string} uid 
+ * @returns {Promise<object>} 用户设置数据
+ */
+export const fetchSettings = async (uid) => {
+    if (!uid) return null;
+    try {
+        const docSnap = await getDoc(doc(db, "users", uid));
+        if (docSnap.exists()) {
+            return docSnap.data();
+        }
+        return null;
+    } catch (e) {
+        console.error("Error fetching settings:", e);
+        return null;
+    }
+};
+
+/**
+ * @deprecated 改为按需同步，不再需要实时监听
  * Listen to user settings changes
  * @param {string} uid 
  * @param {function} callback (data) => void
