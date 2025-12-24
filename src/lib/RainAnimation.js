@@ -18,8 +18,9 @@ export class Raindrop {
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x, this.y + this.length);
-        ctx.strokeStyle = `rgba(148, 163, 184, ${this.opacity})`;
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = `rgba(180, 200, 220, ${this.opacity})`; // 更清冷的蓝灰色，提升质感
+        ctx.lineWidth = 1.2; // 稍微变细，配合高 DPR 会更精致
+        ctx.lineCap = 'round'; // 圆头，更像水滴
         ctx.stroke();
     }
 
@@ -37,9 +38,10 @@ export class RainAnimation {
             desynchronized: true
         });
 
-        this.dpr = Math.min(window.devicePixelRatio || 1, 1.0);
+        // 视觉优化：允许最高 1.5 倍 DPR，在清晰度和显存之间取得平衡
+        this.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         this.raindrops = [];
-        this.count = 40;
+        this.count = 80; // 数量翻倍，增加绵密感 (40 -> 80)
         this.isAnimating = false;
         this.animationId = null;
 
