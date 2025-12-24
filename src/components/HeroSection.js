@@ -593,6 +593,8 @@ export default class HeroSection {
                     const bgUrl = thumb.dataset.bgUrl;
                     if (bgUrl) {
                         thumb.style.backgroundImage = `url('${bgUrl}')`;
+                        // Background images don't support loading="lazy", but we can add decoding hints if they WERE img tags.
+                        // Since they are div with bg-image, we rely on the lazy load logic already present in openModal.
                     }
                 });
                 this.thumbnailsLoaded = true;
@@ -645,6 +647,8 @@ export default class HeroSection {
                 const img = document.createElement('img');
                 img.className = 'icon-bitmap';
                 img.src = cached.iconSrc;
+                img.loading = 'lazy';
+                img.decoding = 'async';
                 glassBox.appendChild(img);
             } else if (cached.iconType === 'text') {
                 const textEl = document.createElement('div');
@@ -693,6 +697,8 @@ export default class HeroSection {
                     const realImg = document.createElement('img');
                     realImg.className = 'icon-bitmap';
                     realImg.src = src;
+                    realImg.loading = 'lazy';
+                    realImg.decoding = 'async';
                     glassBox.innerHTML = '';
                     glassBox.appendChild(realImg);
 

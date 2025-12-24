@@ -3,9 +3,14 @@
     "version": "1.0.0",
     "description": "Catzz Homepage",
     "scripts": {
-        "deploy": "npx wrangler pages deploy . --project-name catzzhome"
+        "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+        "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+        "deploy": "npm run build:css && npx wrangler pages deploy . --project-name catzzhome"
     },
     "keywords": [],
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "devDependencies": {
+        "tailwindcss": "^3.4.0"
+    }
 }

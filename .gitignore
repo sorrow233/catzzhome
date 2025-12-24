@@ -1,1 +1,21 @@
-pixiv_data
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+# Keep dist/output.css for deployment if needed, but usually built in CI
+# For now we keep it since we want to deploy it directly
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Pixiv data
+pixiv_data/

@@ -1,7 +1,8 @@
-const CACHE_NAME = 'catzzhome-v2'; // Bump version to force update
+const CACHE_NAME = 'catzzhome-v3-20241224'; // Date-based versioning for cache invalidation
 const urlsToCache = [
     '/',
     '/index.html',
+    '/dist/output.css',
     '/src/main.js',
     '/src/components/HeroSection.js',
     '/src/lib/firebase.js',
