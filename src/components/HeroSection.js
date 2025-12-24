@@ -1,4 +1,5 @@
-import { login, logout, saveSettings, listenSettings, auth } from '../lib/firebase.js';
+// 移除顶层 Firebase 导入，改为动态按需加载 (~40MB 内存节省)
+// import { login, logout, saveSettings, listenSettings, auth } from '../lib/firebase.js';
 
 export default class HeroSection {
     constructor() {
@@ -479,73 +480,101 @@ export default class HeroSection {
         this.initAuth();
     }
 
+    // 动态加载 Firebase SDK
+    async loadFirebase() {
+        if (!this.firebaseModule) {
+            try {
+                this.firebaseModule = await import('../lib/firebase.js');
+            } catch (e) {
+                console.error("Failed to load Firebase:", e);
+                return null;
+            }
+        }
+        return this.firebaseModule;
+    }
+
     initAuth() {
         const btn = this.element.querySelector('#cloud-btn');
         let currentUser = null;
 
-        // Listen for Auth Changes
-        auth.onAuthStateChanged(user => {
-            currentUser = user;
-            if (user) {
-                btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full avatar-themed" alt="User">`;
-                btn.title = `Logged in as ${user.displayName}`;
+        const handleUserData = (data) => {
+            if (!data) return;
+            if (data.bgId && data.bgId !== this.currentBgId) {
+                if (this.currentLoadedBgId && this.currentLoadedBgId !== data.bgId) {
+                    this.clearPreviousWallpaper();
+                }
+                this.currentBgId = data.bgId;
+                const originalUrl = this.getWallpaperUrl(data.bgId);
+                this.element.style.backgroundImage = `url('${originalUrl}')`;
+                this.element.classList.remove('bg-gradient-to-b');
+                localStorage.setItem('catzz_bg_id', data.bgId);
+                this.currentLoadedBgId = data.bgId;
 
-                // Start Listening to Settings
-                listenSettings(user.uid, (data) => {
-                    if (data) {
-                        let changed = false;
-                        if (data.bgId && data.bgId !== this.currentBgId) {
-                            // 极致优化：清除旧壁纸内存
-                            if (this.currentLoadedBgId && this.currentLoadedBgId !== data.bgId) {
-                                this.clearPreviousWallpaper();
-                            }
+                if (data.cinematicPrefs) {
+                    this.cinematicPrefs = data.cinematicPrefs;
+                    localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
+                } else if (data.cinematicMode !== undefined) {
+                    // Backward compatibility migration
+                    this.cinematicPrefs[this.currentBgId] = data.cinematicMode;
+                    localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
+                }
 
-                            this.currentBgId = data.bgId;
-                            // 当前壁纸使用原图（清晰）
-                            const originalUrl = this.getWallpaperUrl(data.bgId);
-                            this.element.style.backgroundImage = `url('${originalUrl}')`;
-                            this.element.classList.remove('bg-gradient-to-b');
-                            localStorage.setItem('catzz_bg_id', data.bgId);
-                            this.currentLoadedBgId = data.bgId; // 记录新加载的壁纸
-
-                            if (data.cinematicPrefs) {
-                                this.cinematicPrefs = data.cinematicPrefs;
-                                localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
-                            } else if (data.cinematicMode !== undefined) {
-                                // Backward compatibility migration
-                                this.cinematicPrefs[this.currentBgId] = data.cinematicMode;
-                                localStorage.setItem('catzz_cinematic_prefs', JSON.stringify(this.cinematicPrefs));
-                            }
-
-                            const theme = this.getCurrentTheme();
-                            this.updateDynamicStyles(theme);
-                            this.applyThemeToElements(theme);
-
-                            // Toggle gradient based on cinematicMode for CURRENT bg
-                            this.toggleGradient(this.getCinematicState());
-
-                            changed = true;
-                        }
-                        if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
-                            this.bookmarks = data.bookmarks;
-                            localStorage.setItem('catzz_bookmarks', JSON.stringify(data.bookmarks));
-                            this.renderGrid();
-                            changed = true;
-                        }
-                    }
-                });
-            } else {
-                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
-                btn.title = "Sync Settings";
+                const theme = this.getCurrentTheme();
+                this.updateDynamicStyles(theme);
+                this.applyThemeToElements(theme);
+                this.toggleGradient(this.getCinematicState());
             }
-        });
+            if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
+                this.bookmarks = data.bookmarks;
+                localStorage.setItem('catzz_bookmarks', JSON.stringify(data.bookmarks));
+                this.renderGrid();
+            }
+        };
+
+        const setupAuthListener = (fb) => {
+            fb.auth.onAuthStateChanged(user => {
+                currentUser = user;
+                if (user) {
+                    localStorage.setItem('catzz_is_logged_in', 'true');
+                    btn.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full avatar-themed" alt="User">`;
+                    btn.title = `Logged in as ${user.displayName}`;
+                    fb.listenSettings(user.uid, handleUserData);
+                } else {
+                    localStorage.removeItem('catzz_is_logged_in');
+                    btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>`;
+                    btn.title = "Sync Settings";
+                }
+            });
+        };
+
+        // 如果上次已登录，则静默加载以同步
+        if (localStorage.getItem('catzz_is_logged_in')) {
+            this.loadFirebase().then(fb => {
+                if (fb) setupAuthListener(fb);
+            });
+        }
 
         btn.addEventListener('click', async () => {
+            // 点击时显示加载状态并确保加载完成
+            const icon = btn.innerHTML;
+            if (!this.firebaseModule) btn.innerHTML = '<span class="animate-spin">⏳</span>';
+
+            const fb = await this.loadFirebase();
+            if (!fb) {
+                btn.innerHTML = icon;
+                return;
+            }
+
+            // 如果还没设置监听器，现在设置
+            if (!currentUser && !localStorage.getItem('catzz_is_logged_in')) {
+                setupAuthListener(fb);
+            }
+
             if (currentUser) {
-                if (confirm('Logout?')) logout();
+                if (confirm('Logout?')) fb.logout();
             } else {
                 try {
-                    await login();
+                    await fb.login();
                 } catch (e) { alert('Login failed'); }
             }
         });
@@ -627,7 +656,7 @@ export default class HeroSection {
                 this.applyThemeToElements(theme);
 
                 localStorage.setItem('catzz_bg_id', wp.id);
-                if (auth.currentUser) saveSettings(auth.currentUser.uid, { bgId: wp.id, cinematicPrefs: this.cinematicPrefs });
+                if (this.firebaseModule) this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, { bgId: wp.id, cinematicPrefs: this.cinematicPrefs });
 
                 // Update Toggle & Gradient for New Wallpaper
                 updateToggleUI();
@@ -953,7 +982,7 @@ export default class HeroSection {
 
     saveBookmarks() {
         localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
-        if (auth.currentUser) saveSettings(auth.currentUser.uid, { bookmarks: this.bookmarks });
+        if (this.firebaseModule) this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, { bookmarks: this.bookmarks });
     }
     deleteBookmark(index) {
         this.bookmarks.splice(index, 1);
