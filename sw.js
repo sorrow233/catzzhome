@@ -1,5 +1,5 @@
 // Service Worker for Catzz Homepage - Optimized for Memory
-const CACHE_NAME = 'catzzhome-v4-minimal-20241224';
+const CACHE_NAME = 'catzzhome-v5-i18n-20251230';
 
 // 只缓存关键资源（节省内存）
 const urlsToCache = [
@@ -9,6 +9,8 @@ const urlsToCache = [
     '/src/main.js',
     '/src/components/HeroSection.js',
     '/src/lib/firebase.js',
+    '/src/lib/I18n.js',
+    '/src/config/HeroConfig.js',
     '/src/styles/animations.css'
     // ❌ 移除图片、字体等大文件缓存
 ];
