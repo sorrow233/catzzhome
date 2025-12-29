@@ -2,6 +2,9 @@ import { BookmarkComponent } from './BookmarkComponent.js';
 import { QuoteWidget } from './QuoteWidget.js';
 import { WallpaperPicker } from './WallpaperPicker.js';
 import { i18n } from '../lib/I18n.js';
+import { RainAnimation } from '../lib/RainAnimation.js';
+import { IconCache } from '../lib/IconCache.js';
+import { HERO_CONFIG } from '../config/HeroConfig.js';
 
 export default class HeroSection {
     constructor() {
