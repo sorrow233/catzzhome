@@ -32,12 +32,11 @@
 
     <script>
         // Register Service Worker for instant caching
-        // Unregister Service Worker to force update and avoid caching issues
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function (registrations) {
-                for (let registration of registrations) {
-                    registration.unregister();
-                }
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW registered:', reg))
+                    .catch(err => console.log('SW registration failed:', err));
             });
         }
     </script>
