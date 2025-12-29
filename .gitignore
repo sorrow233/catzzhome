@@ -40,5 +40,5 @@ pnpm-debug.log*
 
 # Project specific
 pixiv_data
-package-lock.json
-scripts/
+# package-lock.json
+# scripts/
