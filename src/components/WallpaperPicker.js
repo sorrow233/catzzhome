@@ -1,4 +1,4 @@
-import { HERO_CONFIG } from '../config/HeroConfig.js';
+import { i18n } from '../lib/I18n.js';
 
 export class WallpaperPicker {
     constructor(parent) {
@@ -43,20 +43,34 @@ export class WallpaperPicker {
         });
 
         this.wallpapers.forEach(wp => {
+            const container = document.createElement('div');
+            container.className = 'flex flex-col gap-2 group cursor-pointer';
+
             const thumb = document.createElement('div');
-            thumb.className = `bg-thumb w-full h-32 rounded-xl bg-cover bg-center ${this.parent.currentBgId === wp.id ? 'active' : ''}`;
+            thumb.className = `bg-thumb w-full h-24 md:h-32 rounded-xl bg-cover bg-center transition-all duration-300 border-2 border-transparent group-hover:border-slate-400/50 ${this.parent.currentBgId === wp.id ? 'active !border-slate-600' : ''}`;
             thumb.dataset.bgUrl = wp.thumbUrl;
-            thumb.title = wp.name || wp.id;
-            thumb.addEventListener('click', async () => {
+            // thumb.title = wp.name || wp.id; // Removed title as we now show name below
+
+            const label = document.createElement('span');
+            label.className = 'text-[10px] text-center text-slate-500 font-light tracking-widest uppercase transition-colors group-hover:text-slate-700';
+            label.textContent = i18n.t(`theme_${wp.id}`);
+
+            container.addEventListener('click', async () => {
                 this.parent.updateWallpaperChange();
                 await this.parent.switchBackground(wp.id);
                 updateToggleUI();
                 closeModal();
 
-                modal.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active'));
-                thumb.classList.add('active');
+                modal.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active', '!border-slate-600'));
+                thumb.classList.add('active', '!border-slate-600');
             });
-            grid.appendChild(thumb);
+
+            container.appendChild(thumb);
+            container.appendChild(label);
+            grid.appendChild(container);
+
+            // Add observer to the thumb
+            if (this.observer) this.observer.observe(thumb);
         });
 
         const openModal = () => {

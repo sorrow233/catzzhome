@@ -15,7 +15,15 @@ export const TRANSLATIONS = {
         add: "添加",
         logout_confirm: "确定要退出登录吗？",
         login_failed: "登录失败",
-        change_theme: "切换主题"
+        change_theme: "切换主题",
+        theme_rainy_window: "雨夜清凉",
+        theme_wet_street: "潮湿街头",
+        theme_city_bed: "城市一隅",
+        theme_umbrella_street: "撑伞背影",
+        theme_flower_window: "花窗少女",
+        theme_white_shirt_girl: "白衣少女",
+        theme_sunset_balcony: "阳台日落",
+        theme_night_view: "城市夜景"
     },
     en: {
         title: "Catzz",
@@ -33,7 +41,15 @@ export const TRANSLATIONS = {
         add: "Add",
         logout_confirm: "Logout?",
         login_failed: "Login failed",
-        change_theme: "Change Theme"
+        change_theme: "Change Theme",
+        theme_rainy_window: "Rainy Window",
+        theme_wet_street: "Wet Street",
+        theme_city_bed: "City Bed",
+        theme_umbrella_street: "Umbrella Street",
+        theme_flower_window: "Flower Window",
+        theme_white_shirt_girl: "White Shirt Girl",
+        theme_sunset_balcony: "Sunset Balcony",
+        theme_night_view: "Night View"
     },
     ja: {
         title: "Catzz",
@@ -51,7 +67,15 @@ export const TRANSLATIONS = {
         add: "追加",
         logout_confirm: "ログアウトしますか？",
         login_failed: "ログイン失敗",
-        change_theme: "テーマ変更"
+        change_theme: "テーマ変更",
+        theme_rainy_window: "雨の窓",
+        theme_wet_street: "雨の街路",
+        theme_city_bed: "都会の片隅",
+        theme_umbrella_street: "傘の少女",
+        theme_flower_window: "花の窓辺",
+        theme_white_shirt_girl: "白シャツの少女",
+        theme_sunset_balcony: "夕暮れのバルコニー",
+        theme_night_view: "都市の夜景"
     }
 };
 
