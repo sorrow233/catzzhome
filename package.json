@@ -1,6 +1,6 @@
 {
     "name": "catzzhome",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Catzz Homepage",
     "scripts": {
         "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
