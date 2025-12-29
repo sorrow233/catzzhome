@@ -3,11 +3,11 @@ import { IconCache } from '../lib/IconCache.js';
 import { RainAnimation } from '../lib/RainAnimation.js';
 import { BookmarkManager } from '../lib/BookmarkManager.js';
 import { WallpaperPicker } from './WallpaperPicker.js';
+import { i18n } from '../lib/I18n.js';
 
 export default class HeroSection {
     constructor() {
-        this.prefixes = HERO_CONFIG.prefixes;
-        this.suffixes = HERO_CONFIG.suffixes;
+        this.quotes = HERO_CONFIG.quotes;
         this.currentIndex = 0;
         this.wallpapers = HERO_CONFIG.wallpapers;
         this.wallpaperUrls = HERO_CONFIG.wallpaperUrls;
@@ -193,12 +193,12 @@ export default class HeroSection {
         this.element.innerHTML += `
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
-                <h1 id="hero-title" class="text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ${theme.textColor} ${theme.textShadow}" title="Change Theme">Catzz</h1>
-                <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="Sync Settings">
+                <h1 id="hero-title" class="text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ${theme.textColor} ${theme.textShadow}" title="${i18n.t('change_theme')}">${i18n.t('hero_title')}</h1>
+                <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="${i18n.t('sync_settings')}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
                 </div>
                 <div id="theme-guide" class="hidden absolute top-12 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
-                    <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">Click 'Catzz' to switch theme</div>
+                    <div class="glass-box px-6 py-2 rounded-full text-slate-500 text-xs font-light tracking-widest animate-bounce border border-white/40 shadow-sm bg-white/40 backdrop-blur-md">${i18n.t('switch_theme')}</div>
                 </div>
                 <div class="h-8 flex items-center justify-center text-sm md:text-base hero-font-sc rounded-full transition-colors duration-500 quote-container ${theme.quoteColor}">
                     <span class="prefix inline-block mr-4 opacity-0"></span>
@@ -211,25 +211,25 @@ export default class HeroSection {
             
             <div id="add-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/10 opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="glass-modal w-full max-w-md p-10 rounded-[2rem] transform scale-95 transition-transform duration-300">
-                    <h3 class="text-2xl text-slate-700 font-light mb-8 hero-font-sc tracking-wider text-center">New Shortcut</h3>
+                    <h3 class="text-2xl text-slate-700 font-light mb-8 hero-font-sc tracking-wider text-center">${i18n.t('new_shortcut')}</h3>
                     <div class="flex flex-col items-center justify-center mb-8 h-24">
                         <div id="preview-icon-container" class="preview-container relative w-full flex items-center justify-center">
-                            <div class="glass-box"><span class="text-slate-400 text-[10px] uppercase tracking-widest">Preview</span></div>
+                            <div class="glass-box"><span class="text-slate-400 text-[10px] uppercase tracking-widest">${i18n.t('preview')}</span></div>
                         </div>
                     </div>
                     <div class="space-y-6">
                          <div class="relative">
                             <input type="url" id="bm-url" class="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-4 text-slate-700 focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400 text-sm font-light" placeholder="https://site.com">
-                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">URL</label>
+                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">${i18n.t('url')}</label>
                         </div>
                         <div class="relative">
-                            <input type="text" id="bm-name" class="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-4 text-slate-700 focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400 text-sm font-light" placeholder="Name">
-                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">Name</label>
+                            <input type="text" id="bm-name" class="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-4 text-slate-700 focus:outline-none focus:border-blue-400 focus:bg-white transition-all placeholder-slate-400 text-sm font-light" placeholder="${i18n.t('name')}">
+                            <label class="absolute -top-2.5 left-3 bg-white/80 px-2 text-[10px] text-slate-400 uppercase tracking-widest backdrop-blur-sm rounded">${i18n.t('name')}</label>
                         </div>
                     </div>
                     <div class="flex gap-4 mt-10">
-                        <button id="close-modal" class="flex-1 py-4 bg-transparent border border-slate-300 text-slate-500 rounded-xl hover:bg-slate-50 transition-colors font-light tracking-widest text-[10px] uppercase">Cancel</button>
-                        <button id="save-bookmark" class="flex-1 py-4 bg-slate-700 text-white rounded-xl transition-all hover:bg-slate-800 shadow-lg font-light tracking-widest text-[10px] uppercase">Save</button>
+                        <button id="close-modal" class="flex-1 py-4 bg-transparent border border-slate-300 text-slate-500 rounded-xl hover:bg-slate-50 transition-colors font-light tracking-widest text-[10px] uppercase">${i18n.t('cancel')}</button>
+                        <button id="save-bookmark" class="flex-1 py-4 bg-slate-700 text-white rounded-xl transition-all hover:bg-slate-800 shadow-lg font-light tracking-widest text-[10px] uppercase">${i18n.t('save')}</button>
                     </div>
                 </div>
             </div>
@@ -237,14 +237,19 @@ export default class HeroSection {
             <div id="bg-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="glass-modal w-full max-w-4xl p-8 rounded-[2rem] transform scale-95 transition-transform duration-300 relative">
                      <button id="close-bg-modal" class="absolute top-6 right-8 text-slate-400 hover:text-slate-700 text-2xl transition-colors">&times;</button>
-                     <h3 class="text-2xl text-slate-700 font-light mb-2 hero-font-sc tracking-wider text-center">Select Theme</h3>
-                     <div class="flex items-center justify-center gap-3 mb-8">
-                        <span class="text-xs text-slate-500 font-light tracking-widest uppercase">Cinematic</span>
+                     <h3 class="text-2xl text-slate-700 font-light mb-2 hero-font-sc tracking-wider text-center">${i18n.t('select_theme')}</h3>
+                     <div class="flex items-center justify-center gap-3 mb-4">
+                        <span class="text-xs text-slate-500 font-light tracking-widest uppercase">${i18n.t('cinematic')}</span>
                         <button id="cinematic-toggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 focus:outline-none bg-slate-700">
                             <div class="w-3 h-3 bg-white rounded-full absolute top-1 transition-all duration-300 shadow-sm"></div>
                         </button>
                      </div>
-                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[60vh] overflow-y-auto px-2 pb-4 scrollbar-hide"></div>
+                     <div class="flex items-center justify-center gap-4 mb-8">
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="zh">中文</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="ja">日本語</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="en">English</button>
+                     </div>
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto px-2 pb-4 scrollbar-hide"></div>
                 </div>
             </div>
         `;
@@ -271,6 +276,7 @@ export default class HeroSection {
             .text-icon { font-family: 'Noto Serif SC', serif; font-weight: 300; font-size: 20px; color: ${theme.iconColor || '#64748b'}; border: 1px solid ${theme.iconColor ? theme.iconColor + '40' : '#cbd5e1'}; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
             .add-btn { width: 48px; height: 48px; border-radius: 12px; border: 1px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: all 0.3s ease; cursor: pointer; }
             .add-btn:hover { border-color: #64748b; color: #64748b; background: rgba(255,255,255,0.5); }
+            .lang-btn.active { background: rgba(100, 116, 139, 0.1); border-color: #64748b; opacity: 1; }
             .glass-modal { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 30px 60px -15px rgba(100, 116, 139, 0.25); }
             .bg-thumb { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; border: 2px solid transparent; }
             .bg-thumb:hover { transform: scale(1.05); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
@@ -314,6 +320,23 @@ export default class HeroSection {
         this.wallpaperPicker.init();
         this.initGuide();
         this.initAuth();
+        this.initLanguageSwitcher();
+    }
+
+    initLanguageSwitcher() {
+        const modal = this.element.querySelector('#bg-modal');
+        const langBtns = modal.querySelectorAll('.lang-btn');
+        const currentLang = i18n.getLocale();
+
+        langBtns.forEach(btn => {
+            if (btn.dataset.lang === currentLang) btn.classList.add('active');
+            btn.addEventListener('click', () => {
+                const lang = btn.dataset.lang;
+                if (i18n.setLanguage(lang)) {
+                    window.location.reload(); // 简单处理：切换语言后刷新页面
+                }
+            });
+        });
     }
 
     async loadFirebase() {
@@ -373,8 +396,8 @@ export default class HeroSection {
             const fb = await this.loadFirebase();
             if (!fb) return;
             if (!currentUser && !localStorage.getItem('catzz_is_logged_in')) setupAuthListener(fb);
-            if (currentUser) { if (confirm('Logout?')) fb.logout(); }
-            else { try { await fb.login(); } catch (e) { alert('Login failed'); } }
+            if (currentUser) { if (confirm(i18n.t('logout_confirm'))) fb.logout(); }
+            else { try { await fb.login(); } catch (e) { alert(i18n.t('login_failed')); } }
         });
     }
 
@@ -424,7 +447,7 @@ export default class HeroSection {
 
         const addBtn = document.createElement('div');
         addBtn.className = 'flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer';
-        addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light">Add</span>`;
+        addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light">${i18n.t('add')}</span>`;
         addBtn.onclick = () => this.openModal();
         fragment.appendChild(addBtn);
         grid.appendChild(fragment);
@@ -453,7 +476,7 @@ export default class HeroSection {
             modal.classList.remove('opacity-0', 'pointer-events-none');
             content.classList.replace('scale-95', 'scale-100');
             if (index >= 0 && bookmark) { nameIn.value = bookmark.name; urlIn.value = bookmark.url; updatePreview(); }
-            else { nameIn.value = ''; urlIn.value = ''; preview.innerHTML = '<div class="glass-box"><span class="text-slate-400 text-[10px] uppercase tracking-widest">Preview</span></div>'; }
+            else { nameIn.value = ''; urlIn.value = ''; preview.innerHTML = `<div class="glass-box"><span class="text-slate-400 text-[10px] uppercase tracking-widest">${i18n.t('preview')}</span></div>`; }
             urlIn.focus();
         };
 
@@ -485,13 +508,18 @@ export default class HeroSection {
 
     initTypewriter() {
         const p = this.element.querySelector('.prefix'); const t = this.element.querySelector('.typed-quotes');
-        p.textContent = this.prefixes[0]; t.textContent = this.suffixes[0];
+        const lang = i18n.getLocale();
+        const quotes = this.quotes[lang] || this.quotes['zh'];
+        const prefixes = quotes.prefixes;
+        const suffixes = quotes.suffixes;
+
+        p.textContent = prefixes[0]; t.textContent = suffixes[0];
         p.classList.add('text-prefix-in'); t.classList.add('text-quotes-in');
         this.quoteInterval = setInterval(() => {
             p.classList.replace('text-prefix-in', 'text-out'); t.classList.replace('text-quotes-in', 'text-out');
             setTimeout(() => {
-                this.currentIndex = (this.currentIndex + 1) % this.prefixes.length;
-                p.textContent = this.prefixes[this.currentIndex]; t.textContent = this.suffixes[this.currentIndex];
+                this.currentIndex = (this.currentIndex + 1) % prefixes.length;
+                p.textContent = prefixes[this.currentIndex]; t.textContent = suffixes[this.currentIndex];
                 p.classList.replace('text-out', 'text-prefix-in'); t.classList.replace('text-out', 'text-quotes-in');
             }, 1200);
         }, 5000);
