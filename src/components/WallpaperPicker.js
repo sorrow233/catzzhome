@@ -44,19 +44,12 @@ export class WallpaperPicker {
         });
 
         this.wallpapers.forEach(wp => {
-            const container = document.createElement('div');
-            container.className = 'flex flex-col gap-2 group cursor-pointer';
-
             const thumb = document.createElement('div');
             thumb.className = `bg-thumb w-full h-24 md:h-32 rounded-xl bg-cover bg-center transition-all duration-300 border-2 border-transparent group-hover:border-slate-400/50 ${this.parent.currentBgId === wp.id ? 'active !border-slate-600' : ''}`;
             thumb.dataset.bgUrl = wp.thumbUrl;
-            // thumb.title = wp.name || wp.id; // Removed title as we now show name below
+            thumb.title = i18n.t(`theme_${wp.id}`) || wp.name || wp.id; // Restore title for tooltip
 
-            const label = document.createElement('span');
-            label.className = 'text-[10px] text-center text-slate-500 font-light tracking-widest uppercase transition-colors group-hover:text-slate-700';
-            label.textContent = i18n.t(`theme_${wp.id}`);
-
-            container.addEventListener('click', async () => {
+            thumb.addEventListener('click', async () => {
                 this.parent.updateWallpaperChange();
                 await this.parent.switchBackground(wp.id);
                 updateToggleUI();
@@ -66,9 +59,7 @@ export class WallpaperPicker {
                 thumb.classList.add('active', '!border-slate-600');
             });
 
-            container.appendChild(thumb);
-            container.appendChild(label);
-            grid.appendChild(container);
+            grid.appendChild(thumb);
 
             // Add observer to the thumb
             if (this.observer) this.observer.observe(thumb);
