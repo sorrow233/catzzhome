@@ -1,15 +1,15 @@
 export const HERO_CONFIG = {
     quotes: {
         zh: {
-            prefixes: ["清凉雨夜", "脆弱雨伞", "街边电话", "路旁雨滩"],
+            prefixes: ["雨夜清凉", "雨伞脆弱", "街边电话", "路旁雨滩"],
             suffixes: ["温暖过谁的心", "保护了谁前行", "少女心伤忧郁", "天空触手可及"]
         },
         en: {
-            prefixes: ["Cool Rain Night", "Fragile Umbrella", "Streetside Phone", "Puddle on Road"],
+            prefixes: ["Cool Rainy Night", "Fragile Umbrella", "Streetside Phone", "Puddles on the Road"],
             suffixes: ["Warmed whose heart?", "Protected whom forward?", "Girl's heart melancholic", "Sky within reach"]
         },
         ja: {
-            prefixes: ["涼しい雨の夜", "脆い雨傘", "街路の電話", "道端の雨溜まり"],
+            prefixes: ["涼しい雨夜", "脆い雨傘", "街路の電話", "道端の雨溜まり"],
             suffixes: ["誰の心を温めた？", "誰の前進を守った？", "少女の心は憂鬱に", "空はすぐそこに"]
         }
     },

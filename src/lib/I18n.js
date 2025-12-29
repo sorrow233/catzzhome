@@ -1,28 +1,28 @@
 export const TRANSLATIONS = {
     zh: {
-        title: "古德喵特",
+        title: "Catzz",
         hero_title: "Catzz",
-        sync_settings: "同步设置",
-        switch_theme: "点击 'Catzz' 切换主题",
-        new_shortcut: "新建快捷方式",
-        preview: "预览",
-        url: "网址",
-        name: "名称",
+        sync_settings: "同步",
+        switch_theme: "点击标题切换主题",
+        new_shortcut: "添加快捷方式",
+        preview: "图标预览",
+        url: "链接地址",
+        name: "网站名称",
         cancel: "取消",
         save: "保存",
         select_theme: "选择主题",
-        cinematic: "电影感",
+        cinematic: "沉浸模式",
         add: "添加",
         logout_confirm: "确定要退出登录吗？",
         login_failed: "登录失败",
         change_theme: "切换主题"
     },
     en: {
-        title: "Catzz Home",
+        title: "Catzz",
         hero_title: "Catzz",
-        sync_settings: "Sync Settings",
-        switch_theme: "Click 'Catzz' to switch theme",
-        new_shortcut: "New Shortcut",
+        sync_settings: "Sync",
+        switch_theme: "Click title to change theme",
+        new_shortcut: "Add Shortcut",
         preview: "Preview",
         url: "URL",
         name: "Name",
@@ -36,22 +36,22 @@ export const TRANSLATIONS = {
         change_theme: "Change Theme"
     },
     ja: {
-        title: "Catzzホーム",
+        title: "Catzz",
         hero_title: "Catzz",
-        sync_settings: "設定を同期",
-        switch_theme: "「Catzz」をクリックしてテーマを切り替え",
-        new_shortcut: "新しいショートカット",
+        sync_settings: "同期",
+        switch_theme: "タイトルでテーマ変更",
+        new_shortcut: "ショートカット追加",
         preview: "プレビュー",
         url: "URL",
         name: "名前",
         cancel: "キャンセル",
         save: "保存",
-        select_theme: "テーマを選択",
+        select_theme: "テーマ選択",
         cinematic: "シネマティック",
         add: "追加",
         logout_confirm: "ログアウトしますか？",
-        login_failed: "ログインに失敗しました",
-        change_theme: "テーマを切り替え"
+        login_failed: "ログイン失敗",
+        change_theme: "テーマ変更"
     }
 };
 
@@ -61,7 +61,7 @@ class I18n {
         this.locales = ['zh', 'en', 'ja'];
         this.defaultLocale = 'zh';
         this.currentLocale = this.detectLanguage();
-        
+
         // 更新 HTML lang 属性
         document.documentElement.lang = this.currentLocale;
     }
