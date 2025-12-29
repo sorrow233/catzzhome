@@ -1,33 +1,31 @@
-import { HERO_CONFIG } from '../config/HeroConfig.js';
-import { IconCache } from '../lib/IconCache.js';
-import { RainAnimation } from '../lib/RainAnimation.js';
-import { BookmarkManager } from '../lib/BookmarkManager.js';
+import { BookmarkComponent } from './BookmarkComponent.js';
+import { QuoteWidget } from './QuoteWidget.js';
 import { WallpaperPicker } from './WallpaperPicker.js';
 import { i18n } from '../lib/I18n.js';
 
 export default class HeroSection {
     constructor() {
-        this.quotes = HERO_CONFIG.quotes;
-        this.currentIndex = 0;
+        // this.quotes = HERO_CONFIG.quotes; // Wrapped in QuoteWidget
+        // this.bookmarks = ... // Wrapped in BookmarkComponent
         this.wallpapers = HERO_CONFIG.wallpapers;
         this.wallpaperUrls = HERO_CONFIG.wallpaperUrls;
 
         // Load Saved Data
         try {
-            const saved = localStorage.getItem('catzz_bookmarks');
-            this.bookmarks = saved ? JSON.parse(saved) : HERO_CONFIG.defaultBookmarks;
             this.currentBgId = localStorage.getItem('catzz_bg_id') || 'flower_window';
             this.cinematicPrefs = JSON.parse(localStorage.getItem('catzz_cinematic_prefs')) || {};
         } catch (e) {
-            this.bookmarks = HERO_CONFIG.defaultBookmarks;
             this.currentBgId = 'umbrella_street';
             this.cinematicPrefs = {};
         }
 
-        this.iconCache = new IconCache();
+        this.iconCache = new IconCache(); // Keep for general use if needed, or pass to components
         this.iconCache.init().catch(() => { });
 
-        this.bookmarkManager = new BookmarkManager(this);
+        // Components
+        this.quoteWidget = null;
+        this.bookmarkComponent = null;
+
         this.wallpaperPicker = new WallpaperPicker(this);
 
         this.lastWallpaperChange = Date.now();
@@ -44,6 +42,10 @@ export default class HeroSection {
 
     async purgeMemory() {
         await this.iconCache.cleanup();
+        this.iconCache.releaseMemory(); // Release L1 cache
+
+        // Clean components
+        if (this.quoteWidget) this.quoteWidget.stop();
 
         // 清理壁纸选择器中的未选中预览图
         if (this.wallpaperPicker) this.wallpaperPicker.clearThumbnails();
@@ -309,14 +311,25 @@ export default class HeroSection {
             const svg = cloudBtn.querySelector('svg');
             if (svg) svg.style.color = theme.iconColor || '#64748b';
         }
-        this.renderGrid();
+
+        // Propagate theme to bookmarks
+        if (this.bookmarkComponent) this.bookmarkComponent.setTheme(theme);
     }
 
     mount() {
         new RainAnimation(this.element.querySelector('#rain-canvas')).start();
-        this.initTypewriter();
-        this.renderGrid();
-        this.initModal();
+
+        // Initialize independent widgets
+        this.quoteWidget = new QuoteWidget(this.element.querySelector('.quote-container'));
+        this.quoteWidget.mount();
+
+        this.bookmarkComponent = new BookmarkComponent(this.element.querySelector('#bookmark-grid'), {
+            iconCache: this.iconCache,
+            firebaseModuleProvider: () => this.firebaseModule,
+            theme: this.getCurrentTheme()
+        });
+        this.bookmarkComponent.mount(this.element.querySelector('#bookmark-grid'));
+
         this.wallpaperPicker.init();
         this.initGuide();
         this.initAuth();
@@ -374,10 +387,8 @@ export default class HeroSection {
                 this.applyThemeToElements(theme);
                 this.toggleGradient(this.getCinematicState());
             }
-            if (data.bookmarks && JSON.stringify(data.bookmarks) !== JSON.stringify(this.bookmarks)) {
-                this.bookmarks = data.bookmarks;
-                localStorage.setItem('catzz_bookmarks', JSON.stringify(data.bookmarks));
-                this.renderGrid();
+            if (data.bookmarks && this.bookmarkComponent) {
+                this.bookmarkComponent.setBookmarks(data.bookmarks);
             }
         };
 
@@ -417,48 +428,6 @@ export default class HeroSection {
         }
     }
 
-    renderGrid() {
-        const grid = this.element.querySelector('#bookmark-grid');
-        if (!grid) return;
-        const theme = this.getCurrentTheme();
-        grid.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-
-        this.bookmarks.forEach((site, index) => {
-            const item = document.createElement('div');
-            item.className = 'unified-icon-container flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer relative';
-            const iconRoot = document.createElement('div');
-            iconRoot.className = 'relative w-[48px] h-[48px] flex items-center justify-center';
-
-            const link = document.createElement('a');
-            link.href = site.url; link.target = "_blank"; link.rel = "noopener noreferrer";
-            link.className = "flex flex-col items-center gap-3 w-full";
-            this.bookmarkManager.fetchIcon(site.name, site.url, iconRoot, theme);
-
-            link.appendChild(iconRoot);
-            const label = document.createElement('span');
-            label.className = `text-[10px] font-sans tracking-wider mt-3 group-hover:text-opacity-100 text-opacity-80 transition-colors duration-300 whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${theme.quoteColor || "text-slate-400"}`;
-            label.textContent = site.name;
-            link.appendChild(label);
-            item.appendChild(link);
-
-            const del = document.createElement('button');
-            del.className = "absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] delayed-delete-btn";
-            del.innerHTML = "&times;";
-            del.onclick = (e) => { e.preventDefault(); e.stopPropagation(); this.deleteBookmark(index); };
-            item.appendChild(del);
-            item.oncontextmenu = (e) => { e.preventDefault(); this.openModal(index, site); };
-            fragment.appendChild(item);
-        });
-
-        const addBtn = document.createElement('div');
-        addBtn.className = 'flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer';
-        addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light">${i18n.t('add')}</span>`;
-        addBtn.onclick = () => this.openModal();
-        fragment.appendChild(addBtn);
-        grid.appendChild(fragment);
-    }
-
     toggleGradient(show) {
         const existing = this.element.querySelector('.cinematic-gradient');
         if (existing) existing.remove();
@@ -469,65 +438,6 @@ export default class HeroSection {
             if (rain) rain.after(grad); else this.element.appendChild(grad);
         }
     }
-
-    initModal() {
-        const modal = this.element.querySelector('#add-modal');
-        const content = modal.querySelector('.glass-modal');
-        const nameIn = this.element.querySelector('#bm-name');
-        const urlIn = this.element.querySelector('#bm-url');
-        const preview = this.element.querySelector('#preview-icon-container');
-
-        this.openModal = (index = -1, bookmark = null) => {
-            this.editingIndex = index;
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.replace('scale-95', 'scale-100');
-            if (index >= 0 && bookmark) { nameIn.value = bookmark.name; urlIn.value = bookmark.url; updatePreview(); }
-            else { nameIn.value = ''; urlIn.value = ''; preview.innerHTML = `<div class="glass-box"><span class="text-slate-400 text-[10px] uppercase tracking-widest">${i18n.t('preview')}</span></div>`; }
-            urlIn.focus();
-        };
-
-        const close = () => { modal.classList.add('opacity-0', 'pointer-events-none'); content.classList.replace('scale-100', 'scale-95'); };
-        const updatePreview = () => {
-            const val = urlIn.value.trim(); if (!val) return;
-            let url = val.startsWith('http') ? val : 'https://' + val;
-            if (!nameIn.value.trim()) nameIn.value = this.bookmarkManager.extractNameFromUrl(url);
-            this.bookmarkManager.fetchIcon(nameIn.value || 'Site', url, preview);
-        };
-
-        let debounce;
-        [urlIn, nameIn].forEach(el => el.oninput = () => { clearTimeout(debounce); debounce = setTimeout(updatePreview, 600); });
-        this.element.querySelector('#save-bookmark').onclick = () => {
-            let url = urlIn.value.trim(); if (!url.startsWith('http')) url = 'https://' + url;
-            const bm = { name: nameIn.value.trim(), url };
-            if (this.editingIndex >= 0) this.bookmarks[this.editingIndex] = bm; else this.bookmarks.push(bm);
-            this.saveBookmarks(); this.renderGrid(); close();
-        };
-        this.element.querySelector('#close-modal').onclick = close;
-        modal.onclick = (e) => e.target === modal && close();
-    }
-
-    saveBookmarks() {
-        localStorage.setItem('catzz_bookmarks', JSON.stringify(this.bookmarks));
-        if (this.firebaseModule && this.firebaseModule.auth.currentUser) this.firebaseModule.saveSettings(this.firebaseModule.auth.currentUser.uid, { bookmarks: this.bookmarks });
-    }
-    deleteBookmark(index) { this.bookmarks.splice(index, 1); this.saveBookmarks(); this.renderGrid(); }
-
-    initTypewriter() {
-        const p = this.element.querySelector('.prefix'); const t = this.element.querySelector('.typed-quotes');
-        const lang = i18n.getLocale();
-        const quotes = this.quotes[lang] || this.quotes['zh'];
-        const prefixes = quotes.prefixes;
-        const suffixes = quotes.suffixes;
-
-        p.textContent = prefixes[0]; t.textContent = suffixes[0];
-        p.classList.add('text-prefix-in'); t.classList.add('text-quotes-in');
-        this.quoteInterval = setInterval(() => {
-            p.classList.replace('text-prefix-in', 'text-out'); t.classList.replace('text-quotes-in', 'text-out');
-            setTimeout(() => {
-                this.currentIndex = (this.currentIndex + 1) % prefixes.length;
-                p.textContent = prefixes[this.currentIndex]; t.textContent = suffixes[this.currentIndex];
-                p.classList.replace('text-out', 'text-prefix-in'); t.classList.replace('text-out', 'text-quotes-in');
-            }, 1200);
-        }, 5000);
-    }
 }
+
+

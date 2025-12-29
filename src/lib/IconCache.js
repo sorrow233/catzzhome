@@ -164,4 +164,11 @@ export class IconCache {
             // Ignore errors
         }
     }
+
+    /**
+     * Release L1 memory cache
+     */
+    releaseMemory() {
+        this.memoryCache.clear();
+    }
 }
