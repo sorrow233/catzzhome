@@ -244,10 +244,10 @@ export default class HeroSection {
                             <div class="w-3 h-3 bg-white rounded-full absolute top-1 transition-all duration-300 shadow-sm"></div>
                         </button>
                      </div>
-                     <div class="flex items-center justify-center gap-4 mb-8">
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="zh">中文</button>
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="ja">日本語</button>
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="en">English</button>
+                     <div class="flex items-center justify-center gap-4 mb-4">
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="zh">CH</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="ja">JP</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="en">EN</button>
                      </div>
                      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto px-2 pb-4 scrollbar-hide"></div>
                 </div>
