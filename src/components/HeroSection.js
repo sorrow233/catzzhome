@@ -332,9 +332,15 @@ export default class HeroSection {
             if (btn.dataset.lang === currentLang) btn.classList.add('active');
             btn.addEventListener('click', () => {
                 const lang = btn.dataset.lang;
-                if (i18n.setLanguage(lang)) {
-                    window.location.reload(); // 简单处理：切换语言后刷新页面
-                }
+                if (lang === currentLang) return; // 已经是当前语言，不刷新
+
+                // 更新按钮状态
+                langBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 保存语言并刷新
+                i18n.setLanguage(lang);
+                setTimeout(() => window.location.reload(), 100); // 延迟刷新以显示反馈
             });
         });
     }
