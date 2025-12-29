@@ -1,4 +1,5 @@
 import { i18n } from '../lib/I18n.js';
+import { HERO_CONFIG } from '../config/HeroConfig.js';
 
 export class WallpaperPicker {
     constructor(parent) {
