@@ -4,8 +4,9 @@
     "description": "Catzz Homepage",
     "scripts": {
         "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+        "build:sitemap": "node scripts/generate-sitemap.js",
         "watch:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-        "deploy": "npm run build:css && npx wrangler pages deploy . --project-name catzzhome"
+        "deploy": "npm run build:css && npm run build:sitemap && npx wrangler pages deploy . --project-name catzzhome"
     },
     "keywords": [],
     "author": "",

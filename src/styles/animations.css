@@ -36,3 +36,32 @@
 .animate-slide-up {
     animation: slideUp 1s ease-out forwards;
 }
+
+/* Global Aesthetics */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5); /* slate-400 with opacity */
+    border-radius: 3px;
+    transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.8); /* slate-500 */
+}
+
+::selection {
+    background: rgba(148, 163, 184, 0.3);
+    color: inherit;
+}
+
+html {
+    scroll-behavior: smooth;
+}
