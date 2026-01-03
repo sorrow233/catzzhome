@@ -58,6 +58,7 @@ export class BookmarkManager {
                 const img = document.createElement('img');
                 img.className = 'icon-bitmap';
                 img.src = data.iconSrc;
+                img.alt = data.alt || 'Site Icon';
                 container.appendChild(img);
             }
         } else if (data.iconType === 'text') {
@@ -85,9 +86,9 @@ export class BookmarkManager {
                 this.tryLoadIcon(sources, attempt + 1, glassBox, url, name, container);
             } else {
                 glassBox.innerHTML = '';
-                this.renderIcon({ iconSrc: src, iconType: 'bitmap' }, glassBox, isSVG);
+                this.renderIcon({ iconSrc: src, iconType: 'bitmap', alt: name }, glassBox, isSVG);
                 container.dataset.iconLoaded = 'true';
-                this.iconCache.set(url, { iconSrc: src, iconType: 'bitmap' }).catch(() => { });
+                this.iconCache.set(url, { iconSrc: src, iconType: 'bitmap', alt: name }).catch(() => { });
             }
         };
         img.onerror = () => this.tryLoadIcon(sources, attempt + 1, glassBox, url, name, container);

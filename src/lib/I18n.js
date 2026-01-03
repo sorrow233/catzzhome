@@ -16,6 +16,10 @@ export const TRANSLATIONS = {
         logout_confirm: "确定要退出登录吗？",
         login_failed: "登录失败",
         change_theme: "切换主题",
+        close: "关闭",
+        delete: "删除",
+        toggle_cinematic: "切换沉浸模式",
+        switch_lang: "切换语言",
 
     },
     en: {
@@ -35,6 +39,10 @@ export const TRANSLATIONS = {
         logout_confirm: "Logout?",
         login_failed: "Login failed",
         change_theme: "Change Theme",
+        close: "Close",
+        delete: "Delete",
+        toggle_cinematic: "Toggle Cinematic Mode",
+        switch_lang: "Switch Language",
 
     },
     ja: {
@@ -54,6 +62,10 @@ export const TRANSLATIONS = {
         logout_confirm: "ログアウトしますか？",
         login_failed: "ログイン失敗",
         change_theme: "テーマ変更",
+        close: "閉じる",
+        delete: "削除",
+        toggle_cinematic: "シネマティックモード切替",
+        switch_lang: "言語切替",
 
     },
     ko: {
@@ -73,6 +85,10 @@ export const TRANSLATIONS = {
         logout_confirm: "로그아웃 하시겠습니까?",
         login_failed: "로그인 실패",
         change_theme: "테마 변경",
+        close: "닫기",
+        delete: "삭제",
+        toggle_cinematic: "시네마틱 모드 전환",
+        switch_lang: "언어 변경",
 
     }
 };

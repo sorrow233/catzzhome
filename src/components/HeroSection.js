@@ -199,7 +199,7 @@ export default class HeroSection {
             <canvas id="rain-canvas" class="absolute inset-0 z-0 pointer-events-none w-full h-full opacity-60"></canvas>
             <div class="relative z-10 flex flex-col items-center justify-start w-full max-w-4xl px-4 text-center">
                 <h1 id="hero-title" class="text-4xl md:text-7xl mb-6 md:mb-8 hero-font-sc opacity-90 cursor-pointer hover:opacity-75 transition-colors duration-500 ${theme.textColor} ${theme.textShadow}" title="${i18n.t('change_theme')}">${i18n.t('hero_title')}</h1>
-                <div id="cloud-btn" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="${i18n.t('sync_settings')}">
+                <div id="cloud-btn" role="button" tabindex="0" aria-label="${i18n.t('sync_settings')}" class="absolute top-4 right-4 md:top-8 md:right-8 z-30 w-10 h-10 rounded-full glass-box flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all text-slate-400 hover:text-slate-600" title="${i18n.t('sync_settings')}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
                 </div>
                 <div id="theme-guide" class="hidden absolute top-12 md:top-24 z-20 transition-opacity duration-700 opacity-0 pointer-events-none">
@@ -241,18 +241,18 @@ export default class HeroSection {
 
             <div id="bg-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="glass-modal w-full max-w-4xl p-8 rounded-[2rem] transform scale-95 transition-transform duration-300 relative">
-                     <button id="close-bg-modal" class="absolute top-6 right-8 text-slate-400 hover:text-slate-700 text-2xl transition-colors">&times;</button>
+                     <button id="close-bg-modal" aria-label="${i18n.t('close')}" class="absolute top-6 right-8 text-slate-400 hover:text-slate-700 text-2xl transition-colors">&times;</button>
                      <h3 class="text-2xl text-slate-700 font-light mb-2 hero-font-sc tracking-wider text-center">${i18n.t('select_theme')}</h3>
                      <div class="flex items-center justify-center gap-3 mb-4">
                         <span class="text-xs text-slate-500 font-light tracking-widest uppercase">${i18n.t('cinematic')}</span>
-                        <button id="cinematic-toggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 focus:outline-none bg-slate-700">
+                        <button id="cinematic-toggle" aria-label="${i18n.t('toggle_cinematic')}" class="w-10 h-5 rounded-full relative transition-colors duration-300 focus:outline-none bg-slate-700">
                             <div class="w-3 h-3 bg-white rounded-full absolute top-1 transition-all duration-300 shadow-sm"></div>
                         </button>
                      </div>
                      <div class="flex items-center justify-center gap-4 mb-4">
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="zh">CH</button>
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="ja">JP</button>
-                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="en">EN</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="zh" aria-label="${i18n.t('switch_lang')} - Chinese">CH</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="ja" aria-label="${i18n.t('switch_lang')} - Japanese">JP</button>
+                        <button class="lang-btn text-[10px] tracking-widest uppercase border border-slate-200 px-3 py-1 rounded-full opacity-60 hover:opacity-100 transition-all font-light" data-lang="en" aria-label="${i18n.t('switch_lang')} - English">EN</button>
                      </div>
                      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto px-2 pb-4 scrollbar-hide"></div>
                 </div>

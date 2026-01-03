@@ -72,6 +72,7 @@ export class BookmarkComponent {
             const del = document.createElement('button');
             del.className = "absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] delayed-delete-btn";
             del.innerHTML = "&times;";
+            del.setAttribute('aria-label', i18n.t('delete'));
             del.onclick = (e) => { e.preventDefault(); e.stopPropagation(); this.deleteBookmark(index); };
             item.appendChild(del);
             item.oncontextmenu = (e) => { e.preventDefault(); this.openModal(index, site); };
@@ -79,6 +80,9 @@ export class BookmarkComponent {
         });
 
         const addBtn = document.createElement('div');
+        addBtn.setAttribute('role', 'button');
+        addBtn.setAttribute('tabindex', '0');
+        addBtn.setAttribute('aria-label', i18n.t('add'));
         addBtn.className = 'flex flex-col items-center gap-4 group w-20 md:w-24 cursor-pointer';
         addBtn.innerHTML = `<div class="add-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg></div><span class="text-[10px] tracking-widest text-gray-600 uppercase font-light">${i18n.t('add')}</span>`;
         addBtn.onclick = () => this.openModal();

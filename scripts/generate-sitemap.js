@@ -3,7 +3,7 @@ const path = require('path');
 const SEO_CONFIG = require('../seo-config.js');
 
 const SITE_URL = 'https://catzz.work';
-const DIST_DIR = path.join(__dirname, '../dist');
+const DIST_DIR = path.join(__dirname, '../');
 
 const generateSitemap = () => {
     // Generate distinct URLs for each language to ensure Google indexes them
