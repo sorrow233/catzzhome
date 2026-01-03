@@ -55,13 +55,32 @@ export const TRANSLATIONS = {
         login_failed: "ログイン失敗",
         change_theme: "テーマ変更",
 
+    },
+    ko: {
+        title: "Catzz",
+        hero_title: "Catzz",
+        sync_settings: "동기화",
+        switch_theme: "제목 클릭하여 테마 변경",
+        new_shortcut: "바로가기 추가",
+        preview: "미리보기",
+        url: "URL",
+        name: "이름",
+        cancel: "취소",
+        save: "저장",
+        select_theme: "테마 선택",
+        cinematic: "시네마틱",
+        add: "추가",
+        logout_confirm: "로그아웃 하시겠습니까?",
+        login_failed: "로그인 실패",
+        change_theme: "테마 변경",
+
     }
 };
 
 class I18n {
     constructor() {
         this.translations = TRANSLATIONS;
-        this.locales = ['zh', 'en', 'ja'];
+        this.locales = ['zh', 'en', 'ja', 'ko'];
         this.defaultLocale = 'zh';
         this.currentLocale = this.detectLanguage();
 
