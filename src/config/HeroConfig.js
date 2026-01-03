@@ -32,7 +32,7 @@ export const HERO_CONFIG = {
         {
             id: 'rainy_window',
             name: 'Rainy Window',
-            thumbUrl: "https://blog.catzz.work/file/1766577198544_rainy_window_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459124084_rainy_window_thumb.webp",
             theme: {
                 textColor: "text-cyan-50",
                 textShadow: "drop-shadow-[0_2px_15px_rgba(34,211,238,0.3)]",
@@ -47,7 +47,7 @@ export const HERO_CONFIG = {
         {
             id: 'wet_street',
             name: 'Wet Street',
-            thumbUrl: "https://blog.catzz.work/file/1766577191010_wet_street_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459127086_wet_street_thumb.webp",
             theme: {
                 textColor: "text-indigo-50",
                 textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
@@ -62,7 +62,7 @@ export const HERO_CONFIG = {
         {
             id: 'city_bed',
             name: 'City Bed',
-            thumbUrl: "https://blog.catzz.work/file/1766577198695_city_bed_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459119214_city_bed_thumb.webp",
             theme: {
                 textColor: "text-amber-50",
                 textShadow: "drop-shadow-[0_2px_15px_rgba(251,191,36,0.3)]",
@@ -77,7 +77,7 @@ export const HERO_CONFIG = {
         {
             id: 'umbrella_street',
             name: 'Umbrella Street',
-            thumbUrl: "https://blog.catzz.work/file/1766577195392_umbrella_street_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459127120_umbrella_street_thumb.webp",
             theme: {
                 textColor: "text-fuchsia-50",
                 textShadow: "drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]",
@@ -92,7 +92,7 @@ export const HERO_CONFIG = {
         {
             id: 'flower_window',
             name: 'Flower Window',
-            thumbUrl: "https://blog.catzz.work/file/1766577189209_flower_window_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459120854_flower_window_thumb.webp",
             theme: {
                 textColor: "text-emerald-50",
                 textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
@@ -107,7 +107,7 @@ export const HERO_CONFIG = {
         {
             id: 'white_shirt_girl',
             name: 'White Shirt Girl',
-            thumbUrl: "https://blog.catzz.work/file/1766577195255_white_shirt_girl_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459128017_white_shirt_girl_thumb.webp",
             theme: {
                 textColor: "text-slate-50",
                 textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.6)]",
@@ -122,7 +122,7 @@ export const HERO_CONFIG = {
         {
             id: 'sunset_balcony',
             name: 'Sunset Balcony',
-            thumbUrl: "https://blog.catzz.work/file/1766577196361_sunset_balcony_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459121541_sunset_balcony_thumb.webp",
             theme: {
                 textColor: "text-orange-50",
                 textShadow: "drop-shadow-[0_2px_15px_rgba(251,146,60,0.4)]",
@@ -137,7 +137,7 @@ export const HERO_CONFIG = {
         {
             id: 'night_view',
             name: 'Night View',
-            thumbUrl: "https://blog.catzz.work/file/1766577191962_night_view_thumb.webp",
+            thumbUrl: "https://blog.catzz.work/file/1767459127940_night_view_thumb.webp",
             theme: {
                 textColor: "text-blue-50",
                 textShadow: "drop-shadow-[0_2px_15px_rgba(96,165,250,0.5)]",
@@ -152,14 +152,14 @@ export const HERO_CONFIG = {
     ],
 
     wallpaperUrls: {
-        'rainy_window': "https://blog.catzz.work/file/1766242722856_image.png",
-        'wet_street': "https://blog.catzz.work/file/1766242726260_image.png",
-        'city_bed': "https://blog.catzz.work/file/1766241278914_78375860_p0.png",
-        'umbrella_street': "https://blog.catzz.work/file/1766241276169_100669875_p0.jpg",
-        'flower_window': "https://blog.catzz.work/file/1766241276149_113793915_p0.png",
-        'white_shirt_girl': "https://blog.catzz.work/file/1766241281738_116302432_p0.png",
-        'sunset_balcony': "https://blog.catzz.work/file/1766241284787_72055179_p0.jpg",
-        'night_view': "https://blog.catzz.work/file/1766241306259_68686407_p0.jpg"
+        'rainy_window': "https://blog.catzz.work/file/1767459123988_rainy_window.webp",
+        'wet_street': "https://blog.catzz.work/file/1767459129847_wet_street.webp",
+        'city_bed': "https://blog.catzz.work/file/1767459126076_city_bed.webp",
+        'umbrella_street': "https://blog.catzz.work/file/1767459127815_umbrella_street.webp",
+        'flower_window': "https://blog.catzz.work/file/1767459120939_flower_window.webp",
+        'white_shirt_girl': "https://blog.catzz.work/file/1767459123491_white_shirt_girl.webp",
+        'sunset_balcony': "https://blog.catzz.work/file/1767459122549_sunset_balcony.webp",
+        'night_view': "https://blog.catzz.work/file/1767459128088_night_view.webp"
     },
 
     simpleIconsMap: {
