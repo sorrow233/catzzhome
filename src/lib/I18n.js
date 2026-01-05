@@ -1,7 +1,7 @@
 export const TRANSLATIONS = {
     zh: {
-        title: "古德喵特",
-        hero_title: "古德喵特",
+        title: "Catzz",
+        hero_title: "Catzz",
         sync_settings: "同步",
         switch_theme: "点击标题切换主题",
         new_shortcut: "添加快捷方式",
