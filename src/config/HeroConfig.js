@@ -1,7 +1,7 @@
 export const HERO_CONFIG = {
     quotes: {
         zh: {
-            prefixes: ["雨夜清凉", "雨伞脆弱", "街边电话", "路旁雨滩"],
+            prefixes: ["清凉雨夜", "雨伞脆弱", "街边电话", "路旁雨滩"],
             suffixes: ["温暖过谁的心", "保护了谁前行", "少女心伤忧郁", "天空触手可及"]
         },
         en: {
