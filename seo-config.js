@@ -1,7 +1,7 @@
 const SEO_CONFIG = {
     defaultLocale: 'zh',
     fallbackLocale: 'en',
-    baseUrl: 'https://catzz.work',
+    baseUrl: 'https://ame.catzz.work',
     locales: ['zh', 'en', 'ja', 'ko', 'zh-TW'],
     languages: {
         'zh': {

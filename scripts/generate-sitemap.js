@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const SEO_CONFIG = require('../seo-config.js');
 
-const SITE_URL = 'https://catzz.work';
+const SITE_URL = 'https://ame.catzz.work';
 const DIST_DIR = path.join(__dirname, '../');
 
 const generateSitemap = () => {
