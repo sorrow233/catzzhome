@@ -8,6 +8,7 @@ coverage/
 
 # Production
 dist/
+extension-dist/
 build/
 public/sitemap.xml
 

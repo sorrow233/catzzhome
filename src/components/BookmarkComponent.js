@@ -99,6 +99,11 @@ export class BookmarkComponent {
       image.src = result.src;
       image.alt = '';
       image.loading = 'lazy';
+      image.decoding = 'async';
+      image.referrerPolicy = 'no-referrer';
+      image.addEventListener('error', () => {
+        if (target.isConnected) target.textContent = bookmark.name.charAt(0).toUpperCase() || '?';
+      }, { once: true });
       target.append(image);
     }
   }

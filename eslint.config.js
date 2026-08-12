@@ -3,7 +3,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', 'legacy_backup/**', 'coverage/**', 'node_modules/**']
+    ignores: ['dist/**', 'extension-dist/**', 'legacy_backup/**', 'coverage/**', 'node_modules/**']
   },
   eslint.configs.recommended,
   {

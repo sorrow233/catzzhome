@@ -36,7 +36,7 @@ export class WallpaperController {
 
   getCinematic() {
     if (typeof this.cinematicPrefs[this.selectedId] === 'boolean') return this.cinematicPrefs[this.selectedId];
-    return true;
+    return !['rainy_window', 'sunset_balcony', 'night_view'].includes(this.selectedId);
   }
 
   setCinematic(value) { this.cinematicPrefs[this.selectedId] = Boolean(value); this.applyTheme(); }

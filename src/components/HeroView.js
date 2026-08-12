@@ -8,6 +8,7 @@ export function createHeroView() {
   root.innerHTML = `
     <div class="hero__backdrop" data-wallpaper aria-hidden="true"></div>
     <div class="hero__gradient" data-gradient aria-hidden="true"></div>
+    <div class="hero__vignette" aria-hidden="true"></div>
     <canvas class="hero__rain" data-rain aria-hidden="true"></canvas>
     <button class="icon-button sync-button" type="button" data-sync aria-label="${i18n.t('sync')}" aria-live="polite">
       <span data-sync-icon>${cloudIcon}</span><span class="sr-only" data-sync-label>${i18n.t('sync_idle')}</span>
@@ -17,8 +18,10 @@ export function createHeroView() {
         <span class="brand">${i18n.t('title')}</span>
         <span class="subtitle">${i18n.t('subtitle')}</span>
       </button>
-      <p class="quote" data-quote aria-live="polite"><span data-prefix></span><span data-suffix></span></p>
-      <nav class="bookmarks" id="bookmark-grid" data-bookmarks aria-label="${i18n.t('bookmark_actions')}"></nav>
+      <p class="quote" data-quote aria-live="polite"><span data-prefix></span><i aria-hidden="true"></i><span data-suffix></span></p>
+      <div class="bookmark-rail">
+        <nav class="bookmarks" id="bookmark-grid" data-bookmarks aria-label="${i18n.t('bookmark_actions')}"></nav>
+      </div>
     </div>
     <p class="status-toast" data-status role="status" aria-live="polite"></p>
     ${wallpaperDialog()}
