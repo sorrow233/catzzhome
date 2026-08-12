@@ -1,5 +1,17 @@
 import SEO_CONFIG, { SITE_URL } from '../seo-config.js';
 
+const privatePathPatterns = [
+  /^\/(?:src|functions|scripts|legacy_backup)(?:\/|$)/,
+  /^\/(?:package(?:-lock)?\.json|migration_script\.py|seo-config\.js)$/,
+  /^\/(?:README|CHANGELOG)\.md$/,
+  /^\/(?:firebase\.json|firestore\.rules|wrangler\.toml|vite\.config\.js|eslint\.config\.js|tailwind\.config\.(?:js|cjs))$/,
+  /^\/\.(?:gitignore|github)(?:\/|$)/
+];
+
+export function isPrivatePath(pathname) {
+  return privatePathPatterns.some((pattern) => pattern.test(pathname));
+}
+
 export function resolveLocale(url, acceptLanguage = '') {
   const requested = new URL(url).searchParams.get('lang');
   if (SEO_CONFIG.locales.includes(requested)) return requested;
@@ -18,6 +30,17 @@ export function resolveLocale(url, acceptLanguage = '') {
 }
 
 export async function onRequest({ request, next }) {
+  if (isPrivatePath(new URL(request.url).pathname)) {
+    return new Response('Not Found', {
+      status: 404,
+      headers: {
+        'Cache-Control': 'no-store',
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Robots-Tag': 'noindex'
+      }
+    });
+  }
+
   const response = await next();
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('text/html')) return response;

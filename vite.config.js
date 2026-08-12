@@ -5,6 +5,8 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     sourcemap: false,
+    // Firebase is isolated in a lazy chunk and only loads when cloud sync is used.
+    chunkSizeWarningLimit: 600,
     target: 'es2022'
   },
   server: {
