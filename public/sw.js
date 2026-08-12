@@ -1,8 +1,11 @@
 const CACHE_PREFIX = 'catzzhome';
-const CACHE_VERSION = '2.2.2';
+const CACHE_VERSION = '2.7.0-beta.1';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
+const APP_SHELL = ['/', '/manifest.webmanifest', '/icons/catzz.svg'];
 
-self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+});
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -25,12 +28,12 @@ self.addEventListener('fetch', (event) => {
           if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put('/', response.clone()));
           return response;
         })
-        .catch(() => caches.match('/'))
+        .catch(() => caches.match('/') || caches.match('/index.html'))
     );
     return;
   }
 
-  if (url.pathname.startsWith('/assets/')) {
+  if (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/icons/')) {
     event.respondWith(
       caches.match(request).then((cached) => {
         const update = fetch(request).then((response) => {

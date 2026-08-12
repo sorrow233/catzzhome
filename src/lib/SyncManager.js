@@ -72,6 +72,19 @@ export class SyncManager {
     }
   }
 
+  async deleteCloud() {
+    if (!this.user) { await this.handleClick(); return false; }
+    try {
+      await retry(() => this.firebase.deleteSettings(this.user.uid));
+      this.setStatus('sync_success');
+      return true;
+    } catch (error) {
+      console.error('Cloud data deletion failed', error);
+      this.setStatus('sync_error');
+      return false;
+    }
+  }
+
   async handleClick() {
     try {
       await this.start();

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBQK1cy5yAsiN_RlVgzujnl0vDkI14mQy8',
@@ -29,3 +29,5 @@ export async function fetchSettings(uid) {
 export function saveSettings(uid, settings) {
   return setDoc(doc(database, 'users', uid), { ...settings, serverUpdatedAt: serverTimestamp() }, { merge: true });
 }
+
+export function deleteSettings(uid) { return deleteDoc(doc(database, 'users', uid)); }

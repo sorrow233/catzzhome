@@ -1,6 +1,6 @@
 {
   "name": "catzzhome",
-  "version": "2.2.2",
+  "version": "2.7.0-beta.1",
   "private": true,
   "type": "module",
   "description": "沉浸式雨夜浏览器起始页",
@@ -10,13 +10,15 @@
   "scripts": {
     "dev": "npm run build:seo && vite",
     "build:seo": "node scripts/generate-seo.js",
-    "build": "npm run build:seo && vite build",
+    "build": "npm run build:seo && vite build && npm run build:extension",
+    "build:extension": "node scripts/build-extension.js",
     "preview": "vite preview",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest",
     "test:run": "vitest run --coverage.enabled=false",
     "check": "npm run lint && npm run test:run && npm run build",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name catzzhome --branch main"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name catzzhome --branch main",
+    "deploy:beta": "npm run build && wrangler pages deploy dist --project-name catzzhome --branch beta --commit-message \"Deploy Catzz 2.7 beta preview\""
   },
   "dependencies": {
     "firebase": "^12.0.0"

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Catzz">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#243b55"/>
+      <stop offset="1" stop-color="#0b1118"/>
+    </linearGradient>
+    <linearGradient id="rain" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#d7eef7"/>
+      <stop offset="1" stop-color="#6aa7bd"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="122" fill="url(#night)"/>
+  <path d="M143 186 112 94l105 58a182 182 0 0 1 78 0l105-58-31 92c31 34 50 81 50 132 0 88-73 128-163 128S93 406 93 318c0-51 19-98 50-132Z" fill="#111b25" stroke="#99c5d5" stroke-width="14"/>
+  <path d="M173 300c20 20 47 31 83 31s63-11 83-31" fill="none" stroke="#d9edf4" stroke-linecap="round" stroke-width="15"/>
+  <circle cx="188" cy="250" r="13" fill="#d9edf4"/>
+  <circle cx="324" cy="250" r="13" fill="#d9edf4"/>
+  <path d="M83 105 59 166M455 105l-24 61M50 217l-19 49M474 217l-19 49" stroke="url(#rain)" stroke-linecap="round" stroke-width="13"/>
+</svg>

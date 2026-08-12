@@ -1,0 +1,22 @@
+{
+  "name": "Catzz 沉浸式雨夜起始页",
+  "short_name": "Catzz",
+  "description": "融合搜索、书签、专注与轻量记录的沉浸式雨夜起始页。",
+  "lang": "zh-CN",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#101820",
+  "theme_color": "#101820",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/catzz.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
