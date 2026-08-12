@@ -1,103 +1,31 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, terminate } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBQK1cy5yAsiN_RlVgzujnl0vDkI14mQy8",
-    authDomain: "amecatzz.firebaseapp.com",
-    projectId: "amecatzz",
-    storageBucket: "amecatzz.firebasestorage.app",
-    messagingSenderId: "432779469154",
-    appId: "1:432779469154:web:390e5c5fd58bfefca14c3b",
-    measurementId: "G-0XFRPR3DVH"
+  apiKey: 'AIzaSyBQK1cy5yAsiN_RlVgzujnl0vDkI14mQy8',
+  authDomain: 'amecatzz.firebaseapp.com',
+  projectId: 'amecatzz',
+  storageBucket: 'amecatzz.firebasestorage.app',
+  messagingSenderId: '432779469154',
+  appId: '1:432779469154:web:390e5c5fd58bfefca14c3b',
+  measurementId: 'G-0XFRPR3DVH'
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+export const auth = getAuth(app);
+const database = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-export const login = async () => {
-    try {
-        const result = await signInWithPopup(auth, provider);
-        return result.user;
-    } catch (error) {
-        console.error("Login failed:", error);
-        throw error;
-    }
-};
+export function observeAuth(callback) { return onAuthStateChanged(auth, callback); }
+export function login() { return signInWithPopup(auth, provider).then((result) => result.user); }
+export function logout() { return signOut(auth); }
 
-export const logout = async () => {
-    try {
-        await signOut(auth);
-    } catch (error) {
-        console.error("Logout failed:", error);
-    }
-};
+export async function fetchSettings(uid) {
+  const snapshot = await getDoc(doc(database, 'users', uid));
+  return snapshot.exists() ? snapshot.data() : null;
+}
 
-/**
- * Save user settings to Cloud
- * @param {string} uid User ID
- * @param {object} data { bg: string, bookmarks: array }
- */
-export const saveSettings = async (uid, data) => {
-    if (!uid) return;
-    try {
-        await setDoc(doc(db, "users", uid), data, { merge: true });
-    } catch (e) {
-        console.error("Error saving settings:", e);
-    }
-};
-
-/**
- * 按需同步：单次获取用户设置（不保持实时监听）
- * @param {string} uid 
- * @returns {Promise<object>} 用户设置数据
- */
-export const fetchSettings = async (uid) => {
-    if (!uid) return null;
-    try {
-        const docSnap = await getDoc(doc(db, "users", uid));
-        if (docSnap.exists()) {
-            return docSnap.data();
-        }
-        return null;
-    } catch (e) {
-        console.error("Error fetching settings:", e);
-        return null;
-    }
-};
-
-/**
- * @deprecated 改为按需同步，不再需要实时监听
- * Listen to user settings changes
- * @param {string} uid 
- * @param {function} callback (data) => void
- */
-export const listenSettings = (uid, callback) => {
-    if (!uid) return null;
-    return onSnapshot(doc(db, "users", uid), (doc) => {
-        if (doc.exists()) {
-            callback(doc.data());
-        }
-    });
-};
-
-/**
- * 极致优化：强行关闭连接并清理内存
- */
-export const terminateFirebase = async () => {
-    try {
-        if (db) {
-            await terminate(db);
-            console.log("Firestore connection terminated for memory saving.");
-        }
-    } catch (e) {
-        console.error("Failed to terminate Firebase:", e);
-    }
-};
-
-export { auth, onAuthStateChanged };
+export function saveSettings(uid, settings) {
+  return setDoc(doc(database, 'users', uid), { ...settings, serverUpdatedAt: serverTimestamp() }, { merge: true });
+}

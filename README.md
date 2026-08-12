@@ -1,29 +1,43 @@
-# 古德喵特 (Catzz Home)
+# Catzz Home
 
-一个极简、唯美的浏览器起始页，集成了雨夜氛围与云端同步功能。
+Catzz 是一个沉浸式雨夜浏览器起始页，提供自定义壁纸、快捷入口、多语言界面和可选的 Firebase 云同步。
 
-## ✨ 特性
+## 环境要求
 
-- **唯美视效**：动态 Canvas 雨滴动画 + 呼吸灯文字效果。
-- **自定义壁纸**：内置多款精选日系/暗黑风格壁纸，支持实时切换。
-- **云端同步**：集成 **Firebase**，支持 Google 账号登录，跨设备同步壁纸与书签设置。
-- **高效导航**：自定义常用网站快捷方式，自动获取图标。
-- **响应式设计**：完美适配桌面端与移动端。
+- Node.js 22 或更高版本
+- npm 10 或更高版本
 
-## 🚀 快速开始
+## 本地开发
 
-本项目为纯静态由 HTML/JS 驱动，无需构建。
-
-### 1. 启动服务
-使用 Python 内置服务器快速预览：
 ```bash
-python3 -m http.server 8081
+npm ci
+npm run dev
 ```
 
-### 2. 访问
-打开浏览器访问：`http://localhost:8081`
+访问 `http://localhost:8081`。
 
-## 🛠️ 技术栈
-- **核心**:原生 HTML5 / ES6 JavaScript
-- **样式**: Tailwind CSS (CDN)
-- **后端**: Firebase Authentication & Firestore
+## 质量检查
+
+```bash
+npm run check
+```
+
+该命令依次执行 ESLint、Vitest 和生产构建。生产文件只会生成到 `dist/`，仓库源文件和历史备份不会进入部署目录。
+
+## 部署
+
+正式环境使用 Cloudflare Pages 项目 `catzzhome`，生产分支为 `main`：
+
+```bash
+npm run deploy
+```
+
+正式域名为 <https://ame.catzz.work>。部署前应确认当前 Git commit 已推送到 `origin/main`，Cloudflare 部署元数据中的 commit SHA 必须与之相同。
+
+## 数据与安全
+
+- 书签、壁纸和语言设置默认存储在浏览器本地。
+- 用户主动登录后，设置会同步到 Firebase Firestore。
+- Firebase Web 配置是公开客户端标识，数据权限必须由 Firestore Security Rules 按用户 UID 约束。
+- 仓库中的 `firestore.rules` 只允许已登录用户读写自己的文档，并校验字段与书签数量。
+- 发布目录由 Vite 生成，不允许直接发布仓库根目录。

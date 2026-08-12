@@ -71,7 +71,7 @@ export class IconCache {
                 };
                 request.onerror = () => resolve(null);
             });
-        } catch (e) {
+        } catch {
             return null;
         }
     }
@@ -98,7 +98,7 @@ export class IconCache {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             store.put(cacheData);
-        } catch (e) {
+        } catch {
             // Fallback: use memory cache only
         }
     }
@@ -121,7 +121,7 @@ export class IconCache {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             store.delete(url);
-        } catch (e) {
+        } catch {
             // Ignore errors
         }
     }
@@ -136,7 +136,7 @@ export class IconCache {
             const tx = this.db.transaction(this.storeName, 'readwrite');
             const store = tx.objectStore(this.storeName);
             store.clear();
-        } catch (e) {
+        } catch {
             // Ignore errors
         }
     }
@@ -160,7 +160,7 @@ export class IconCache {
                     cursor.continue();
                 }
             };
-        } catch (e) {
+        } catch {
             // Ignore errors
         }
     }

@@ -2,56 +2,35 @@ import { i18n } from '../lib/I18n.js';
 import { HERO_CONFIG } from '../config/HeroConfig.js';
 
 export class QuoteWidget {
-    constructor(containerElement) {
-        this.container = containerElement;
-        this.quotes = HERO_CONFIG.quotes;
-        this.currentIndex = 0;
-        this.interval = null;
-    }
+  constructor(element) {
+    this.prefix = element.querySelector('[data-prefix]');
+    this.suffix = element.querySelector('[data-suffix]');
+    this.index = 0;
+    this.timer = null;
+    this.reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
 
-    mount() {
-        if (!this.container) return;
+  start() {
+    this.stop();
+    this.render();
+    if (!this.reducedMotion) this.timer = window.setInterval(() => this.advance(), 6000);
+  }
 
-        // Find expected child elements
-        this.prefixEl = this.container.querySelector('.prefix');
-        this.quotesEl = this.container.querySelector('.typed-quotes');
+  advance() {
+    this.prefix.parentElement.classList.add('is-changing');
+    window.setTimeout(() => {
+      this.index += 1;
+      this.render();
+      this.prefix.parentElement.classList.remove('is-changing');
+    }, 450);
+  }
 
-        if (!this.prefixEl || !this.quotesEl) return;
+  render() {
+    const quotes = HERO_CONFIG.quotes[i18n.getLocale()] || HERO_CONFIG.quotes.zh;
+    this.index %= quotes.prefixes.length;
+    this.prefix.textContent = quotes.prefixes[this.index];
+    this.suffix.textContent = quotes.suffixes[this.index] || '';
+  }
 
-        this.start();
-    }
-
-    start() {
-        const lang = i18n.getLocale();
-        const quotes = this.quotes[lang] || this.quotes['zh'];
-        const prefixes = quotes.prefixes;
-        const suffixes = quotes.suffixes;
-
-        this.prefixEl.textContent = prefixes[0];
-        this.quotesEl.textContent = suffixes[0];
-
-        this.prefixEl.classList.remove('text-out');
-        this.quotesEl.classList.remove('text-out');
-        this.prefixEl.classList.add('text-prefix-in');
-        this.quotesEl.classList.add('text-quotes-in');
-
-        if (this.interval) clearInterval(this.interval);
-
-        this.interval = setInterval(() => {
-            this.prefixEl.classList.replace('text-prefix-in', 'text-out');
-            this.quotesEl.classList.replace('text-quotes-in', 'text-out');
-
-            setTimeout(() => {
-                this.currentIndex = (this.currentIndex + 1) % prefixes.length;
-                this.prefixEl.textContent = prefixes[this.currentIndex];
-                this.quotesEl.textContent = suffixes[this.currentIndex];
-                this.prefixEl.classList.replace('text-out', 'text-prefix-in');
-                this.quotesEl.classList.replace('text-out', 'text-quotes-in');
-            }, 1200);
-        }, 5000);
-    }
-
-    stop() {
-        if (this.interval) clearInterval(this.interval);
-    }
+  stop() { if (this.timer) window.clearInterval(this.timer); this.timer = null; }
 }

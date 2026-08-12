@@ -1,118 +1,59 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Primary Meta Tags - Multi-language optimized -->
-    <meta name="description"
-        content="Catzz - 沉浸式雨夜起始页。精选壁纸、音乐与效率工具。A melancholic, rainy aesthetic start page. 美しい雨の夜のスタートページ。감성적인 비 오는 밤 시작 페이지。">
-    <meta name="keywords"
-        content="start page, aesthetic, rainy, wallpapers, productivity, browser homepage, new tab, catzz, 起始页, 浏览器主页, 新标签页, 美化, 壁纸, 雨夜, 氛围感, スタートページ, ブラウザホーム, 新しいタブ, 壁紙, 美的, 雨, 시작 페이지, 브라우저 홈페이지, 새 탭, 배경화면, 감성, 비 오는 밤">
-    <meta name="author" content="Catzz Team">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-
-    <!-- Language Alternates (hreflang) - Critical for multi-language SEO -->
-    <link rel="alternate" hreflang="zh-CN" href="https://ame.catzz.work/">
-    <link rel="alternate" hreflang="zh-TW" href="https://ame.catzz.work/">
-    <link rel="alternate" hreflang="en" href="https://ame.catzz.work/">
-    <link rel="alternate" hreflang="ja" href="https://ame.catzz.work/">
-    <link rel="alternate" hreflang="ko" href="https://ame.catzz.work/">
-    <link rel="alternate" hreflang="x-default" href="https://ame.catzz.work/">
-
-    <!-- Google Site Verification -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#101820" />
+    <meta name="description" content="沉浸式雨夜起始页，精选壁纸与效率工具。打造属于你的专注空间。" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Catzz" />
     <meta name="google-site-verification" content="NXudx4sx5tbwD0lI6Z_OV0Jm8u808Kphebpxk5m3D94" />
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://ame.catzz.work/">
 
-    <!-- Open Graph / Facebook - Multi-language -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://ame.catzz.work/">
-    <meta property="og:site_name" content="Catzz">
-    <meta property="og:locale" content="zh_CN">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta property="og:locale:alternate" content="ja_JP">
-    <meta property="og:locale:alternate" content="ko_KR">
-    <meta property="og:title" content="Catzz - 沉浸式雨夜起始页 | Aesthetic Start Page | 美的スタートページ | 감성 시작 페이지">
-    <meta property="og:description"
-        content="沉浸式雨夜起始页，精选壁纸与效率工具。A melancholic, rainy aesthetic start page for your soul. 美しい雨の夜のスタートページ。감성적인 비 오는 밤 시작 페이지。">
-    <meta property="og:image" content="https://blog.catzz.work/file/1765900724771_image.png">
-    <meta property="og:image:alt" content="Catzz - Rainy aesthetic start page preview">
+    <link rel="canonical" href="https://ame.catzz.work/" />
+    <link rel="alternate" hreflang="zh-CN" href="https://ame.catzz.work/?lang=zh" />
+    <link rel="alternate" hreflang="zh-TW" href="https://ame.catzz.work/?lang=zh-TW" />
+    <link rel="alternate" hreflang="en" href="https://ame.catzz.work/?lang=en" />
+    <link rel="alternate" hreflang="ja" href="https://ame.catzz.work/?lang=ja" />
+    <link rel="alternate" hreflang="ko" href="https://ame.catzz.work/?lang=ko" />
+    <link rel="alternate" hreflang="x-default" href="https://ame.catzz.work/" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://ame.catzz.work/">
-    <meta name="twitter:title" content="Catzz - 沉浸式雨夜起始页 | Aesthetic Start Page">
-    <meta name="twitter:description" content="沉浸式雨夜起始页，精选壁纸与效率工具。A melancholic, rainy aesthetic start page.">
-    <meta name="twitter:image" content="https://blog.catzz.work/file/1765900724771_image.png">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ame.catzz.work/" />
+    <meta property="og:site_name" content="Catzz" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="Catzz - 沉浸式雨夜起始页" />
+    <meta property="og:description" content="沉浸式雨夜起始页，精选壁纸与效率工具。打造属于你的专注空间。" />
+    <meta property="og:image" content="https://blog.catzz.work/file/1765900724771_image.png" />
+    <meta property="og:image:alt" content="Catzz 雨夜起始页预览" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Catzz - 沉浸式雨夜起始页" />
+    <meta name="twitter:description" content="沉浸式雨夜起始页，精选壁纸与效率工具。" />
+    <meta name="twitter:image" content="https://blog.catzz.work/file/1765900724771_image.png" />
 
-    <!-- Structured Data (JSON-LD) - Enhanced multi-language -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Catzz",
-      "alternateName": ["古德喵特", "Catzz Start Page", "キャッツ", "캐츠"],
-      "url": "https://ame.catzz.work/",
-      "description": "沉浸式雨夜起始页。A melancholic, rainy aesthetic start page featuring curated wallpapers, music, and productivity tools. 美しい雨の夜のスタートページ。감성적인 비 오는 밤 시작 페이지。",
-      "applicationCategory": "BrowserApplication",
-      "operatingSystem": "All",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "inLanguage": ["zh-CN", "en", "ja", "ko"],
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://ame.catzz.work/?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      },
-      "author": {
-        "@type": "Organization",
-        "name": "Catzz Team",
-        "url": "https://ame.catzz.work/"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Catzz",
+        "url": "https://ame.catzz.work/",
+        "description": "沉浸式雨夜起始页，精选壁纸与效率工具。",
+        "applicationCategory": "BrowserApplication",
+        "operatingSystem": "All",
+        "isAccessibleForFree": true,
+        "inLanguage": ["zh-CN", "zh-TW", "en", "ja", "ko"]
       }
-    }
     </script>
 
-    <title>Catzz - 沉浸式雨夜起始页 | Aesthetic Start Page | 美的スタートページ | 감성 시작 페이지</title>
-    <link rel="icon" type="image/png" href="https://blog.catzz.work/file/1765900724771_image.png">
-    <link rel="apple-touch-icon" href="https://blog.catzz.work/file/1765900724771_image.png">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
-
-
-    <!-- Tailwind CSS - Static Build -->
-    <link rel="stylesheet" href="/dist/output.css">
-
-    <!-- Custom Animations -->
-    <link rel="stylesheet" href="src/styles/animations.css">
-</head>
-
-<body
-    class="bg-[#f8f9fa] text-primary font-serif selection:bg-gray-200 selection:text-gray-900 overflow-x-hidden p-0 m-0">
-    <div id="app" class="w-full min-h-screen">
-        <!-- Content will be injected here -->
-        <main id="main-content"></main>
-    </div>
-
-
-    <script>
-        // Register Service Worker for instant caching
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('SW registered:', reg))
-                    .catch(err => console.log('SW registration failed:', err));
-            });
-        }
-    </script>
-    <script type="module" src="src/main.js?v=1.0.8"></script>
-</body>
-
+    <title>Catzz - 沉浸式雨夜起始页 | 专注与美学</title>
+    <link rel="icon" type="image/png" href="https://blog.catzz.work/file/1765900724771_image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip-link" href="#bookmark-grid">跳到快捷入口</a>
+    <main id="app"></main>
+    <noscript>Catzz 需要启用 JavaScript 才能使用书签和壁纸功能。</noscript>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

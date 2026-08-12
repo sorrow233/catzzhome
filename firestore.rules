@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly([
+          'bgId',
+          'bookmarks',
+          'cinematicPrefs',
+          'updatedAt',
+          'serverUpdatedAt'
+        ])
+        && request.resource.data.bgId is string
+        && request.resource.data.bgId.size() <= 64
+        && request.resource.data.bookmarks is list
+        && request.resource.data.bookmarks.size() <= 24
+        && request.resource.data.cinematicPrefs is map
+        && request.resource.data.updatedAt is int
+        && request.resource.data.serverUpdatedAt == request.time;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

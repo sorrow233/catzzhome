@@ -1,14 +1,11 @@
-import HeroSection from './components/HeroSection.js';
+import './input.css';
+import './styles/animations.css';
+import { App } from './App.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const app = document.getElementById('app');
+const root = document.querySelector('#app');
+const app = new App(root);
+app.mount();
 
-    // Initialize components
-    const hero = new HeroSection();
-
-    // Render components
-    app.appendChild(hero.render());
-
-    // Mount/Hydrate components (animations, events)
-    if (hero.mount) hero.mount();
-});
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch((error) => console.warn('Service worker registration failed', error)));
+}
