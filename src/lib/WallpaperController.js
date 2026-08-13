@@ -13,6 +13,8 @@ export class WallpaperController {
   }
 
   async mount(sceneMode = 'manual') {
+    this.media = matchMedia('(max-width: 640px)');
+    this.media.addEventListener?.('change', () => this.applyPosition());
     if (this.customWallpaper?.enabled) {
       const blob = await this.assetStore?.get('custom-wallpaper');
       if (blob) return this.setCustom(blob);
@@ -49,7 +51,7 @@ export class WallpaperController {
 
   getCinematic() {
     if (typeof this.cinematicPrefs[this.selectedId] === 'boolean') return this.cinematicPrefs[this.selectedId];
-    return true;
+    return this.wallpapers.find((item) => item.id === this.selectedId)?.cinematic !== false;
   }
 
   setCinematic(value) { this.cinematicPrefs[this.selectedId] = Boolean(value); this.applyTheme(); }
@@ -59,6 +61,7 @@ export class WallpaperController {
     const loaded = await preload(this.customUrl);
     if (!loaded) { this.revokeCustom(); return false; }
     this.element.style.backgroundImage = `url("${this.customUrl}")`;
+    this.element.style.backgroundPosition = 'center';
     this.applyTheme();
     return true;
   }
@@ -73,6 +76,13 @@ export class WallpaperController {
     style.setProperty('--icon-hover', theme.iconHoverColor || '#ffffff');
     style.setProperty('--glow-color', theme.glowColor || 'rgba(255,255,255,.25)');
     this.gradient.hidden = !this.getCinematic();
+    this.applyPosition();
+  }
+
+  applyPosition() {
+    if (this.customUrl) return;
+    const wallpaper = this.wallpapers.find((item) => item.id === this.selectedId);
+    this.element.style.backgroundPosition = this.media?.matches ? (wallpaper?.mobilePosition || wallpaper?.position || 'center') : (wallpaper?.position || 'center');
   }
 }
 

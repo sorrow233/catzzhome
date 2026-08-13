@@ -22,7 +22,10 @@ export default [
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
-      globals: { HTMLRewriter: 'readonly', Response: 'readonly', URL: 'readonly' }
+      globals: {
+        HTMLRewriter: 'readonly', Response: 'readonly', URL: 'readonly', TextDecoder: 'readonly',
+        fetch: 'readonly', AbortController: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly'
+      }
     }
   },
   {

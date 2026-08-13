@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'catzzhome';
-const CACHE_VERSION = '2.7.0-beta.1';
+const CACHE_VERSION = '2.7.0-beta.2';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 const APP_SHELL = ['/', '/manifest.webmanifest', '/icons/catzz.svg'];
 

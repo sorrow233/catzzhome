@@ -2,14 +2,14 @@ import { i18n } from '../lib/I18n.js';
 import { fetchWeather, requestPosition, weatherSymbol } from '../lib/WeatherService.js';
 
 export class ClockWeather {
-  constructor({ root, settings, onSettings, announce }) {
+  constructor({ root, settings, onChange, announce }) {
     this.clock = root.querySelector('[data-clock]');
     this.date = root.querySelector('[data-date]');
     this.weather = root.querySelector('[data-weather]');
     this.settings = settings;
-    this.onSettings = onSettings;
+    this.onChange = onChange;
     this.announce = announce;
-    this.weather.addEventListener('click', () => onSettings());
+    this.weather.addEventListener('click', () => this.handleClick());
   }
 
   start() {
@@ -31,12 +31,21 @@ export class ClockWeather {
       const position = await requestPosition();
       this.settings.weather = { ...this.settings.weather, ...position, enabled: true };
       await this.refreshWeather();
+      this.onChange({ weather: this.settings.weather });
       return true;
     } catch (error) {
       console.warn('Location request failed', error);
       this.announce(i18n.t('location_denied'));
       return false;
     }
+  }
+
+  async handleClick() {
+    if (this.pending) return;
+    if (this.settings.weather.enabled) return this.refreshWeather();
+    this.pending = true; this.weather.setAttribute('aria-busy', 'true');
+    try { await this.enableWeather(); }
+    finally { this.pending = false; this.weather.removeAttribute('aria-busy'); }
   }
 
   async refreshWeather() {

@@ -10,7 +10,14 @@ export function normalizeBookmark(input) {
   try { parsed = new URL(rawUrl); } catch { return { ok: false, error: 'invalid_url' }; }
   if (!['http:', 'https:'].includes(parsed.protocol)) return { ok: false, error: 'invalid_url' };
   if (!name) return { ok: false, error: 'invalid_name' };
-  return { ok: true, value: { id: String(input?.id || createId('bookmark')).slice(0, 80), name, url: parsed.href.slice(0, 2048), groupId: String(input?.groupId || 'favorites').slice(0, 80) } };
+  const iconUrl = safeIconUrl(input?.iconUrl);
+  return { ok: true, value: { id: String(input?.id || createId('bookmark')).slice(0, 80), name, url: parsed.href.slice(0, 2048), groupId: String(input?.groupId || 'favorites').slice(0, 80), ...(iconUrl ? { iconUrl } : {}) } };
+}
+
+function safeIconUrl(value) {
+  if (!value) return '';
+  try { const url = new URL(String(value)); return ['http:', 'https:'].includes(url.protocol) ? url.href.slice(0, 2048) : ''; }
+  catch { return ''; }
 }
 
 export function importBookmarkHtml(html) {

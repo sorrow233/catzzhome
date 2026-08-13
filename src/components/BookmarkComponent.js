@@ -4,10 +4,11 @@ import { deriveName, MAX_BOOKMARKS, normalizeBookmark, sanitizeBookmarks } from 
 import { createId } from '../lib/id.js';
 
 export class BookmarkComponent {
-  constructor({ container, groupsElement, dialogElement, iconResolver, bookmarks, groups, activeGroup, onChange }) {
+  constructor({ container, groupsElement, dialogElement, iconResolver, metadataService, bookmarks, groups, activeGroup, onChange }) {
     this.container = container;
     this.groupsElement = groupsElement;
     this.iconResolver = iconResolver;
+    this.metadataService = metadataService;
     this.groups = Array.isArray(groups) && groups.length ? groups : [{ id: 'favorites', name: 'Favorites' }];
     this.activeGroup = this.groups.some((group) => group.id === activeGroup) ? activeGroup : this.groups[0].id;
     this.bookmarks = sanitizeBookmarks(bookmarks).map((bookmark) => ({ ...bookmark, groupId: this.groups.some((group) => group.id === bookmark.groupId) ? bookmark.groupId : this.activeGroup }));
@@ -16,8 +17,11 @@ export class BookmarkComponent {
     this.title = dialogElement.querySelector('[data-bookmark-title]');
     this.error = dialogElement.querySelector('[data-form-error]');
     this.preview = dialogElement.querySelector('[data-preview]');
+    this.metadataStatus = dialogElement.querySelector('[data-metadata-status]');
     this.dialog = new Dialog(dialogElement, { onClose: () => this.resetForm() });
     this.editingId = null;
+    this.nameEdited = false;
+    this.detected = null;
     this.bindForm();
   }
 
@@ -90,21 +94,38 @@ export class BookmarkComponent {
     const label = document.createElement('span'); label.className = 'bookmark__label'; label.textContent = i18n.t('add'); button.append(label); button.addEventListener('click', () => this.open()); return button;
   }
 
-  async paintIcon(bookmark, target) {
-    const result = await this.iconResolver.resolve(bookmark); if (!target.isConnected) return; target.replaceChildren();
+  async paintIcon(bookmark, target, options) {
+    const requestKey = `${bookmark.url}:${bookmark.iconUrl || ''}`;
+    target.dataset.iconRequest = requestKey;
+    const result = await this.iconResolver.resolve(bookmark, options); if (!target.isConnected || target.dataset.iconRequest !== requestKey) return; target.replaceChildren();
     if (result.type === 'text') { target.textContent = result.text; return; }
     if (result.mask) { const mask = document.createElement('span'); mask.className = 'bookmark__mask'; mask.style.maskImage = `url("${result.src}")`; mask.style.webkitMaskImage = `url("${result.src}")`; target.append(mask); }
-    else { const image = document.createElement('img'); image.src = result.src; image.alt = ''; image.loading = 'lazy'; target.append(image); }
+    else {
+      const image = document.createElement('img'); image.src = result.src; image.alt = ''; image.loading = 'lazy';
+      image.addEventListener('error', () => { target.textContent = bookmark.name.charAt(0).toUpperCase() || '?'; }, { once: true });
+      target.append(image);
+    }
   }
 
   bindForm() {
     const urlInput = this.form.elements.url; const nameInput = this.form.elements.name;
-    urlInput.addEventListener('blur', () => { const candidate = normalizeBookmark({ url: urlInput.value, name: nameInput.value || 'Site' }); if (!nameInput.value && candidate.ok) nameInput.value = deriveName(candidate.value.url); this.updatePreview(); });
-    nameInput.addEventListener('input', () => this.updatePreview());
-    this.form.addEventListener('submit', (event) => {
+    urlInput.addEventListener('input', () => {
+      window.clearTimeout(this.metadataTimer);
+      this.detected = null;
+      this.metadataTimer = window.setTimeout(() => this.lookupMetadata(), 450);
+    });
+    urlInput.addEventListener('blur', () => this.lookupMetadata());
+    nameInput.addEventListener('input', () => { this.nameEdited = true; this.updatePreview(); });
+    this.form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      window.clearTimeout(this.metadataTimer);
+      if (this.metadataPromise) await this.metadataPromise.catch(() => null);
+      else if (!this.detected) await this.lookupMetadata().catch(() => null);
       const existing = this.bookmarks.find((bookmark) => bookmark.id === this.editingId);
-      const result = normalizeBookmark({ id: existing?.id, url: urlInput.value, name: nameInput.value, groupId: this.form.elements.group.value });
+      const normalizedUrl = normalizeBookmark({ url: urlInput.value, name: nameInput.value || 'Site' });
+      const detectedUrl = this.detected?.requestedUrl || this.detected?.url;
+      const detectedIcon = normalizedUrl.ok && detectedUrl === normalizedUrl.value.url ? this.detected.icons?.[0] : null;
+      const result = normalizeBookmark({ id: existing?.id, url: urlInput.value, name: nameInput.value, iconUrl: detectedIcon || (existing?.url === normalizedUrl.value?.url ? existing.iconUrl : ''), groupId: this.form.elements.group.value });
       if (!result.ok) { this.error.textContent = i18n.t(result.error); return; }
       if (!existing && this.bookmarks.length >= MAX_BOOKMARKS) { this.error.textContent = i18n.t('limit'); return; }
       if (existing) Object.assign(existing, result.value); else this.bookmarks.push(result.value);
@@ -114,6 +135,7 @@ export class BookmarkComponent {
 
   open(id = null) {
     this.editingId = id; const bookmark = this.bookmarks.find((item) => item.id === id);
+    this.nameEdited = Boolean(bookmark); this.detected = bookmark ? { url: bookmark.url, requestedUrl: bookmark.url, name: bookmark.name, icons: bookmark.iconUrl ? [bookmark.iconUrl] : [] } : null;
     this.title.textContent = i18n.t(bookmark ? 'edit_title' : 'add_title'); this.form.elements.url.value = bookmark?.url || ''; this.form.elements.name.value = bookmark?.name || ''; this.form.elements.group.value = bookmark?.groupId || this.activeGroup; this.updatePreview(); this.dialog.open(this.form.elements.url);
   }
 
@@ -131,7 +153,44 @@ export class BookmarkComponent {
   }
   renameGroup(group) { const name = prompt(i18n.t('new_group'), group.name)?.trim(); if (!name) return; group.name = name.slice(0, 30); this.emit(); this.render(); }
   updateGroupSelect() { const select = this.form.elements.group; select.replaceChildren(...this.groups.map((group) => new Option(group.name, group.id))); }
-  updatePreview() { this.preview.textContent = this.form.elements.name.value.trim().charAt(0).toUpperCase() || i18n.t('empty_icon'); }
-  resetForm() { this.form.reset(); this.error.textContent = ''; this.editingId = null; }
+  async lookupMetadata() {
+    window.clearTimeout(this.metadataTimer);
+    const candidate = normalizeBookmark({ url: this.form.elements.url.value, name: 'Site' });
+    if (!candidate.ok) { this.metadataStatus.textContent = ''; this.updatePreview(); return null; }
+    const requestUrl = candidate.value.url;
+    this.metadataAbort?.abort();
+    const controller = new AbortController(); this.metadataAbort = controller;
+    this.metadataStatus.textContent = i18n.t('detecting_site');
+    const promise = this.metadataService.resolve(requestUrl, { signal: controller.signal });
+    this.metadataPromise = promise;
+    try {
+      const metadata = await promise;
+      if (controller.signal.aborted || this.form.elements.url.value.trim() === '') return null;
+      this.detected = { ...metadata, requestedUrl: requestUrl };
+      if (!this.nameEdited && metadata?.name) this.form.elements.name.value = metadata.name;
+      if (!this.form.elements.name.value) this.form.elements.name.value = deriveName(requestUrl);
+      this.metadataStatus.textContent = i18n.t('site_detected');
+      await this.updatePreview();
+      return metadata;
+    } catch (error) {
+      if (error.name === 'AbortError') return null;
+      if (!this.nameEdited && !this.form.elements.name.value) this.form.elements.name.value = deriveName(requestUrl);
+      this.metadataStatus.textContent = i18n.t('site_detect_fallback');
+      await this.updatePreview();
+      return null;
+    } finally { if (this.metadataPromise === promise) this.metadataPromise = null; }
+  }
+
+  async updatePreview() {
+    const name = this.form.elements.name.value.trim();
+    const candidate = normalizeBookmark({ url: this.form.elements.url.value, name: name || 'Site', iconUrl: this.detected?.icons?.[0] });
+    this.preview.textContent = name.charAt(0).toUpperCase() || i18n.t('empty_icon');
+    if (!candidate.ok) return;
+    await this.paintIcon(candidate.value, this.preview, { refresh: true });
+  }
+  resetForm() {
+    window.clearTimeout(this.metadataTimer); this.metadataAbort?.abort(); this.metadataAbort = null; this.metadataPromise = null;
+    this.form.reset(); this.error.textContent = ''; this.metadataStatus.textContent = ''; this.editingId = null; this.nameEdited = false; this.detected = null;
+  }
   emit() { this.onChange({ bookmarks: this.bookmarks, bookmarkGroups: this.groups, activeBookmarkGroup: this.activeGroup }); }
 }

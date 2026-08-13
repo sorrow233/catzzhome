@@ -4,14 +4,10 @@ import { createBackup, downloadJson, parseBackup } from '../lib/dataTransfer.js'
 import { importBookmarkHtml } from '../lib/bookmarkValidation.js';
 
 export class SettingsPanel {
-  constructor({ root, settings, wallpapers, wallpaperController, assetStore, bookmarks, clockWeather, installer, onChange, onRestore, onDeleteLocal, onDeleteCloud, announce }) {
+  constructor({ root, settings, bookmarks, installer, onChange, onRestore, onDeleteLocal, onDeleteCloud, announce }) {
     this.root = root;
     this.settings = settings;
-    this.wallpapers = wallpapers;
-    this.wallpaperController = wallpaperController;
-    this.assetStore = assetStore;
     this.bookmarks = bookmarks;
-    this.clockWeather = clockWeather;
     this.installer = installer;
     this.onChange = onChange;
     this.onRestore = onRestore;
@@ -24,7 +20,7 @@ export class SettingsPanel {
 
   mount() {
     this.root.querySelectorAll('[data-open-settings]').forEach((button) => button.addEventListener('click', () => this.open()));
-    this.bindTabs(); this.bindGeneral(); this.bindAppearance(); this.bindData(); this.renderWallpapers(); this.syncControls();
+    this.bindTabs(); this.bindGeneral(); this.bindData(); this.syncControls();
   }
 
   open(page = 'general') { this.showPage(page); this.dialog.open(this.element.querySelector(`[data-settings-tab="${page}"]`)); }
@@ -38,40 +34,12 @@ export class SettingsPanel {
     this.element.querySelector('[data-language]').addEventListener('change', (event) => {
       i18n.setLanguage(event.target.value); const url = new URL(location.href); url.searchParams.set('lang', event.target.value); location.assign(url);
     });
-    this.element.querySelector('[data-search-engine]').addEventListener('change', (event) => { this.settings.search.engine = event.target.value; this.persist('search'); });
+    this.element.querySelector('[data-search-engine]').addEventListener('change', (event) => { this.settings.search = { ...this.settings.search, engine: event.target.value, regionInitialized: true, userSelected: true }; this.persist('search'); });
     this.element.querySelector('[data-search-new-tab]').addEventListener('change', (event) => { this.settings.search.openInNewTab = event.target.checked; this.persist('search'); });
-    this.element.querySelector('[data-enable-weather]').addEventListener('click', async () => { if (await this.clockWeather.enableWeather()) this.persist('weather'); });
     this.element.querySelector('[data-install-app]').addEventListener('click', async (event) => {
       const result = await this.installer.install();
       if (result === 'installed' || this.installer.isInstalled()) event.currentTarget.textContent = i18n.t('installed');
       else if (result === 'unavailable') this.announce(i18n.t('install_unavailable'));
-    });
-  }
-
-  bindAppearance() {
-    this.element.querySelector('[data-cinematic]').addEventListener('change', (event) => { this.wallpaperController.setCinematic(event.target.checked); this.settings.cinematicPrefs = this.wallpaperController.cinematicPrefs; this.persist('cinematicPrefs'); });
-    this.element.querySelector('[data-scene-mode]').addEventListener('change', async (event) => { this.settings.preferences.sceneMode = event.target.checked ? 'time' : 'manual'; this.persist('preferences'); await this.wallpaperController.applyScene(this.settings.preferences.sceneMode); });
-    this.element.querySelector('[data-density]').addEventListener('change', (event) => { this.settings.preferences.density = event.target.checked ? 'compact' : 'calm'; document.body.dataset.density = this.settings.preferences.density; this.persist('preferences'); });
-    this.element.querySelector('[data-wallpaper-upload]').addEventListener('change', (event) => this.uploadWallpaper(event.target.files[0]));
-    this.element.querySelector('[data-wallpaper-remove]').addEventListener('click', async () => { await this.assetStore.delete('custom-wallpaper'); this.settings.customWallpaper = { enabled: false, name: '' }; await this.wallpaperController.removeCustom(); this.persist('customWallpaper'); });
-  }
-
-  async uploadWallpaper(file) {
-    if (!file || !file.type.startsWith('image/') || file.size > 12 * 1024 * 1024) return;
-    await this.assetStore.set('custom-wallpaper', file);
-    this.settings.customWallpaper = { enabled: true, name: file.name.slice(0, 80) };
-    await this.wallpaperController.setCustom(file);
-    this.persist('customWallpaper');
-  }
-
-  renderWallpapers() {
-    const grid = this.element.querySelector('[data-wallpaper-grid]'); grid.replaceChildren();
-    this.wallpapers.forEach((wallpaper) => {
-      const button = document.createElement('button'); button.type = 'button'; button.className = 'wallpaper-choice'; button.dataset.id = wallpaper.id; button.setAttribute('aria-pressed', String(wallpaper.id === this.wallpaperController.selectedId)); button.setAttribute('aria-label', wallpaper.name);
-      const image = document.createElement('img'); image.src = wallpaper.thumbUrl; image.alt = ''; image.loading = 'lazy';
-      const label = document.createElement('span'); label.textContent = wallpaper.name; button.append(image, label);
-      button.addEventListener('click', async () => { if (await this.wallpaperController.select(wallpaper.id)) { this.settings.bgId = wallpaper.id; this.settings.customWallpaper.enabled = false; this.persistMany(['bgId', 'customWallpaper']); this.syncControls(); } });
-      grid.append(button);
     });
   }
 
@@ -89,12 +57,6 @@ export class SettingsPanel {
   syncControls() {
     this.element.querySelector('[data-search-engine]').value = this.settings.search.engine;
     this.element.querySelector('[data-search-new-tab]').checked = this.settings.search.openInNewTab;
-    this.element.querySelector('[data-cinematic]').checked = this.wallpaperController.getCinematic();
-    this.element.querySelector('[data-scene-mode]').checked = this.settings.preferences.sceneMode === 'time';
-    this.element.querySelector('[data-density]').checked = this.settings.preferences.density === 'compact';
-    this.element.querySelector('[data-wallpaper-remove]').disabled = !this.settings.customWallpaper.enabled;
-    this.element.querySelectorAll('.wallpaper-choice').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.id === this.wallpaperController.selectedId && !this.settings.customWallpaper.enabled)));
   }
   persist(key) { this.onChange({ [key]: this.settings[key] }); }
-  persistMany(keys) { this.onChange(Object.fromEntries(keys.map((key) => [key, this.settings[key]]))); }
 }

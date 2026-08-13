@@ -13,7 +13,7 @@ const defaultSettings = {
   bookmarks: [],
   bookmarkGroups: [{ id: 'favorites', name: 'Favorites' }],
   activeBookmarkGroup: 'favorites',
-  search: { engine: 'google', openInNewTab: false },
+  search: { engine: 'google', openInNewTab: false, regionInitialized: false, userSelected: false },
   weather: { enabled: false, latitude: null, longitude: null, label: '' },
   focus: { minutes: 25, remainingSeconds: 1500, running: false, endsAt: null, sessionsToday: 0, sessionDate: '' },
   tasks: [],
@@ -54,7 +54,7 @@ function mergeSettings(source, defaults = defaultSettings) {
     bookmarks: arrayOr(candidate.bookmarks, defaults.bookmarks, 24),
     bookmarkGroups: arrayOr(candidate.bookmarkGroups, defaults.bookmarkGroups, 12),
     activeBookmarkGroup: typeof candidate.activeBookmarkGroup === 'string' ? candidate.activeBookmarkGroup : defaults.activeBookmarkGroup,
-    search: mergeRecord(defaults.search, candidate.search),
+    search: mergeSearch(defaults.search, candidate.search),
     weather: mergeRecord(defaults.weather, candidate.weather),
     focus: mergeRecord(defaults.focus, candidate.focus),
     tasks: arrayOr(candidate.tasks, defaults.tasks, 20),
@@ -69,6 +69,11 @@ function mergeSettings(source, defaults = defaultSettings) {
 
 function isRecord(value) { return Boolean(value) && typeof value === 'object' && !Array.isArray(value); }
 function mergeRecord(defaults, value) { return { ...defaults, ...(isRecord(value) ? value : {}) }; }
+function mergeSearch(defaults, value) {
+  const merged = mergeRecord(defaults, value);
+  if (isRecord(value) && typeof value.regionInitialized !== 'boolean') return { ...merged, regionInitialized: true, userSelected: true };
+  return merged;
+}
 function arrayOr(value, fallback, limit) { return (Array.isArray(value) ? value : fallback).slice(0, limit); }
 
 export function readSettings(defaultBookmarks = []) {

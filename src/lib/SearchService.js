@@ -48,8 +48,6 @@ export function searchBookmarks(bookmarks, query, limit = 5) {
 }
 
 export const COMMANDS = [
-  { name: 'focus', hint: '/focus 25' },
-  { name: 'note', hint: '/note …' },
   { name: 'weather', hint: '/weather' },
   { name: 'settings', hint: '/settings' },
   { name: 'export', hint: '/export' }

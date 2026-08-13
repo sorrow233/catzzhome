@@ -1,186 +1,32 @@
+import { WALLPAPERS, WALLPAPER_URLS } from './wallpapers.js';
+
 export const HERO_CONFIG = {
-    quotes: {
-        zh: {
-            prefixes: ["清凉雨夜", "雨伞脆弱", "街边电话", "路旁雨滩"],
-            suffixes: ["温暖过谁的心", "保护了谁前行", "少女心伤忧郁", "天空触手可及"]
-        },
-        en: {
-            prefixes: ["Cool Rainy Night", "Fragile Umbrella", "Streetside Phone", "Puddles on the Road"],
-            suffixes: ["Warmed whose heart?", "Protected whom forward?", "Girl's heart melancholic", "Sky within reach"]
-        },
-        ja: {
-            prefixes: ["涼しい雨夜", "脆い雨傘", "街路の電話", "道端の雨溜まり"],
-            suffixes: ["誰の心を温めた？", "誰の前進を守った？", "少女の心は憂鬱に", "空はすぐそこに"]
-        },
-        'zh-TW': {
-            prefixes: ["清涼雨夜", "脆弱雨傘", "街邊電話", "路旁雨灘"],
-            suffixes: ["溫暖過誰的心", "保護了誰前行", "少女心傷憂鬱", "天空觸手可及"]
-        },
-        ko: {
-            prefixes: ["서늘한 비의 밤", "여린 우산", "거리의 전화", "길가의 빗물"],
-            suffixes: ["누구의 마음을 데웠을까", "누구의 걸음을 지켰을까", "소녀의 마음은 흐리고", "하늘은 손끝 가까이"]
-        }
-    },
-
-    defaultBookmarks: [
-        { name: "Bilibili", url: "https://www.bilibili.com" },
-        { name: "YouTube", url: "https://www.youtube.com" },
-        { name: "Twitter", url: "https://x.com" },
-        { name: "Gmail", url: "https://mail.google.com" },
-        { name: "Notion", url: "https://www.notion.so" },
-        { name: "GitHub", url: "https://github.com" },
-        { name: "Pixiv", url: "https://www.pixiv.net" },
-        { name: "Gemini", url: "https://gemini.google.com" },
-        { name: "元宝", url: "https://yuanbao.tencent.com" },
-        { name: "Google Maps", url: "https://maps.google.com" },
-        { name: "Netflix", url: "https://www.netflix.com" }
-    ],
-
-    wallpapers: [
-        {
-            id: 'rainy_window',
-            name: 'Rainy Window',
-            thumbUrl: "https://blog.catzz.work/file/1767459124084_rainy_window_thumb.webp",
-            theme: {
-                textColor: "text-cyan-50",
-                textShadow: "drop-shadow-[0_2px_15px_rgba(34,211,238,0.3)]",
-                glassColor: "bg-cyan-950/40",
-                glassBorder: "border-cyan-200/20",
-                iconColor: "#a5f3fc",
-                iconHoverColor: "#22d3ee",
-                glowColor: "rgba(34, 211, 238, 0.4)",
-                quoteColor: "text-cyan-100/80"
-            }
-        },
-        {
-            id: 'wet_street',
-            name: 'Wet Street',
-            thumbUrl: "https://blog.catzz.work/file/1767459127086_wet_street_thumb.webp",
-            theme: {
-                textColor: "text-indigo-50",
-                textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
-                glassColor: "bg-slate-900/70",
-                glassBorder: "border-indigo-200/10",
-                iconColor: "#e0e7ff",
-                iconHoverColor: "#818cf8",
-                glowColor: "rgba(129, 140, 248, 0.4)",
-                quoteColor: "text-indigo-100/80"
-            }
-        },
-        {
-            id: 'city_bed',
-            name: 'City Bed',
-            thumbUrl: "https://blog.catzz.work/file/1767459119214_city_bed_thumb.webp",
-            theme: {
-                textColor: "text-amber-50",
-                textShadow: "drop-shadow-[0_2px_15px_rgba(251,191,36,0.3)]",
-                glassColor: "bg-neutral-900/60",
-                glassBorder: "border-amber-500/20",
-                iconColor: "#fcd34d",
-                iconHoverColor: "#fbbf24",
-                glowColor: "rgba(251, 191, 36, 0.4)",
-                quoteColor: "text-amber-100/90"
-            }
-        },
-        {
-            id: 'umbrella_street',
-            name: 'Umbrella Street',
-            thumbUrl: "https://blog.catzz.work/file/1767459127120_umbrella_street_thumb.webp",
-            theme: {
-                textColor: "text-fuchsia-50",
-                textShadow: "drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]",
-                glassColor: "bg-gray-900/40",
-                glassBorder: "border-fuchsia-200/10",
-                iconColor: "#e879f9",
-                iconHoverColor: "#d946ef",
-                glowColor: "rgba(217, 70, 239, 0.4)",
-                quoteColor: "text-fuchsia-100/90"
-            }
-        },
-        {
-            id: 'flower_window',
-            name: 'Flower Window',
-            thumbUrl: "https://blog.catzz.work/file/1767459120854_flower_window_thumb.webp",
-            theme: {
-                textColor: "text-emerald-50",
-                textShadow: "drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]",
-                glassColor: "bg-emerald-950/40",
-                glassBorder: "border-emerald-200/15",
-                iconColor: "#6ee7b7",
-                iconHoverColor: "#34d399",
-                glowColor: "rgba(52, 211, 153, 0.4)",
-                quoteColor: "text-emerald-100/90"
-            }
-        },
-        {
-            id: 'white_shirt_girl',
-            name: 'White Shirt Girl',
-            thumbUrl: "https://blog.catzz.work/file/1767459128017_white_shirt_girl_thumb.webp",
-            theme: {
-                textColor: "text-slate-50",
-                textShadow: "drop-shadow-[0_2px_5px_rgba(0,0,0,0.6)]",
-                glassColor: "bg-slate-800/30",
-                glassBorder: "border-slate-200/20",
-                iconColor: "#cbd5e1",
-                iconHoverColor: "#ffffff",
-                glowColor: "rgba(255, 255, 255, 0.4)",
-                quoteColor: "text-slate-200/80"
-            }
-        },
-        {
-            id: 'sunset_balcony',
-            name: 'Sunset Balcony',
-            thumbUrl: "https://blog.catzz.work/file/1767459121541_sunset_balcony_thumb.webp",
-            theme: {
-                textColor: "text-orange-50",
-                textShadow: "drop-shadow-[0_2px_15px_rgba(251,146,60,0.4)]",
-                glassColor: "bg-orange-950/40",
-                glassBorder: "border-orange-200/20",
-                iconColor: "#fdba74",
-                iconHoverColor: "#fb923c",
-                glowColor: "rgba(251, 146, 60, 0.5)",
-                quoteColor: "text-orange-100"
-            }
-        },
-        {
-            id: 'night_view',
-            name: 'Night View',
-            thumbUrl: "https://blog.catzz.work/file/1767459127940_night_view_thumb.webp",
-            theme: {
-                textColor: "text-blue-50",
-                textShadow: "drop-shadow-[0_2px_15px_rgba(96,165,250,0.5)]",
-                glassColor: "bg-blue-950/50",
-                glassBorder: "border-blue-400/20",
-                iconColor: "#93c5fd",
-                iconHoverColor: "#60a5fa",
-                glowColor: "rgba(96, 165, 250, 0.6)",
-                quoteColor: "text-blue-100/90"
-            }
-        }
-    ],
-
-    wallpaperUrls: {
-        'rainy_window': "https://blog.catzz.work/file/1767459123988_rainy_window.webp",
-        'wet_street': "https://blog.catzz.work/file/1767459129847_wet_street.webp",
-        'city_bed': "https://blog.catzz.work/file/1767459126076_city_bed.webp",
-        'umbrella_street': "https://blog.catzz.work/file/1767459127815_umbrella_street.webp",
-        'flower_window': "https://blog.catzz.work/file/1767459120939_flower_window.webp",
-        'white_shirt_girl': "https://blog.catzz.work/file/1767459123491_white_shirt_girl.webp",
-        'sunset_balcony': "https://blog.catzz.work/file/1767459122549_sunset_balcony.webp",
-        'night_view': "https://blog.catzz.work/file/1767459128088_night_view.webp"
-    },
-
-    simpleIconsMap: {
-        'x.com': 'x', 'twitter.com': 'twitter',
-        'mail.google.com': 'gmail', 'chatgpt.com': 'openai',
-        'claude.ai': 'anthropic', 'dribbble.com': 'dribbble',
-        'figma.com': 'figma', 'notion.so': 'notion', 'vercel.com': 'vercel',
-        'bluesky.app': 'bluesky',
-        'github.com': 'github',
-        'pixiv.net': 'pixiv',
-        'gemini.google.com': 'googlegemini',
-        'yuanbao.tencent.com': 'tencentqq',
-        'maps.google.com': 'googlemaps',
-        'netflix.com': 'netflix'
-    }
+  quotes: {
+    zh: { prefixes: ['清凉雨夜', '雨伞脆弱', '街边电话', '路旁雨滩'], suffixes: ['温暖过谁的心', '保护了谁前行', '少女心伤忧郁', '天空触手可及'] },
+    en: { prefixes: ['Cool Rainy Night', 'Fragile Umbrella', 'Streetside Phone', 'Puddles on the Road'], suffixes: ['Warmed whose heart?', 'Protected whom forward?', "Girl's heart melancholic", 'Sky within reach'] },
+    ja: { prefixes: ['涼しい雨夜', '脆い雨傘', '街路の電話', '道端の雨溜まり'], suffixes: ['誰の心を温めた？', '誰の前進を守った？', '少女の心は憂鬱に', '空はすぐそこに'] },
+    'zh-TW': { prefixes: ['清涼雨夜', '脆弱雨傘', '街邊電話', '路旁雨灘'], suffixes: ['溫暖過誰的心', '保護了誰前行', '少女心傷憂鬱', '天空觸手可及'] },
+    ko: { prefixes: ['서늘한 비의 밤', '여린 우산', '거리의 전화', '길가의 빗물'], suffixes: ['누구의 마음을 데웠을까', '누구의 걸음을 지켰을까', '소녀의 마음은 흐리고', '하늘은 손끝 가까이'] }
+  },
+  defaultBookmarks: [
+    { name: 'Bilibili', url: 'https://www.bilibili.com' },
+    { name: 'YouTube', url: 'https://www.youtube.com' },
+    { name: 'Twitter', url: 'https://x.com' },
+    { name: 'Gmail', url: 'https://mail.google.com' },
+    { name: 'Notion', url: 'https://www.notion.so' },
+    { name: 'GitHub', url: 'https://github.com' },
+    { name: 'Pixiv', url: 'https://www.pixiv.net' },
+    { name: 'Gemini', url: 'https://gemini.google.com' },
+    { name: '元宝', url: 'https://yuanbao.tencent.com' },
+    { name: 'Google Maps', url: 'https://maps.google.com' },
+    { name: 'Netflix', url: 'https://www.netflix.com' }
+  ],
+  wallpapers: WALLPAPERS,
+  wallpaperUrls: WALLPAPER_URLS,
+  simpleIconsMap: {
+    'x.com': 'x', 'twitter.com': 'twitter', 'mail.google.com': 'gmail', 'chatgpt.com': 'openai',
+    'claude.ai': 'anthropic', 'dribbble.com': 'dribbble', 'figma.com': 'figma', 'notion.so': 'notion',
+    'vercel.com': 'vercel', 'bluesky.app': 'bluesky', 'github.com': 'github', 'pixiv.net': 'pixiv',
+    'gemini.google.com': 'googlegemini', 'yuanbao.tencent.com': 'tencentqq', 'maps.google.com': 'googlemaps', 'netflix.com': 'netflix'
+  }
 };

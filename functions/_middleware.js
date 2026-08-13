@@ -29,6 +29,10 @@ export function resolveLocale(url, acceptLanguage = '') {
   return SEO_CONFIG.defaultLocale;
 }
 
+export function resolveCountry(request) {
+  return String(request.cf?.country || request.headers.get('CF-IPCountry') || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2);
+}
+
 export async function onRequest({ request, next }) {
   if (isPrivatePath(new URL(request.url).pathname)) {
     return new Response('Not Found', {
@@ -50,6 +54,7 @@ export async function onRequest({ request, next }) {
   const localizedUrl = `${SITE_URL}/?lang=${locale}`;
   const rewriter = new HTMLRewriter()
     .on('html', { element: (element) => element.setAttribute('lang', config.lang) })
+    .on('head', { element: (element) => element.append(`<meta name="catzz-country" content="${resolveCountry(request)}">`, { html: true }) })
     .on('title', { element: (element) => element.setInnerContent(config.title) })
     .on('meta[name="description"]', { element: (element) => element.setAttribute('content', config.description) })
     .on('meta[property="og:title"]', { element: (element) => element.setAttribute('content', config.title) })
