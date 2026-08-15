@@ -5,7 +5,7 @@ const translations = {
     theme: '选择壁纸', close: '关闭', cinematic: '增强文字对比', language: '界面语言', add: '添加', edit: '编辑', remove: '删除',
     add_title: '添加快捷方式', edit_title: '编辑快捷方式', preview: '图标预览', url: '链接地址', name: '网站名称', cancel: '取消', save: '保存',
     invalid_url: '请输入有效的 HTTP 或 HTTPS 地址。', invalid_name: '请输入网站名称。', limit: '快捷方式最多只能添加 24 个。',
-    theme_hint: '打开壁纸设置', bookmark_actions: '快捷方式操作', empty_icon: '站点', offline: '当前离线，显示本地设置。'
+    theme_hint: '打开壁纸设置', brand_action_hint: '单击搜索，双击切换壁纸', search_simple: '搜索或输入网址', detecting_site: '正在识别网站名称与图标…', site_detected: '已识别网站信息', site_detect_fallback: '目标网站限制访问，已使用备用识别', bookmark_actions: '快捷方式操作', empty_icon: '站点', offline: '当前离线，显示本地设置。'
   },
   'zh-TW': {
     skip: '跳到快速入口', title: 'Catzz', subtitle: '讓雨聲之外的世界，暫時慢一點。', sync: '雲端同步', sync_idle: '雲端同步',
@@ -13,7 +13,7 @@ const translations = {
     theme: '選擇桌布', close: '關閉', cinematic: '增強文字對比', language: '介面語言', add: '新增', edit: '編輯', remove: '刪除',
     add_title: '新增快速方式', edit_title: '編輯快速方式', preview: '圖示預覽', url: '連結網址', name: '網站名稱', cancel: '取消', save: '儲存',
     invalid_url: '請輸入有效的 HTTP 或 HTTPS 網址。', invalid_name: '請輸入網站名稱。', limit: '快速方式最多只能新增 24 個。',
-    theme_hint: '開啟桌布設定', bookmark_actions: '快速方式操作', empty_icon: '網站', offline: '目前離線，顯示本機設定。'
+    theme_hint: '開啟桌布設定', brand_action_hint: '按一下搜尋，按兩下切換桌布', search_simple: '搜尋或輸入網址', detecting_site: '正在識別網站名稱與圖示…', site_detected: '已識別網站資訊', site_detect_fallback: '目標網站限制存取，已使用備用識別', bookmark_actions: '快速方式操作', empty_icon: '網站', offline: '目前離線，顯示本機設定。'
   },
   en: {
     skip: 'Skip to shortcuts', title: 'Catzz', subtitle: 'Let the world beyond the rain slow down for a while.', sync: 'Cloud sync', sync_idle: 'Cloud sync',
@@ -21,7 +21,7 @@ const translations = {
     theme: 'Choose wallpaper', close: 'Close', cinematic: 'Increase text contrast', language: 'Interface language', add: 'Add', edit: 'Edit', remove: 'Remove',
     add_title: 'Add shortcut', edit_title: 'Edit shortcut', preview: 'Icon preview', url: 'Web address', name: 'Site name', cancel: 'Cancel', save: 'Save',
     invalid_url: 'Enter a valid HTTP or HTTPS address.', invalid_name: 'Enter a site name.', limit: 'You can add up to 24 shortcuts.',
-    theme_hint: 'Open wallpaper settings', bookmark_actions: 'Shortcut actions', empty_icon: 'Site', offline: 'You are offline. Local settings are shown.'
+    theme_hint: 'Open wallpaper settings', brand_action_hint: 'Click to search, double-click to change wallpaper', search_simple: 'Search or enter a URL', detecting_site: 'Detecting site name and icon…', site_detected: 'Site details detected', site_detect_fallback: 'The site limited access; using a reliable fallback', bookmark_actions: 'Shortcut actions', empty_icon: 'Site', offline: 'You are offline. Local settings are shown.'
   },
   ja: {
     skip: 'ショートカットへ移動', title: 'Catzz', subtitle: '雨音の向こうの世界を、少しだけゆっくりに。', sync: 'クラウド同期', sync_idle: 'クラウド同期',
@@ -29,7 +29,7 @@ const translations = {
     theme: '壁紙を選択', close: '閉じる', cinematic: '文字のコントラストを上げる', language: '表示言語', add: '追加', edit: '編集', remove: '削除',
     add_title: 'ショートカットを追加', edit_title: 'ショートカットを編集', preview: 'アイコンプレビュー', url: 'URL', name: 'サイト名', cancel: 'キャンセル', save: '保存',
     invalid_url: '有効な HTTP または HTTPS URL を入力してください。', invalid_name: 'サイト名を入力してください。', limit: 'ショートカットは24件まで追加できます。',
-    theme_hint: '壁紙設定を開く', bookmark_actions: 'ショートカット操作', empty_icon: 'サイト', offline: 'オフラインです。ローカル設定を表示しています。'
+    theme_hint: '壁紙設定を開く', brand_action_hint: 'クリックで検索、ダブルクリックで壁紙を変更', search_simple: '検索またはURLを入力', detecting_site: 'サイト名とアイコンを確認中…', site_detected: 'サイト情報を確認しました', site_detect_fallback: 'サイトの制限により予備の識別方法を使用しました', bookmark_actions: 'ショートカット操作', empty_icon: 'サイト', offline: 'オフラインです。ローカル設定を表示しています。'
   },
   ko: {
     skip: '바로가기로 이동', title: 'Catzz', subtitle: '빗소리 너머의 세상을 잠시 천천히.', sync: '클라우드 동기화', sync_idle: '클라우드 동기화',
@@ -37,7 +37,7 @@ const translations = {
     theme: '배경화면 선택', close: '닫기', cinematic: '텍스트 대비 높이기', language: '인터페이스 언어', add: '추가', edit: '편집', remove: '삭제',
     add_title: '바로가기 추가', edit_title: '바로가기 편집', preview: '아이콘 미리보기', url: '웹 주소', name: '사이트 이름', cancel: '취소', save: '저장',
     invalid_url: '올바른 HTTP 또는 HTTPS 주소를 입력하세요.', invalid_name: '사이트 이름을 입력하세요.', limit: '바로가기는 최대 24개까지 추가할 수 있습니다.',
-    theme_hint: '배경화면 설정 열기', bookmark_actions: '바로가기 작업', empty_icon: '사이트', offline: '오프라인 상태입니다. 로컬 설정을 표시합니다.'
+    theme_hint: '배경화면 설정 열기', brand_action_hint: '클릭하여 검색, 더블 클릭하여 배경화면 변경', search_simple: '검색 또는 URL 입력', detecting_site: '사이트 이름과 아이콘 확인 중…', site_detected: '사이트 정보를 확인했습니다', site_detect_fallback: '사이트 접근 제한으로 대체 식별을 사용했습니다', bookmark_actions: '바로가기 작업', empty_icon: '사이트', offline: '오프라인 상태입니다. 로컬 설정을 표시합니다.'
   }
 };
 

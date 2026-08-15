@@ -13,7 +13,6 @@ export class WallpaperPicker {
     this.toggle = root.querySelector('[data-cinematic]');
     this.toggle.checked = cinematic;
     this.render();
-    root.querySelector('[data-open-wallpapers]').addEventListener('click', () => this.open());
     this.toggle.addEventListener('change', () => this.onCinematic(this.toggle.checked));
     root.querySelector('[data-language]').addEventListener('change', (event) => {
       i18n.setLanguage(event.target.value);

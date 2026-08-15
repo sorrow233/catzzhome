@@ -1,10 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { isPrivatePath, resolveLocale } from './_middleware.js';
+import { isPrivatePath, resolveCountry, resolveLocale } from './_middleware.js';
 
 describe('边缘多语言解析', () => {
   it('优先使用合法查询参数', () => expect(resolveLocale('https://ame.catzz.work/?lang=en', 'ja')).toBe('en'));
   it('能识别 Accept-Language 中的地区语言', () => expect(resolveLocale('https://ame.catzz.work/', 'zh-TW,zh;q=0.9')).toBe('zh-TW'));
   it('无法识别时回退到默认语言', () => expect(resolveLocale('https://ame.catzz.work/', 'fr-FR')).toBe('zh'));
+});
+
+describe('国家识别', () => {
+  it('优先读取 Cloudflare 国家代码', () => expect(resolveCountry({ cf: { country: 'CN' }, headers: new Headers() })).toBe('CN'));
+  it('没有 cf 对象时读取请求头', () => expect(resolveCountry({ headers: new Headers({ 'cf-ipcountry': 'JP' }) })).toBe('JP'));
 });
 
 describe('私有发布路径保护', () => {

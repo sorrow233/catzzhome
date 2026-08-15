@@ -8,7 +8,18 @@ export function normalizeBookmark(input) {
   try { parsed = new URL(rawUrl); } catch { return { ok: false, error: 'invalid_url' }; }
   if (!['http:', 'https:'].includes(parsed.protocol)) return { ok: false, error: 'invalid_url' };
   if (!name) return { ok: false, error: 'invalid_name' };
-  return { ok: true, value: { name, url: parsed.href.slice(0, 2048) } };
+  const iconUrl = safeIconUrl(input?.iconUrl);
+  return { ok: true, value: { name, url: parsed.href.slice(0, 2048), ...(iconUrl ? { iconUrl } : {}) } };
+}
+
+function safeIconUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(String(value));
+    return ['http:', 'https:'].includes(url.protocol) ? url.href.slice(0, 2048) : '';
+  } catch {
+    return '';
+  }
 }
 
 export function sanitizeBookmarks(items, fallback = []) {

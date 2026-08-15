@@ -6,7 +6,7 @@ export class IconCache {
     constructor() {
         this.dbName = 'CatzzIconCache';
         this.storeName = 'icons';
-        this.version = 1;
+        this.version = 2;
         this.db = null;
         this.memoryCache = new Map(); // L1 cache for ultra-fast access
     }
@@ -31,6 +31,8 @@ export class IconCache {
                 if (!db.objectStoreNames.contains(this.storeName)) {
                     const store = db.createObjectStore(this.storeName, { keyPath: 'url' });
                     store.createIndex('cachedAt', 'cachedAt', { unique: false });
+                } else {
+                    event.target.transaction.objectStore(this.storeName).clear();
                 }
             };
         });

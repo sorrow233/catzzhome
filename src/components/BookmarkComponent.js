@@ -3,9 +3,10 @@ import { Dialog } from './Dialog.js';
 import { deriveName, MAX_BOOKMARKS, normalizeBookmark, sanitizeBookmarks } from '../lib/bookmarkValidation.js';
 
 export class BookmarkComponent {
-  constructor({ container, dialogElement, iconResolver, bookmarks, onChange, announce }) {
+  constructor({ container, dialogElement, iconResolver, metadataService, bookmarks, onChange, announce }) {
     this.container = container;
     this.iconResolver = iconResolver;
+    this.metadataService = metadataService;
     this.bookmarks = sanitizeBookmarks(bookmarks);
     this.onChange = onChange;
     this.announce = announce;
@@ -13,8 +14,11 @@ export class BookmarkComponent {
     this.title = dialogElement.querySelector('[data-bookmark-title]');
     this.error = dialogElement.querySelector('[data-form-error]');
     this.preview = dialogElement.querySelector('[data-preview]');
+    this.metadataStatus = dialogElement.querySelector('[data-metadata-status]');
     this.dialog = new Dialog(dialogElement, { onClose: () => this.resetForm() });
     this.editingIndex = -1;
+    this.nameEdited = false;
+    this.detected = null;
     this.bindForm();
   }
 
@@ -84,8 +88,10 @@ export class BookmarkComponent {
   }
 
   async paintIcon(bookmark, target) {
+    const requestKey = `${bookmark.url}:${bookmark.iconUrl || ''}`;
+    target.dataset.iconRequest = requestKey;
     const result = await this.iconResolver.resolve(bookmark);
-    if (!target.isConnected) return;
+    if (!target.isConnected || target.dataset.iconRequest !== requestKey) return;
     target.replaceChildren();
     if (result.type === 'text') { target.textContent = result.text; return; }
     if (result.mask) {
@@ -111,15 +117,30 @@ export class BookmarkComponent {
   bindForm() {
     const urlInput = this.form.elements.url;
     const nameInput = this.form.elements.name;
-    urlInput.addEventListener('blur', () => {
-      const candidate = normalizeBookmark({ url: urlInput.value, name: nameInput.value || 'Site' });
-      if (!nameInput.value && candidate.ok) nameInput.value = deriveName(candidate.value.url);
+    urlInput.addEventListener('input', () => {
+      window.clearTimeout(this.metadataTimer);
+      this.detected = null;
+      this.metadataStatus.textContent = '';
+      this.metadataTimer = window.setTimeout(() => this.lookupMetadata(), 450);
+    });
+    urlInput.addEventListener('blur', () => this.lookupMetadata());
+    nameInput.addEventListener('input', () => {
+      this.nameEdited = true;
       this.updatePreview();
     });
-    nameInput.addEventListener('input', () => this.updatePreview());
-    this.form.addEventListener('submit', (event) => {
+    this.form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const result = normalizeBookmark({ url: urlInput.value, name: nameInput.value });
+      window.clearTimeout(this.metadataTimer);
+      if (this.metadataPromise) await this.metadataPromise.catch(() => null);
+      else if (!this.detected) await this.lookupMetadata().catch(() => null);
+      const candidate = normalizeBookmark({ url: urlInput.value, name: nameInput.value || deriveNameWithProtocol(urlInput.value) || 'Site' });
+      const detectedIcon = candidate.ok && this.detected?.requestedUrl === candidate.value.url ? this.detected.icons?.[0] : '';
+      const existing = this.bookmarks[this.editingIndex];
+      const result = normalizeBookmark({
+        url: urlInput.value,
+        name: nameInput.value || deriveName(candidate.value?.url),
+        iconUrl: detectedIcon || (existing?.url === candidate.value?.url ? existing.iconUrl : '')
+      });
       if (!result.ok) { this.error.textContent = i18n.t(result.error); return; }
       if (this.editingIndex < 0 && this.bookmarks.length >= MAX_BOOKMARKS) { this.error.textContent = i18n.t('limit'); return; }
       if (this.editingIndex >= 0) this.bookmarks[this.editingIndex] = result.value;
@@ -133,6 +154,8 @@ export class BookmarkComponent {
   open(index = -1) {
     this.editingIndex = index;
     const bookmark = this.bookmarks[index];
+    this.nameEdited = Boolean(bookmark);
+    this.detected = bookmark ? { requestedUrl: bookmark.url, url: bookmark.url, name: bookmark.name, icons: bookmark.iconUrl ? [bookmark.iconUrl] : [] } : null;
     this.title.textContent = i18n.t(bookmark ? 'edit_title' : 'add_title');
     this.form.elements.url.value = bookmark?.url || '';
     this.form.elements.name.value = bookmark?.name || '';
@@ -146,6 +169,68 @@ export class BookmarkComponent {
     this.onChange(this.bookmarks);
   }
 
-  updatePreview() { this.preview.textContent = this.form.elements.name.value.trim().charAt(0).toUpperCase() || i18n.t('empty_icon'); }
-  resetForm() { this.form.reset(); this.error.textContent = ''; this.editingIndex = -1; }
+  async lookupMetadata() {
+    window.clearTimeout(this.metadataTimer);
+    const candidate = normalizeBookmark({ url: this.form.elements.url.value, name: 'Site' });
+    if (!candidate.ok || !this.metadataService) {
+      this.metadataStatus.textContent = '';
+      this.updatePreview();
+      return null;
+    }
+    const requestUrl = candidate.value.url;
+    this.metadataAbort?.abort();
+    const controller = new AbortController();
+    this.metadataAbort = controller;
+    this.metadataStatus.textContent = i18n.t('detecting_site');
+    const promise = this.metadataService.resolve(requestUrl, { signal: controller.signal });
+    this.metadataPromise = promise;
+    try {
+      const metadata = await promise;
+      const current = normalizeBookmark({ url: this.form.elements.url.value, name: 'Site' });
+      if (controller.signal.aborted || !current.ok || current.value.url !== requestUrl) return null;
+      this.detected = { ...metadata, requestedUrl: requestUrl };
+      if (!this.nameEdited && metadata?.name) this.form.elements.name.value = metadata.name;
+      if (!this.form.elements.name.value) this.form.elements.name.value = deriveName(requestUrl);
+      this.metadataStatus.textContent = i18n.t('site_detected');
+      await this.updatePreview();
+      return metadata;
+    } catch (error) {
+      if (error.name === 'AbortError') return null;
+      if (!this.nameEdited && !this.form.elements.name.value) this.form.elements.name.value = deriveName(requestUrl);
+      this.metadataStatus.textContent = i18n.t('site_detect_fallback');
+      this.updatePreview();
+      return null;
+    } finally {
+      if (this.metadataPromise === promise) this.metadataPromise = null;
+    }
+  }
+
+  async updatePreview() {
+    const name = this.form.elements.name.value.trim();
+    const candidate = normalizeBookmark({ url: this.form.elements.url.value, name: name || 'Site' });
+    const iconUrl = candidate.ok && this.detected?.requestedUrl === candidate.value.url ? this.detected.icons?.[0] : '';
+    if (candidate.ok && iconUrl) {
+      await this.paintIcon({ name: name || deriveName(candidate.value.url), url: candidate.value.url, iconUrl }, this.preview);
+      return;
+    }
+    this.preview.removeAttribute('data-icon-request');
+    this.preview.textContent = name.charAt(0).toUpperCase() || i18n.t('empty_icon');
+  }
+
+  resetForm() {
+    window.clearTimeout(this.metadataTimer);
+    this.metadataAbort?.abort();
+    this.form.reset();
+    this.error.textContent = '';
+    this.metadataStatus.textContent = '';
+    this.editingIndex = -1;
+    this.nameEdited = false;
+    this.detected = null;
+    this.metadataPromise = null;
+  }
+}
+
+function deriveNameWithProtocol(value) {
+  const url = /^[a-z][a-z\d+.-]*:/i.test(value) ? value : `https://${value}`;
+  return deriveName(url);
 }

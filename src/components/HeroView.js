@@ -1,6 +1,7 @@
 import { i18n, LOCALES } from '../lib/I18n.js';
 
 const cloudIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A5 5 0 0 0 6.1 11.1 4 4 0 0 0 3 15Z"/></svg>';
+const searchIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>';
 
 export function createHeroView() {
   const root = document.createElement('section');
@@ -14,10 +15,16 @@ export function createHeroView() {
       <span data-sync-icon>${cloudIcon}</span><span class="sr-only" data-sync-label>${i18n.t('sync_idle')}</span>
     </button>
     <div class="hero__content">
-      <button class="brand-button" type="button" data-open-wallpapers aria-label="${i18n.t('theme_hint')}">
+      <button class="brand-button" type="button" data-brand-trigger aria-label="${i18n.t('brand_action_hint')}" aria-controls="quick-search" aria-expanded="false">
         <span class="brand">${i18n.t('title')}</span>
-        <span class="subtitle">${i18n.t('subtitle')}</span>
       </button>
+      <p class="date-line"><span data-date></span><span aria-hidden="true">·</span><time data-clock></time></p>
+      <section class="quick-search" id="quick-search" data-quick-search hidden>
+        <form class="quick-search__form" data-quick-search-form role="search">
+          <span class="quick-search__icon">${searchIcon}</span>
+          <input data-quick-search-input type="search" inputmode="search" autocomplete="off" enterkeyhint="go" aria-label="${i18n.t('search_simple')}" placeholder="${i18n.t('search_simple')}" />
+        </form>
+      </section>
       <p class="quote" data-quote aria-live="polite"><span data-prefix></span><i aria-hidden="true"></i><span data-suffix></span></p>
       <div class="bookmark-rail">
         <nav class="bookmarks" id="bookmark-grid" data-bookmarks aria-label="${i18n.t('bookmark_actions')}"></nav>
@@ -52,6 +59,7 @@ function bookmarkDialog() {
       <header class="dialog__header"><div><p class="eyebrow">SHORTCUT</p><h2 id="bookmark-dialog-title" data-bookmark-title>${i18n.t('add_title')}</h2></div>
         <button class="icon-button dialog__close" type="button" data-dialog-close aria-label="${i18n.t('close')}">×</button></header>
       <div class="icon-preview" data-preview aria-label="${i18n.t('preview')}"><span>${i18n.t('empty_icon')}</span></div>
+      <p class="metadata-status" data-metadata-status aria-live="polite"></p>
       <label class="field"><span>${i18n.t('url')}</span><input name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://example.com" required maxlength="2048" /></label>
       <label class="field"><span>${i18n.t('name')}</span><input name="name" type="text" autocomplete="off" required maxlength="40" /></label>
       <p class="form-error" data-form-error role="alert"></p>

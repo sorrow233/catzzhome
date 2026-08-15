@@ -1,12 +1,15 @@
 import { HERO_CONFIG } from './config/HeroConfig.js';
 import { createHeroView } from './components/HeroView.js';
 import { BookmarkComponent } from './components/BookmarkComponent.js';
+import { BrandInteraction } from './components/BrandInteraction.js';
+import { DateTime } from './components/DateTime.js';
 import { WallpaperPicker } from './components/WallpaperPicker.js';
 import { QuoteWidget } from './components/QuoteWidget.js';
 import { IconCache } from './lib/IconCache.js';
 import { IconResolver } from './lib/IconResolver.js';
 import { i18n } from './lib/I18n.js';
 import { RainAnimation } from './lib/RainAnimation.js';
+import { SiteMetadata } from './lib/SiteMetadata.js';
 import { readSettings, writeSettings } from './lib/storage.js';
 import { sanitizeBookmarks } from './lib/bookmarkValidation.js';
 import { SyncManager } from './lib/SyncManager.js';
@@ -36,10 +39,12 @@ export class App {
     this.wallpaper.mount();
 
     this.iconCache = new IconCache();
+    this.metadata = new SiteMetadata();
     this.bookmarks = new BookmarkComponent({
       container: this.view.querySelector('[data-bookmarks]'),
       dialogElement: this.view.querySelector('[data-bookmark-dialog]'),
-      iconResolver: new IconResolver(this.iconCache),
+      iconResolver: new IconResolver(this.iconCache, this.metadata),
+      metadataService: this.metadata,
       bookmarks: this.settings.bookmarks,
       onChange: (bookmarks) => this.update({ bookmarks }),
       announce: (message) => this.announce(message)
@@ -54,6 +59,10 @@ export class App {
       onWallpaper: (id) => this.changeWallpaper(id),
       onCinematic: (value) => this.changeCinematic(value)
     });
+    this.brandInteraction = new BrandInteraction({ root: this.view, openWallpapers: () => this.picker.open() });
+    this.brandInteraction.mount();
+    this.dateTime = new DateTime(this.view);
+    this.dateTime.start();
 
     this.quotes = new QuoteWidget(this.view.querySelector('[data-quote]'));
     this.quotes.start();
