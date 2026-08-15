@@ -1,6 +1,6 @@
 const translations = {
   zh: {
-    skip: '跳到快捷入口', title: 'Catzz', subtitle: '让雨声之外的世界，暂时慢一点。', sync: '云同步', sync_idle: '云同步',
+    skip: '跳到快捷入口', title: 'Catzz', sync: '云同步', sync_idle: '云同步',
     sync_loading: '正在连接', sync_success: '已同步', sync_error: '同步失败', logout_confirm: '确定退出云同步吗？', login_failed: '登录失败，请稍后重试。',
     theme: '选择壁纸', close: '关闭', cinematic: '增强文字对比', language: '界面语言', add: '添加', edit: '编辑', remove: '删除',
     add_title: '添加快捷方式', edit_title: '编辑快捷方式', preview: '图标预览', url: '链接地址', name: '网站名称', cancel: '取消', save: '保存',
@@ -16,7 +16,7 @@ const translations = {
     command_unknown: '未知命令。可使用 /weather、/settings 或 /export。', backup_invalid: '备份文件无效。', imported: '导入完成', no_events: '未来七天没有日程', next_event: '下一个日程'
   },
   'zh-TW': {
-    skip: '跳到快速入口', title: 'Catzz', subtitle: '讓雨聲之外的世界，暫時慢一點。', sync: '雲端同步', sync_idle: '雲端同步',
+    skip: '跳到快速入口', title: 'Catzz', sync: '雲端同步', sync_idle: '雲端同步',
     sync_loading: '正在連線', sync_success: '已同步', sync_error: '同步失敗', logout_confirm: '確定登出雲端同步嗎？', login_failed: '登入失敗，請稍後再試。',
     theme: '選擇桌布', close: '關閉', cinematic: '增強文字對比', language: '介面語言', add: '新增', edit: '編輯', remove: '刪除',
     add_title: '新增快速方式', edit_title: '編輯快速方式', preview: '圖示預覽', url: '連結網址', name: '網站名稱', cancel: '取消', save: '儲存',
@@ -32,7 +32,7 @@ const translations = {
     command_unknown: '未知指令。可使用 /weather、/settings 或 /export。', backup_invalid: '備份檔案無效。', imported: '匯入完成', no_events: '未來七天沒有行程', next_event: '下一個行程'
   },
   en: {
-    skip: 'Skip to shortcuts', title: 'Catzz', subtitle: 'Let the world beyond the rain slow down for a while.', sync: 'Cloud sync', sync_idle: 'Cloud sync',
+    skip: 'Skip to shortcuts', title: 'Catzz', sync: 'Cloud sync', sync_idle: 'Cloud sync',
     sync_loading: 'Connecting', sync_success: 'Synced', sync_error: 'Sync failed', logout_confirm: 'Sign out of cloud sync?', login_failed: 'Sign-in failed. Please try again.',
     theme: 'Choose wallpaper', close: 'Close', cinematic: 'Increase text contrast', language: 'Interface language', add: 'Add', edit: 'Edit', remove: 'Remove',
     add_title: 'Add shortcut', edit_title: 'Edit shortcut', preview: 'Icon preview', url: 'Web address', name: 'Site name', cancel: 'Cancel', save: 'Save',
@@ -48,7 +48,7 @@ const translations = {
     command_unknown: 'Unknown command. Try /weather, /settings, or /export.', backup_invalid: 'This backup is not valid.', imported: 'Import complete', no_events: 'No events in the next seven days', next_event: 'Next event'
   },
   ja: {
-    skip: 'ショートカットへ移動', title: 'Catzz', subtitle: '雨音の向こうの世界を、少しだけゆっくりに。', sync: 'クラウド同期', sync_idle: 'クラウド同期',
+    skip: 'ショートカットへ移動', title: 'Catzz', sync: 'クラウド同期', sync_idle: 'クラウド同期',
     sync_loading: '接続中', sync_success: '同期済み', sync_error: '同期失敗', logout_confirm: 'クラウド同期からログアウトしますか？', login_failed: 'ログインに失敗しました。もう一度お試しください。',
     theme: '壁紙を選択', close: '閉じる', cinematic: '文字のコントラストを上げる', language: '表示言語', add: '追加', edit: '編集', remove: '削除',
     add_title: 'ショートカットを追加', edit_title: 'ショートカットを編集', preview: 'アイコンプレビュー', url: 'URL', name: 'サイト名', cancel: 'キャンセル', save: '保存',
@@ -64,7 +64,7 @@ const translations = {
     command_unknown: '不明なコマンドです。/weather、/settings、/export が使えます。', backup_invalid: 'バックアップが無効です。', imported: '読み込み完了', no_events: '今後7日間の予定はありません', next_event: '次の予定'
   },
   ko: {
-    skip: '바로가기로 이동', title: 'Catzz', subtitle: '빗소리 너머의 세상을 잠시 천천히.', sync: '클라우드 동기화', sync_idle: '클라우드 동기화',
+    skip: '바로가기로 이동', title: 'Catzz', sync: '클라우드 동기화', sync_idle: '클라우드 동기화',
     sync_loading: '연결 중', sync_success: '동기화됨', sync_error: '동기화 실패', logout_confirm: '클라우드 동기화에서 로그아웃할까요?', login_failed: '로그인하지 못했습니다. 다시 시도해 주세요.',
     theme: '배경화면 선택', close: '닫기', cinematic: '텍스트 대비 높이기', language: '인터페이스 언어', add: '추가', edit: '편집', remove: '삭제',
     add_title: '바로가기 추가', edit_title: '바로가기 편집', preview: '아이콘 미리보기', url: '웹 주소', name: '사이트 이름', cancel: '취소', save: '저장',

@@ -1,14 +1,12 @@
 import { i18n, LOCALES } from '../lib/I18n.js';
-import { SEARCH_ENGINES } from '../lib/SearchService.js';
 
 const icons = {
   cloud: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-10A5 5 0 0 0 6.1 11.1 4 4 0 0 0 3 15Z"/></svg>',
   settings: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg>',
-  search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
   weather: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 18h10a4 4 0 0 0 .1-8 5 5 0 0 0-9.7 1.2A3.5 3.5 0 0 0 6.5 18Z"/></svg>'
 };
 
-export function createHeroView(settings) {
+export function createHeroView() {
   const root = document.createElement('section');
   root.className = 'hero';
   root.innerHTML = `
@@ -28,18 +26,9 @@ export function createHeroView(settings) {
       <section class="now">
         <button class="brand-button" type="button" data-open-wallpapers aria-label="${i18n.t('theme_hint')}">
           <span class="brand">${i18n.t('title')}</span>
-          <span class="subtitle">${i18n.t('subtitle')}</span>
         </button>
         <p class="date-line"><span data-date></span><span aria-hidden="true">·</span><time data-clock></time></p>
         <p class="quote" data-quote aria-live="polite"><span data-prefix></span><i aria-hidden="true"></i><span data-suffix></span></p>
-      </section>
-      <section class="command" data-command>
-        <form class="command__form" data-command-form role="search">
-          <span class="command__icon">${icons.search}</span>
-          <input data-command-input autocomplete="off" spellcheck="false" aria-label="${i18n.t('search_placeholder')}" placeholder="${i18n.t('search_simple')}" />
-          <kbd>⌘ K</kbd>
-        </form>
-        <div class="command__results" data-command-results hidden></div>
       </section>
       <section class="shortcut-area">
         <div class="group-tabs" data-bookmark-groups></div>
@@ -48,7 +37,7 @@ export function createHeroView(settings) {
     </div>
     <p class="status-toast" data-status role="status" aria-live="polite"></p>
     ${wallpaperDialog()}
-    ${settingsDialog(settings)}
+    ${settingsDialog()}
     ${bookmarkDialog()}`;
   return root;
 }
@@ -63,16 +52,15 @@ function wallpaperDialog() {
   </div>`;
 }
 
-function settingsDialog(settings) {
+function settingsDialog() {
   const localeOptions = LOCALES.map((locale) => `<option value="${locale}" ${locale === i18n.getLocale() ? 'selected' : ''}>${localeLabel(locale)}</option>`).join('');
-  const engineOptions = Object.entries(SEARCH_ENGINES).map(([id, engine]) => `<option value="${id}" ${id === settings.search.engine ? 'selected' : ''}>${engine.name}</option>`).join('');
   return `<div class="dialog" data-settings-dialog role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
     <section class="dialog__panel dialog__panel--settings" data-dialog-panel>
       <header class="dialog__header"><div><p class="eyebrow">CATZZ 2.7 BETA</p><h2 id="settings-title">${i18n.t('settings')}</h2></div><button class="icon-button dialog__close" type="button" data-dialog-close aria-label="${i18n.t('close')}">×</button></header>
       <div class="settings-layout">
         <nav class="settings-nav"><button class="active" data-settings-tab="general">${i18n.t('settings')}</button><button data-settings-tab="data">${i18n.t('data_privacy')}</button></nav>
         <div class="settings-pages">
-          <section data-settings-page="general"><label class="setting-row"><span>${i18n.t('language')}</span><select data-language>${localeOptions}</select></label><label class="setting-row"><span>${i18n.t('search_engine')}</span><select data-search-engine>${engineOptions}</select></label><label class="setting-row"><span>${i18n.t('open_new_tab')}</span><input data-search-new-tab type="checkbox" ${settings.search.openInNewTab ? 'checked' : ''}/></label><button class="setting-action" type="button" data-install-app>${i18n.t('install_app')}</button></section>
+          <section data-settings-page="general"><label class="setting-row"><span>${i18n.t('language')}</span><select data-language>${localeOptions}</select></label><button class="setting-action" type="button" data-install-app>${i18n.t('install_app')}</button></section>
           <section data-settings-page="data" hidden><div class="setting-actions setting-actions--stack"><label class="file-button">${i18n.t('import_bookmarks')}<input type="file" accept="text/html,.html" data-bookmark-import hidden /></label><button class="setting-action" type="button" data-export>${i18n.t('export_data')}</button><label class="file-button">${i18n.t('import_data')}<input type="file" accept="application/json,.json" data-import hidden /></label><button class="setting-action danger" type="button" data-delete-cloud>${i18n.t('delete_cloud')}</button><button class="setting-action danger" type="button" data-delete-local>${i18n.t('delete_local')}</button></div></section>
         </div>
       </div>

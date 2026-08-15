@@ -4,12 +4,11 @@ import { createBackup, downloadJson, parseBackup } from '../lib/dataTransfer.js'
 import { importBookmarkHtml } from '../lib/bookmarkValidation.js';
 
 export class SettingsPanel {
-  constructor({ root, settings, bookmarks, installer, onChange, onRestore, onDeleteLocal, onDeleteCloud, announce }) {
+  constructor({ root, settings, bookmarks, installer, onRestore, onDeleteLocal, onDeleteCloud, announce }) {
     this.root = root;
     this.settings = settings;
     this.bookmarks = bookmarks;
     this.installer = installer;
-    this.onChange = onChange;
     this.onRestore = onRestore;
     this.onDeleteLocal = onDeleteLocal;
     this.onDeleteCloud = onDeleteCloud;
@@ -20,7 +19,7 @@ export class SettingsPanel {
 
   mount() {
     this.root.querySelectorAll('[data-open-settings]').forEach((button) => button.addEventListener('click', () => this.open()));
-    this.bindTabs(); this.bindGeneral(); this.bindData(); this.syncControls();
+    this.bindTabs(); this.bindGeneral(); this.bindData();
   }
 
   open(page = 'general') { this.showPage(page); this.dialog.open(this.element.querySelector(`[data-settings-tab="${page}"]`)); }
@@ -34,8 +33,6 @@ export class SettingsPanel {
     this.element.querySelector('[data-language]').addEventListener('change', (event) => {
       i18n.setLanguage(event.target.value); const url = new URL(location.href); url.searchParams.set('lang', event.target.value); location.assign(url);
     });
-    this.element.querySelector('[data-search-engine]').addEventListener('change', (event) => { this.settings.search = { ...this.settings.search, engine: event.target.value, regionInitialized: true, userSelected: true }; this.persist('search'); });
-    this.element.querySelector('[data-search-new-tab]').addEventListener('change', (event) => { this.settings.search.openInNewTab = event.target.checked; this.persist('search'); });
     this.element.querySelector('[data-install-app]').addEventListener('click', async (event) => {
       const result = await this.installer.install();
       if (result === 'installed' || this.installer.isInstalled()) event.currentTarget.textContent = i18n.t('installed');
@@ -53,10 +50,4 @@ export class SettingsPanel {
     this.element.querySelector('[data-delete-local]').addEventListener('click', () => { if (confirm(i18n.t('delete_confirm'))) this.onDeleteLocal(); });
     this.element.querySelector('[data-delete-cloud]').addEventListener('click', () => { if (confirm(i18n.t('delete_confirm'))) this.onDeleteCloud(); });
   }
-
-  syncControls() {
-    this.element.querySelector('[data-search-engine]').value = this.settings.search.engine;
-    this.element.querySelector('[data-search-new-tab]').checked = this.settings.search.openInNewTab;
-  }
-  persist(key) { this.onChange({ [key]: this.settings[key] }); }
 }

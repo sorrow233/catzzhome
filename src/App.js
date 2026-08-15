@@ -2,18 +2,15 @@ import { HERO_CONFIG } from './config/HeroConfig.js';
 import { createHeroView } from './components/HeroView.js';
 import { BookmarkComponent } from './components/BookmarkComponent.js';
 import { ClockWeather } from './components/ClockWeather.js';
-import { CommandCenter } from './components/CommandCenter.js';
 import { QuoteWidget } from './components/QuoteWidget.js';
 import { SettingsPanel } from './components/SettingsPanel.js';
 import { WallpaperGallery } from './components/WallpaperGallery.js';
 import { AssetStore } from './lib/AssetStore.js';
-import { createBackup, downloadJson } from './lib/dataTransfer.js';
 import { IconCache } from './lib/IconCache.js';
 import { IconResolver } from './lib/IconResolver.js';
 import { i18n } from './lib/I18n.js';
 import { PwaInstaller } from './lib/PwaInstaller.js';
 import { RainAnimation } from './lib/RainAnimation.js';
-import { regionalSearchEngine } from './lib/RegionalSearch.js';
 import { SiteMetadata } from './lib/SiteMetadata.js';
 import { readSettings, resetSettings, writeSettings } from './lib/storage.js';
 import { sanitizeBookmarks } from './lib/bookmarkValidation.js';
@@ -25,18 +22,13 @@ export class App {
     this.root = root;
     this.settings = readSettings(HERO_CONFIG.defaultBookmarks);
     this.settings.bookmarks = sanitizeBookmarks(this.settings.bookmarks, HERO_CONFIG.defaultBookmarks);
-    if (!this.settings.search.regionInitialized && !this.settings.search.userSelected) {
-      const country = document.querySelector('meta[name="catzz-country"]')?.content || '';
-      this.settings.search = { ...this.settings.search, engine: regionalSearchEngine({ country, language: navigator.language }), regionInitialized: true };
-      writeSettings(this.settings, { touch: false });
-    }
     this.assetStore = new AssetStore();
   }
 
   async mount() {
     i18n.applyDocumentLanguage();
     await this.reconcileLocalWallpaper();
-    this.view = createHeroView(this.settings);
+    this.view = createHeroView();
     this.root.replaceChildren(this.view);
     this.status = this.view.querySelector('[data-status]');
 
@@ -62,7 +54,7 @@ export class App {
     this.installer = new PwaInstaller();
     this.settingsPanel = new SettingsPanel({
       root: this.view, settings: this.settings, bookmarks: this.bookmarks, installer: this.installer,
-      onChange: (partial) => this.update(partial), onRestore: (settings) => this.applySettings(settings), onDeleteLocal: () => this.deleteLocal(),
+      onRestore: (settings) => this.applySettings(settings), onDeleteLocal: () => this.deleteLocal(),
       onDeleteCloud: () => this.sync.deleteCloud(), announce: (message) => this.announce(message)
     });
     this.settingsPanel.mount();
@@ -71,16 +63,6 @@ export class App {
       onChange: (partial) => this.update(partial), announce: (message) => this.announce(message)
     });
     this.wallpaperGallery.mount();
-
-    this.command = new CommandCenter({
-      root: this.view, getBookmarks: () => this.bookmarks.getAll(), getEngine: () => this.settings.search.engine,
-      openInNewTab: () => this.settings.search.openInNewTab, announce: (message) => this.announce(message),
-      commands: {
-        weather: () => this.clockWeather.handleClick(), settings: () => this.settingsPanel.open(),
-        export: () => downloadJson(`catzz-backup-${new Date().toISOString().slice(0, 10)}.json`, createBackup(this.settings))
-      }
-    });
-    this.command.mount();
 
     this.quotes = new QuoteWidget(this.view.querySelector('[data-quote]')); this.quotes.start();
     this.rain = new RainAnimation(this.view.querySelector('[data-rain]')); this.rain.start();
@@ -106,7 +88,7 @@ export class App {
     writeSettings(this.settings, { touch: false });
     await this.wallpaper.select(this.settings.bgId);
     this.wallpaper.cinematicPrefs = this.settings.cinematicPrefs; this.wallpaper.applyTheme();
-    this.bookmarks.setData(this.settings); this.settingsPanel.syncControls(); this.wallpaperGallery.syncControls();
+    this.bookmarks.setData(this.settings); this.wallpaperGallery.syncControls();
   }
 
   async hasCustomWallpaper() { try { return Boolean(await this.assetStore.get('custom-wallpaper')); } catch { return false; } }
