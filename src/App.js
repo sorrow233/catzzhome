@@ -53,7 +53,7 @@ export class App {
       container: this.view.querySelector('[data-bookmarks]'), groupsElement: this.view.querySelector('[data-bookmark-groups]'),
       dialogElement: this.view.querySelector('[data-bookmark-dialog]'), iconResolver: new IconResolver(this.iconCache, this.metadata), metadataService: this.metadata,
       bookmarks: this.settings.bookmarks, groups: this.settings.bookmarkGroups, activeGroup: this.settings.activeBookmarkGroup,
-      onChange: (partial) => this.update(partial)
+      onChange: (partial) => this.update(partial), announce: (message) => this.announce(message)
     });
     this.bookmarks.mount();
 

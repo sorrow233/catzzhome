@@ -4,7 +4,7 @@ import { deriveName, MAX_BOOKMARKS, normalizeBookmark, sanitizeBookmarks } from 
 import { createId } from '../lib/id.js';
 
 export class BookmarkComponent {
-  constructor({ container, groupsElement, dialogElement, iconResolver, metadataService, bookmarks, groups, activeGroup, onChange }) {
+  constructor({ container, groupsElement, dialogElement, iconResolver, metadataService, bookmarks, groups, activeGroup, onChange, announce }) {
     this.container = container;
     this.groupsElement = groupsElement;
     this.iconResolver = iconResolver;
@@ -13,6 +13,8 @@ export class BookmarkComponent {
     this.activeGroup = this.groups.some((group) => group.id === activeGroup) ? activeGroup : this.groups[0].id;
     this.bookmarks = sanitizeBookmarks(bookmarks).map((bookmark) => ({ ...bookmark, groupId: this.groups.some((group) => group.id === bookmark.groupId) ? bookmark.groupId : this.activeGroup }));
     this.onChange = onChange;
+    this.announce = announce;
+    this.touchInput = matchMedia('(hover: none), (pointer: coarse)');
     this.form = dialogElement.querySelector('[data-bookmark-form]');
     this.title = dialogElement.querySelector('[data-bookmark-title]');
     this.error = dialogElement.querySelector('[data-form-error]');
@@ -25,7 +27,11 @@ export class BookmarkComponent {
     this.bindForm();
   }
 
-  mount() { this.render(); }
+  mount() {
+    this.render();
+    document.addEventListener('pointerdown', (event) => { if (this.managing && !this.container.contains(event.target)) this.stopManaging(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') this.stopManaging(); });
+  }
   getAll() { return this.bookmarks; }
 
   setData({ bookmarks, bookmarkGroups, activeBookmarkGroup }) {
@@ -82,7 +88,42 @@ export class BookmarkComponent {
     const label = document.createElement('span'); label.className = 'bookmark__label'; label.textContent = bookmark.name; link.append(icon, label); item.append(link);
     const actions = document.createElement('div'); actions.className = 'bookmark__actions';
     actions.append(this.actionButton('edit', i18n.t('edit'), () => this.open(bookmark.id)), this.actionButton('remove', i18n.t('remove'), () => this.remove(bookmark.id))); item.append(actions);
+    this.bindLongPress(item, link, bookmark.id);
     this.paintIcon(bookmark, icon); return item;
+  }
+
+  bindLongPress(item, link, bookmarkId) {
+    let origin;
+    const cancel = () => { window.clearTimeout(this.longPressTimer); this.longPressTimer = null; };
+    item.addEventListener('pointerdown', (event) => {
+      if (!this.touchInput.matches || event.pointerType === 'mouse' || event.button !== 0) return;
+      cancel(); origin = { x: event.clientX, y: event.clientY };
+      this.longPressTimer = window.setTimeout(() => {
+        this.suppressOpen = bookmarkId;
+        this.startManaging();
+      }, 520);
+    });
+    item.addEventListener('pointermove', (event) => { if (origin && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > 10) cancel(); });
+    item.addEventListener('pointerup', cancel);
+    item.addEventListener('pointercancel', cancel);
+    item.addEventListener('contextmenu', (event) => { if (this.touchInput.matches) event.preventDefault(); });
+    link.addEventListener('click', (event) => {
+      if (this.suppressOpen !== bookmarkId) return;
+      event.preventDefault(); event.stopPropagation(); this.suppressOpen = null;
+    }, { capture: true });
+  }
+
+  startManaging() {
+    if (this.managing) return;
+    this.managing = true;
+    this.container.classList.add('is-managing');
+    this.announce?.(i18n.t('manage_shortcuts_hint'));
+  }
+
+  stopManaging() {
+    this.managing = false;
+    this.suppressOpen = null;
+    this.container.classList.remove('is-managing');
   }
 
   actionButton(kind, label, callback) {

@@ -48,9 +48,10 @@
 .bookmark__icon img,.bookmark__mask { width:1.5rem; height:1.5rem; object-fit:contain; }
 .bookmark__mask { display:block; background:currentColor; mask-position:center; mask-repeat:no-repeat; mask-size:contain; }
 .bookmark__label { max-width:4.3rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:500 .58rem ui-sans-serif,sans-serif; letter-spacing:.05em; opacity:.76; }
-.bookmark__actions { position:absolute; top:-.5rem; right:-.1rem; display:flex; gap:.12rem; opacity:0; transition:opacity .2s; }
-.bookmark:hover .bookmark__actions,.bookmark:focus-within .bookmark__actions { opacity:1; }
+.bookmark__actions { position:absolute; top:-.5rem; right:-.1rem; display:flex; gap:.12rem; opacity:0; visibility:hidden; pointer-events:none; transform:scale(.88); transition:opacity .18s,transform .18s,visibility .18s; }
+.bookmark:focus-within .bookmark__actions,.bookmarks.is-managing .bookmark__actions { opacity:1; visibility:visible; pointer-events:auto; transform:none; }
+@media (hover:hover) { .bookmark:hover .bookmark__actions { opacity:1; visibility:visible; pointer-events:auto; transform:none; } }
 .bookmark__action { width:1.25rem; height:1.25rem; display:grid; place-items:center; padding:0; border:1px solid rgba(255,255,255,.25); border-radius:50%; background:rgba(9,16,25,.84); cursor:pointer; font:.64rem ui-sans-serif,sans-serif; }
 .bookmark__action--remove:hover { background:#a73030; }
 @media (max-height:720px) and (min-width:641px) { .hero__content { padding-top:4.8rem; } .brand { font-size:4.3rem; } .subtitle { margin-top:.8rem; } .quote { margin-top:.7rem; } .command { margin-top:1rem; } }
-@media (max-width:640px) { .hero__content { width:min(100% - 1.25rem,34rem); padding-top:clamp(5.5rem,13vh,7rem); padding-bottom:2rem; } .brand { font-size:4.2rem; } .subtitle { margin-top:.9rem; font-size:.65rem; } .date-line { margin-top:.9rem; } .quote { margin-top:.8rem; gap:.45rem; font-size:.62rem; } .command { margin-top:1.2rem; } .command__form kbd { display:none; } .shortcut-area { width:100%; min-height:6.8rem; } .bookmarks { justify-content:flex-start; padding-inline:calc(50vw - 2.65rem); } .bookmark__actions { opacity:1; } }
+@media (max-width:640px) { .hero__content { width:min(100% - 1.25rem,34rem); padding-top:clamp(5.5rem,13vh,7rem); padding-bottom:2rem; } .brand { font-size:4.2rem; } .subtitle { margin-top:.9rem; font-size:.65rem; } .date-line { margin-top:.9rem; } .quote { margin-top:.8rem; gap:.45rem; font-size:.62rem; } .command { margin-top:1.2rem; } .command__form kbd { display:none; } .shortcut-area { width:100%; min-height:6.8rem; } .bookmarks { justify-content:flex-start; padding-inline:calc(50vw - 2.65rem); } .bookmark__link { -webkit-touch-callout:none; } }
