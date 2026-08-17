@@ -98,6 +98,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .status-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 .dialog-open { overflow: hidden; }
 
+@media (min-width: 900px) {
+  .bookmark-rail { width: min(calc(100vw - 3rem), 132rem); overflow: visible; overscroll-behavior-inline: auto; scroll-snap-type: none; mask-image: none; -webkit-mask-image: none; }
+  .bookmarks { width: 100%; min-width: 0; padding: 1.2rem 1rem .5rem; flex-wrap: wrap; align-content: flex-end; gap: .9rem clamp(.5rem, .7vw, .85rem); }
+  .bookmark { flex: 0 0 4rem; }
+  .bookmark__link, .bookmark--add { width: 4rem; scroll-snap-align: none; }
+  .bookmark__label { max-width: 4rem; }
+}
+
 @media (max-width: 640px) {
   .hero__content { width: 100%; padding-inline: .75rem; }
   .brand-button { margin-top: 11vh; }

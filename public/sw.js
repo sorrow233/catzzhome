@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'catzzhome';
-const CACHE_VERSION = '2.3.0';
+const CACHE_VERSION = '2.3.1';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VERSION}`;
 
 self.addEventListener('install', () => self.skipWaiting());
